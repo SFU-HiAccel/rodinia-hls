@@ -1,0 +1,57 @@
+DIR STATUS
+	
+--------------------------------------------------------------------------------------------------
+backprop:
+	1. no input.data and check.data are use for result verification; instead, SW model is embedded in code. 
+	2. need to comment out #define LOAD_INPUT, #define WRITE_OUTPUT, and #define CHECK_OUTPUT
+	3. missing "backprop_3_unroll": easy to add one
+--------------------------------------------------------------------------------------------------	
+cfd:
+	cfd_flux:
+		1. Missing check.data
+
+	cfd_step_factor:
+		1. Missing check.data
+--------------------------------------------------------------------------------------------------
+hotspot:
+	1. modified and regenerated data from rodinia openmp benchmark. Mismatch between output.data and check.data
+--------------------------------------------------------------------------------------------------
+kmeans:
+	1. host code seg fault
+	2. need to comment out #define LOAD_INPUT, #define WRITE_OUTPUT, and #define CHECK_OUTPUT	
+--------------------------------------------------------------------------------------------------
+knn: 
+	TODO: refactor the code to extract "local_support.cpp" from knn.cpp
+--------------------------------------------------------------------------------------------------	
+leukocyte
+	lc_dilate:
+		1. Missing check.data
+
+	lc_gicov:
+		1. Missing check.data
+
+	lc_mgvf:
+		1. Missing check.data
+--------------------------------------------------------------------------------------------------
+lud:
+	1. mismatch betwee check.data and output.data - first 257 correct data, rest is corrupted
+--------------------------------------------------------------------------------------------------
+nw: 
+	completed
+--------------------------------------------------------------------------------------------------
+pathfinder:
+	1. missing "pathfinder_2_pipeline": easy to add one
+--------------------------------------------------------------------------------------------------
+srad: 
+	1. mismatching check.data and generated.data (still the case after data regen from sw model)
+	2. missing "srad_3_unroll opt": directly set the PARA_FACTOR macro
+--------------------------------------------------------------------------------------------------
+StreamCluster:
+	TODO: refactor the code to extract "local_support.cpp" from _cl_helper.cpp
+--------------------------------------------------------------------------------------------------
+
+
+
+
+
+
