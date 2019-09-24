@@ -1,0 +1,1 @@
+./sc_omp 10 30 200 8192 1024 1000 none output.txt 1
