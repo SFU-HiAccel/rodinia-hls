@@ -17,7 +17,7 @@
 #include "xclhal2.h"
 
 #define LOAD_INPUT
-#define WRITE_OUTPUT
+// #define WRITE_OUTPUT
 #define CHECK_OUTPUT
 #define FPGA_DEVICE
 

@@ -3,7 +3,10 @@
 #include <string.h>
 #include "support.h"
 #include "my_timer.h"
+#include <CL/cl_ext_xilinx.h>
 #include "lavaMD.h"
+
+// #define USE_MEM_EXT_PTR
 
 int INPUT_SIZE = sizeof(struct bench_args_t);
 
@@ -147,11 +150,32 @@ void run_benchmark( void *vargs, cl_context& context, cl_command_queue& commands
   // 0th: initialize the timer at the beginning of the program
   timespec timer = tic();
 
+#ifdef USE_MEM_EXT_PTR
+  cl_mem_ext_ptr_t inExt_pos, inExt_q, outExt;// Declaring two extension for both buffer
+  inExt_pos.flags = XCL_MEM_DDR_BANK0; // Specify Bank0 Memory for input memory
+  inExt_q.flags = XCL_MEM_DDR_BANK1; // Specify Bank1 Memory for input memory
+  outExt.flags = XCL_MEM_DDR_BANK2; // Specify Bank2 Memory for output Memory
+  
+  inExt_pos.obj = pos_i_padded;   inExt_pos.param = 0; 
+  inExt_q.obj = q_i_padded;       inExt_q.param = 0; 
+  outExt.obj = pos_o_padded;      outExt.param = 0;
+  
+  // Create device buffers
+  //
+  cl_mem pos_i_buffer = clCreateBuffer(context, CL_MEM_USE_HOST_PTR | CL_MEM_EXT_PTR_XILINX | CL_MEM_READ_WRITE, 
+                                        POS_I_SIZE, &inExt_pos, NULL);
+  cl_mem q_i_buffer = clCreateBuffer(context, CL_MEM_USE_HOST_PTR | CL_MEM_EXT_PTR_XILINX | CL_MEM_READ_WRITE, 
+                                        Q_I_SIZE, &inExt_q, NULL);
+  cl_mem pos_o_buffer = clCreateBuffer(context, CL_MEM_USE_HOST_PTR | CL_MEM_EXT_PTR_XILINX | CL_MEM_READ_WRITE,
+                                        POS_O_SIZE, &outExt, NULL);
+#else 
   // Create device buffers
   //
   cl_mem pos_i_buffer = clCreateBuffer(context, CL_MEM_READ_WRITE, POS_I_SIZE, NULL, NULL);
   cl_mem q_i_buffer = clCreateBuffer(context, CL_MEM_READ_WRITE, Q_I_SIZE, NULL, NULL);
-  cl_mem pos_o_buffer = clCreateBuffer(context, CL_MEM_READ_WRITE, POS_O_SIZE, NULL, NULL);
+  cl_mem pos_o_buffer = clCreateBuffer(context, CL_MEM_READ_WRITE, POS_O_SIZE, NULL, NULL);  
+#endif
+
   if (!pos_i_buffer || !q_i_buffer || !pos_o_buffer)
   {
     printf("Error: Failed to allocate device memory!\n");

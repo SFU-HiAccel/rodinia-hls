@@ -48,7 +48,7 @@ XCLBIN := ./xclbin
 include ../utils.mk
 
 # Linker options to map kernel ports to DDR banks
-XOCC_LINK_OPTS := --sp $(KERNAL_NAME)_1.pos_i:DDR[0] --sp $(KERNAL_NAME)_1.q_i:DDR[1] --sp $(KERNAL_NAME)_1.pos_o:DDR[2]
+# XOCC_LINK_OPTS := --slr $(KERNAL_NAME)_1:SLR1 --sp $(KERNAL_NAME)_1.pos_i:DDR[0] --sp $(KERNAL_NAME)_1.q_i:DDR[1] --sp $(KERNAL_NAME)_1.pos_o:DDR[2]
 
 DSA := $(call device2dsa, $(DEVICE))
 BUILD_DIR := ./_x.$(TARGET).$(DSA)
@@ -100,10 +100,10 @@ build: $(BINARY_CONTAINERS)
 # Building kernel
 $(XCLBIN)/$(APP).$(TARGET).$(DSA).xo: src/$(APP).cpp
 	mkdir -p $(XCLBIN)
-	$(XOCC) $(CLFLAGS) --temp_dir $(BUILD_DIR_KERNEL) -c -k $(KERNAL_NAME) -I'$(<D)' -o'$@' '$<'
+	$(XOCC) $(CLFLAGS) --temp_dir $(BUILD_DIR_KERNEL) -c -k $(KERNAL_NAME) -I'$(<D)' -o'$@' '$<' --interactive impl
 $(XCLBIN)/$(APP).$(TARGET).$(DSA).xclbin: $(BINARY_CONTAINER_vadd_OBJS)
 	mkdir -p $(XCLBIN)
-	$(XOCC) $(CLFLAGS) --temp_dir $(BUILD_DIR_KERNEL) -l $(LDCLFLAGS) --nk $(KERNAL_NAME):1 --profile_kernel data:all:all:all -o'$@' $(+) $(XOCC_LINK_OPTS)
+	$(XOCC) $(CLFLAGS) --temp_dir $(BUILD_DIR_KERNEL) -l $(LDCLFLAGS) --nk $(KERNAL_NAME):1 -j 8 --profile_kernel data:all:all:all:all -o'$@' $(+) $(XOCC_LINK_OPTS) 
 
 # Building Host
 $(EXECUTABLE): check-xrt $(HOST_SRCS) $(HOST_HDRS)
@@ -137,4 +137,5 @@ clean:
 cleanall: clean
 	-$(RMDIR) $(XCLBIN)
 	-$(RMDIR) _x.*
+	-$(RMDIR) .run
 
