@@ -1,0 +1,8 @@
+promaxmat.c                processing output of MUM-candidates
+maxmatopt.c                read the input option, e.g. -s for showing result. 
+maxmatdef.h                necessary header for max matching.
+maxmatinp.c                read in multiple input files. 
+findmumcand.c**            This is not necessary right now, but may be useful in the future. Traversing suffix tree to get the mum candidate. Maximal matches which are unique in the subject-sequence but not necessarily in the query sequence.
+findmaxmat.c               traversing the suffix tree, find the max unique matching.
+maxmat3.c                  main.
+
