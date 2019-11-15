@@ -1,0 +1,15 @@
+11/14/2019
+
+Classified all source files needed for "mummer" function; 
+Finished new simpilified Dependencied.mf;
+Working on the new simplyfied Makefile;
+Excluded all debug file and debug version of mummer;
+
+To do
+
+Classify Stree lib;
+Stree lib Make file;
+
+Classify libbasedir folder;
+Generate the libbase.a file; 
+Modify the related make file; 
