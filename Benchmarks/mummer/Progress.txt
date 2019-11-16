@@ -13,3 +13,15 @@ Stree lib Make file;
 Classify libbasedir folder;
 Generate the libbase.a file; 
 Modify the related make file; 
+
+
+11/15/2019 
+
+Classified Stree lib, libbase lib, then generated libstree.a, libbase.a
+CPU version of "mummer" function built successfully; 
+
+To do:
+
+Substrct host&kernel;
+Test kernel;
+Accelerate kernel;
