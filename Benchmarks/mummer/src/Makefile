@@ -9,7 +9,7 @@ endif
 
 VPATH := $(BIN_DIR)
 
-ALL := maxmat3.x
+ALL := mummer
 
 LIBBASEDIR=../libbasedir
 LIBSTREEDIR=../streesrc
@@ -29,13 +29,6 @@ LIBSTREE=$(LIBSTREEDIR)/libstree.a
 MUM3OBJECTS=maxmat3.o maxmatopt.o maxmatinp.o\
             findmumcand.o findmaxmat.o procmaxmat.o
 
-MUM3DBGOBJECTS=maxmat3.dbg.o maxmatopt.dbg.o maxmatinp.dbg.o\
-               findmumcand.dbg.o findmaxmat.dbg.o procmaxmat.dbg.o
-
-SPLINTALL=maxmat3.splint maxmatopt.splint maxmatinp.splint\
-          findmumcand.splint findmaxmat.splint procmaxmat.splint
-
-.SUFFIXES: .dbg.o
 
 all: $(ALL)
 
@@ -47,11 +40,7 @@ maxmat3.x: $(MUM3OBJECTS) $(LIBSTREE)
 	$(LD) $(LDFLAGS) $(MUM3OBJECTS) $(LIBSTREE) $(LIBBASE) \
 	-o $(BIN_DIR)/$@; chmod 755 $(BIN_DIR)/$@
 
-maxmat3.dbg.x: ${MUM3DBGOBJECTS} $(LIBSTREEDBG)
-	$(LD) $(LDFLAGS) $(MUM3DBGOBJECTS) $(LIBSTREEDBG) $(LIBBASEDBG) \
-	-lm -o $(BIN_DIR)/$@; chmod 755 $(BIN_DIR)/$@
-
-include Filegoals.mf
+#include Filegoals.mf
 
 .PHONY:clean
 clean:splintclean
