@@ -25,3 +25,7 @@ To do:
 Substrct host&kernel;
 Test kernel;
 Accelerate kernel;
+
+11/19/2019
+
+Working on the kernel, the difficulty is that the kernel function requires many ADTs, structs, and functions; 
