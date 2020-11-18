@@ -22,5 +22,5 @@ struct bench_args_t {
     float result[GRID_ROWS * GRID_COLS];
 };
 
-
+// void workload(float result[GRID_ROWS * GRID_COLS]);
 #endif

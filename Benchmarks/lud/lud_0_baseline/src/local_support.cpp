@@ -12,10 +12,8 @@ void run_benchmark( void *vargs, cl_context& context, cl_command_queue& commands
   // 0th: initialize the timer at the beginning of the program
   timespec timer = tic();
     
-    cl_mem result_buffer = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(args -> result), NULL, NULL);
- //   cl_mem img_buffer = clCreateBuffer(context, CL_MEM_READ_ONLY , sizeof(args -> img), NULL, NULL);
+  cl_mem result_buffer = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(args -> result), NULL, NULL);
 
-  //if (!result_buffer || !img_buffer)
   if (!result_buffer)
   {
     printf("Error: Failed to allocate device memory!\n");
@@ -27,7 +25,6 @@ void run_benchmark( void *vargs, cl_context& context, cl_command_queue& commands
   toc(&timer, "buffer allocation");
 
   // Write our data set into device buffers  
-  //
   int err;
     err  = clEnqueueWriteBuffer(commands, result_buffer  , CL_TRUE, 0, sizeof(args -> result), args -> result  , 0, NULL, NULL);
   //  err |= clEnqueueWriteBuffer(commands, img_buffer  , CL_TRUE, 0, sizeof(args -> img), args -> img  , 0, NULL, NULL);
@@ -42,8 +39,7 @@ void run_benchmark( void *vargs, cl_context& context, cl_command_queue& commands
   // 2nd: time of pageable-pinned memory copy
   toc(&timer, "memory copy");
     
-    err  = clSetKernelArg(kernel, 0, sizeof(cl_mem), &result_buffer);
-   // err |= clSetKernelArg(kernel, 1, sizeof(cl_mem), &img_buffer);
+  err  = clSetKernelArg(kernel, 0, sizeof(cl_mem), &result_buffer);
 
   if (err != CL_SUCCESS)
   {
@@ -65,6 +61,7 @@ void run_benchmark( void *vargs, cl_context& context, cl_command_queue& commands
   printf("Error: OpenCL kernel is not currently supported!\n");
   exit(1);
 #endif
+
   if (err)
   {
     printf("Error: Failed to execute kernel! %d\n", err);
@@ -78,8 +75,7 @@ void run_benchmark( void *vargs, cl_context& context, cl_command_queue& commands
 
   // Read back the results from the device to verify the output
   
-    err  = clEnqueueReadBuffer(commands, result_buffer,  CL_TRUE, 0, sizeof(args -> result)  , args -> result  , 0, NULL, NULL);  
-
+  err  = clEnqueueReadBuffer(commands, result_buffer,  CL_TRUE, 0, sizeof(args -> result)  , args -> result  , 0, NULL, NULL);  
 
   if (err != CL_SUCCESS)
   {
@@ -109,10 +105,6 @@ int i;
   s = find_section_start(p,1);
   STAC(parse_,TYPE,_array)(s, data->result, GRID_ROWS*GRID_COLS);
 
-//for (i = 0; i < GRID_COLS * GRID_ROWS; i++) {
-//    data -> result[i] = 0;
-//}
-
 }
 
 void data_to_input(int fd, void *vdata) {
@@ -121,11 +113,6 @@ void data_to_input(int fd, void *vdata) {
   write_section_header(fd);
   STAC(write_, TYPE, _array)(fd, data->result, GRID_ROWS * GRID_COLS);
   
-//  write_section_header(fd);
-//  STAC(write_, TYPE, _array)(fd, data -> img, GRID_ROWS * GRID_COLS);
-
-
-//  write_section_header(fd);
 }
 
 /* Output format:
@@ -144,6 +131,7 @@ void output_to_data(int fd, void *vdata) {
   s = find_section_start(p,1);
   STAC(parse_,TYPE,_array)(s, data->result, GRID_ROWS * GRID_COLS);
 
+  printf("this is output reference\n");
   for (int j = 0;j<10;j++)
     printf("%f\n",data->result[j]);
 }
@@ -151,21 +139,18 @@ void output_to_data(int fd, void *vdata) {
 void data_to_output(int fd, void *vdata) {
   struct bench_args_t *data = (struct bench_args_t *)vdata;
 
-FILE* fid = fopen("output.data", "w");
+  FILE* fid = fopen("output.data", "w");
 
-for (int kk = 0; kk <GRID_ROWS*GRID_COLS;kk++){
-  fprintf(fid,"%.8f\n", data->result[kk]);
-}
+  for (int kk = 0; kk <GRID_ROWS*GRID_COLS;kk++){
+    fprintf(fid,"%.18f\n", data->result[kk]);
+  }
 
-fclose(fid);
+  fclose(fid);
 
-printf("+++++++++++++++++++++++++++++++++++data_to_output\n");
-for (int j = 0;j<10;j++){
-  printf("%f\n",data->result[j]);
-}
-  //write_section_header(fd);
-  //STAC(write_,TYPE,_array)(fd, data->result, GRID_ROWS * GRID_COLS);
-  //write_float_array(fd, data->img, 100000);
+  printf("+++++++++++++++++++++++++++++++++++data_to_output\n");
+  for (int j = 0;j<10;j++){
+    printf("%f\n",data->result[j]);
+  }
 }
 
 int check_data( void *vdata, void *vref ) {
@@ -173,7 +158,8 @@ int check_data( void *vdata, void *vref ) {
   struct bench_args_t *ref = (struct bench_args_t *)vref;
   int has_errors = 0;
 
-  has_errors |= memcmp(data->result, ref->result, GRID_ROWS * GRID_COLS);
+  has_errors |= memcmp(data->result, ref->result, GRID_ROWS * GRID_COLS - 100);
+  printf("error num is %d \n", has_errors);
   // Return true if it's correct.
   return !has_errors;
 }
