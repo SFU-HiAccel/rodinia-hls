@@ -7,9 +7,9 @@
 #define PADDED 1
 
 #define TYPE float
-#define UNROLL_SIZE 1
+#define UNROLL_SIZE 10  //20
 #define FULL_NEIGHBOR_COUNT 27
-#define NUMBER_PAR_PER_BOX 1
+#define NUMBER_PAR_PER_BOX 100 //100
 
 #define DIMENSION_1D 2   //User defined
 #define DIMENSION_2D (DIMENSION_1D * DIMENSION_1D)

@@ -1,4 +1,4 @@
-#include "ap_uint.h"
+#include "ap_int.h"
 #include "lavaMD.h"
 #include <inttypes.h>
 
@@ -29,13 +29,13 @@ void load_memoryreorg_padded(int flag, int A_x, int A_y, int A_z,
        B_idx = B_idx * NUMBER_PAR_PER_BOX;
        //load local_B_pos_i
        LOAD_LOCAL_B_POS_I: for (ii=0; ii<NUMBER_PAR_PER_BOX; ++ii){
-#pragma HLS PIPELINE
-           local_B_pos_i[ii] = pos_i[B_idx+ii];
+            #pragma HLS PIPELINE
+            local_B_pos_i[ii] = pos_i[B_idx+ii];
        }
        //load local_B_q_i
        LOAD_LOCAL_B_Q_I: for (ii=0; ii<NUMBER_PAR_PER_BOX; ++ii){
-#pragma HLS PIPELINE
-           local_B_q_i[ii] = q_i[B_idx+ii];
+            #pragma HLS PIPELINE
+            local_B_q_i[ii] = q_i[B_idx+ii];
        }
    }
 }
@@ -65,6 +65,10 @@ void compute_memoryreorg_padded(int flag, TYPE r2[UNROLL_SIZE], TYPE u2[UNROLL_S
                    uint32_t tmp_A_x = local_A_pos_i[j+jj].range( 63, 32);
                    uint32_t tmp_A_y = local_A_pos_i[j+jj].range( 95, 64);
                    uint32_t tmp_A_z = local_A_pos_i[j+jj].range(127, 96);
+                   //  uint32_t tmp_A_v = local_A_pos_i[j+jj].range( 127,  96);
+                   // uint32_t tmp_A_x = local_A_pos_i[j+jj].range( 95, 64);
+                   // uint32_t tmp_A_y = local_A_pos_i[j+jj].range( 63, 32);
+                   // uint32_t tmp_A_z = local_A_pos_i[j+jj].range( 31, 0);
                    TYPE A_v = *((float *)(&tmp_A_v));
                    TYPE A_x = *((float *)(&tmp_A_x));
                    TYPE A_y = *((float *)(&tmp_A_y));
@@ -74,6 +78,10 @@ void compute_memoryreorg_padded(int flag, TYPE r2[UNROLL_SIZE], TYPE u2[UNROLL_S
                    uint32_t tmp_B_x = local_B_pos_i[k].range( 63, 32);
                    uint32_t tmp_B_y = local_B_pos_i[k].range( 95, 64);
                    uint32_t tmp_B_z = local_B_pos_i[k].range(127, 96);
+                   //  uint32_t tmp_B_v = local_B_pos_i[j+jj].range( 127,  96);
+                   // uint32_t tmp_B_x = local_B_pos_i[j+jj].range( 95, 64);
+                   // uint32_t tmp_B_y = local_B_pos_i[j+jj].range( 63, 32);
+                   // uint32_t tmp_B_z = local_B_pos_i[j+jj].range( 31, 0);
                    TYPE B_v = *((float *)(&tmp_B_v));
                    TYPE B_x = *((float *)(&tmp_B_x));
                    TYPE B_y = *((float *)(&tmp_B_y));
@@ -98,6 +106,10 @@ void compute_memoryreorg_padded(int flag, TYPE r2[UNROLL_SIZE], TYPE u2[UNROLL_S
                    uint32_t tmp_C_x = local_pos_o[j+jj].range( 63, 32);
                    uint32_t tmp_C_y = local_pos_o[j+jj].range( 95, 64);
                    uint32_t tmp_C_z = local_pos_o[j+jj].range(127, 96);
+                   //  uint32_t tmp_C_v = local_pos_o[j+jj].range(127, 96);
+                   // uint32_t tmp_C_x = local_pos_o[j+jj].range( 95, 64);
+                   // uint32_t tmp_C_y = local_pos_o[j+jj].range( 63, 32);
+                   // uint32_t tmp_C_z = local_pos_o[j+jj].range( 31,  0);
                    TYPE C_v = *((float *)(&tmp_C_v));
                    TYPE C_x = *((float *)(&tmp_C_x));
                    TYPE C_y = *((float *)(&tmp_C_y));
@@ -110,6 +122,10 @@ void compute_memoryreorg_padded(int flag, TYPE r2[UNROLL_SIZE], TYPE u2[UNROLL_S
                    local_pos_o[j+jj].range( 63, 32) = *((uint32_t *)(&C_x));
                    local_pos_o[j+jj].range( 95, 64) = *((uint32_t *)(&C_y));
                    local_pos_o[j+jj].range(127, 96) = *((uint32_t *)(&C_z));
+                   //  local_pos_o[j+jj].range(127, 96)  = *((uint32_t *)(&C_v));
+                   // local_pos_o[j+jj].range( 95, 64) = *((uint32_t *)(&C_x));
+                   // local_pos_o[j+jj].range( 63, 32) = *((uint32_t *)(&C_y));
+                   // local_pos_o[j+jj].range( 31,  0)= *((uint32_t *)(&C_z));
                }
            }
        }
@@ -196,8 +212,8 @@ void lavaMD_memoryreorg_padded(TYPE_PARTICLE pos_i[N_PADDED], TYPE q_i[N_PADDED]
        A_idx = A_idx * NUMBER_PAR_PER_BOX;
        //load local_A_pos_i
        LOAD_LOCAL_A_POS_I: for (ii=0; ii<NUMBER_PAR_PER_BOX; ++ii){
-#pragma HLS PIPELINE
-           local_A_pos_i[ii] = pos_i[A_idx+ii];
+            #pragma HLS PIPELINE
+            local_A_pos_i[ii] = pos_i[A_idx+ii];
        }
        //go through 27 neighbors
        counter = 0;
@@ -206,14 +222,14 @@ void lavaMD_memoryreorg_padded(TYPE_PARTICLE pos_i[N_PADDED], TYPE q_i[N_PADDED]
                load_memoryreorg_padded(l<FULL_NEIGHBOR_COUNT, x_n, y_n, z_n,
                            neighborOffset[l][0], neighborOffset[l][1], neighborOffset[l][2],
                            local_B_pos_i_0, local_B_q_i_0, pos_i, q_i);
-               // compute_memoryreorg_padded(l>0, r2, u2, fs, vij, fxij, fyij, fzij, d,
-               //                local_A_pos_i, local_B_pos_i_1, local_B_q_i_1, local_pos_o);
+               compute_memoryreorg_padded(l>0, r2, u2, fs, vij, fxij, fyij, fzij, d,
+                              local_A_pos_i, local_B_pos_i_1, local_B_q_i_1, local_pos_o);
            }else{
                load_memoryreorg_padded(l<FULL_NEIGHBOR_COUNT, x_n, y_n, z_n,
                            neighborOffset[l][0], neighborOffset[l][1], neighborOffset[l][2],
                            local_B_pos_i_1, local_B_q_i_1, pos_i, q_i);
-               // compute_memoryreorg_padded(l>0, r2, u2, fs, vij, fxij, fyij, fzij, d,
-               //                local_A_pos_i, local_B_pos_i_0, local_B_q_i_0, local_pos_o);
+               compute_memoryreorg_padded(l>0, r2, u2, fs, vij, fxij, fyij, fzij, d,
+                              local_A_pos_i, local_B_pos_i_0, local_B_q_i_0, local_pos_o);
            }
            counter = counter + 1;
            if (counter == 2)
@@ -222,9 +238,6 @@ void lavaMD_memoryreorg_padded(TYPE_PARTICLE pos_i[N_PADDED], TYPE q_i[N_PADDED]
        //writeback local_pos_o
        WRITE_POS_O: for (ii=0; ii<NUMBER_PAR_PER_BOX; ++ii){
 #pragma HLS PIPELINE
-           pos_o[C_idx+ii] = local_pos_o[ii];
-           pos_o[C_idx+ii] = local_pos_o[ii];
-           pos_o[C_idx+ii] = local_pos_o[ii];
            pos_o[C_idx+ii] = local_pos_o[ii];
        }
    }

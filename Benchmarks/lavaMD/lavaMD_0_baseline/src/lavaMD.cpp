@@ -91,12 +91,9 @@ extern "C"
 {
     void workload(TYPE pos_i[N_PADDED*POS_DIM], TYPE q_i[N_PADDED], TYPE pos_o[N*POS_DIM])
     {
-        // #pragma HLS INTERFACE m_axi port=pos_i  offset=slave bundle=gmem0
-        // #pragma HLS INTERFACE m_axi port=q_i    offset=slave bundle=gmem1
-        // #pragma HLS INTERFACE m_axi port=pos_o  offset=slave bundle=gmem2
-        #pragma HLS INTERFACE m_axi port=pos_i  offset=slave bundle=gmem
-        #pragma HLS INTERFACE m_axi port=q_i    offset=slave bundle=gmem
-        #pragma HLS INTERFACE m_axi port=pos_o  offset=slave bundle=gmem
+        #pragma HLS INTERFACE m_axi port=pos_i  offset=slave bundle=gmem0
+        #pragma HLS INTERFACE m_axi port=q_i    offset=slave bundle=gmem1
+        #pragma HLS INTERFACE m_axi port=pos_o  offset=slave bundle=gmem2
 
         #pragma HLS INTERFACE s_axilite port=pos_i  bundle=control
         #pragma HLS INTERFACE s_axilite port=q_i    bundle=control
