@@ -89,8 +89,6 @@ void pathfinder_kernel(char J_buf[COLS*TILE_SIZE], int32_t Jout_buf1[COLS/2], in
 			if(n < COLS/2){
 				min2 = MIN(min2,next);
 			}	
-		
-			///////////////////////////////////////////////////////
 
 			Jout_buf2[n] = get1+min1;
 			Jout_buf4[n] = get2+min2;
@@ -144,8 +142,7 @@ void load(char J_buf[COLS*TILE_SIZE], class ap_uint<LARGE_BUS> *J, int32_t t){
 		((class ap_uint<LARGE_BUS> *)(J + (COLS*(t * TILE_SIZE+1))/(LARGE_BUS/8))),
 		0*sizeof(char),//COLS*(t * TILE_SIZE+1)*sizeof(char),
 		sizeof(char)*COLS*TILE_SIZE);
-	
-	
+
 	return;
 }
 
@@ -224,7 +221,6 @@ void workload(class ap_uint<LARGE_BUS> *J, class ap_uint<LARGE_BUS> *Jout){//, i
 		sizeof(int32_t)*COLS);
 
 	//}
-  	return;
-							  
+  	return;						  
 }
 }

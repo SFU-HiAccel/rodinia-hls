@@ -12,7 +12,7 @@ void run_benchmark( void *vargs, cl_context& context, cl_command_queue& commands
 
   // Create device buffers
   cl_mem J_buffer = clCreateBuffer(context, CL_MEM_READ_ONLY, sizeof(args->J) , NULL, NULL);
-  cl_mem Jout_buffer   = clCreateBuffer(context, CL_MEM_WRITE_ONLY, sizeof(args->Jout) , NULL, NULL);
+  cl_mem Jout_buffer = clCreateBuffer(context, CL_MEM_WRITE_ONLY, sizeof(args->Jout) , NULL, NULL);
 
   if (!J_buffer || !Jout_buffer) {
     printf("Error: Failed to allocate device memory!\n");
@@ -29,11 +29,11 @@ void run_benchmark( void *vargs, cl_context& context, cl_command_queue& commands
   err  = clEnqueueWriteBuffer(commands, J_buffer, CL_TRUE, 0, sizeof(args->J), args->J, 0, NULL, NULL);
 
   if (err != CL_SUCCESS)
-    {
-      printf("Error: Failed to write to device memory!\n");
-      printf("Test failed\n");
-      exit(1);
-    }
+  {
+    printf("Error: Failed to write to device memory!\n");
+    printf("Test failed\n");
+    exit(1);
+  }
 
   // 2nd: time of pageable-pinned memory copy
   toc(&timer, "memory copy");
@@ -57,9 +57,9 @@ void run_benchmark( void *vargs, cl_context& context, cl_command_queue& commands
   // using the maximum number of work group items for this device
   //
 
-cl_ulong time_start, time_end;
-cl_event event;
-double total_time;
+  cl_ulong time_start, time_end;
+  cl_event event;
+  double total_time;
 #ifdef C_KERNEL
   err = clEnqueueTask(commands, kernel, 0, NULL, &event);
   err = clWaitForEvents(1, &event); 
@@ -76,17 +76,21 @@ double total_time;
   // 4th: time of kernel execution
   clFinish(commands);
   err = clGetEventProfilingInfo(event, CL_PROFILING_COMMAND_START, sizeof(time_start), &time_start, NULL);
+
   if (err) {
     printf("Error: Failed to retrieve time start! %d\n", err);
     printf("Test failed\n");
     exit(1);
   }
+
   err = clGetEventProfilingInfo(event, CL_PROFILING_COMMAND_END, sizeof(time_end), &time_end, NULL);
+
   if (err) {
     printf("Error: Failed to time end! %d\n", err);
     printf("Test failed\n");
     exit(1);
   }
+
   total_time = time_end-time_start;
   printf("OpenCl Execution time is (ms): %0.3f \n",(total_time/1000000.0));
   toc(&timer, "kernel execution");

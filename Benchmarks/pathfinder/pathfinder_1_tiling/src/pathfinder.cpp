@@ -44,6 +44,7 @@ void workload(int32_t J[ROWS * COLS], int32_t Jout[COLS]) {
 			memcpy(dst,src,sizeof(int32_t) * COLS);
 		}
 	}  	
+	
 	memcpy(Jout,dst,sizeof(int32_t) * COLS);
 	return;
 }
