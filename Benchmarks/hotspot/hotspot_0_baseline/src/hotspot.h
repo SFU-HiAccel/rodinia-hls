@@ -1,12 +1,10 @@
 #ifndef HOTSPOT_H
 #define HOTSPOT_H
 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
-
 
 #define SIM_TIME 64
 
@@ -16,9 +14,6 @@
 #define TILE_ROWS 64
 
 #define PARA_FACTOR 16
-
-
-
 /* maximum power density possible (say 300W for a 10mm x 10mm chip) */
 
 #define MAX_PD  (3.0e4)

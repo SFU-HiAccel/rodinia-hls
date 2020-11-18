@@ -87,7 +87,6 @@ void hotspot(float result[GRID_ROWS * GRID_COLS], float temp[GRID_ROWS * GRID_CO
 
         }
 
-
     return;
 }
 
@@ -125,16 +124,13 @@ void workload(float result[GRID_ROWS * GRID_COLS], float temp[GRID_ROWS * GRID_C
 
     int i;
     for (i = 0; i < SIM_TIME/2; i++) {
-     
-   hotspot(result, temp, power, Cap_1, Rx_1, Ry_1, Rz_1);
-   
-   hotspot(temp, result, power, Cap_1, Rx_1, Ry_1, Rz_1);
+       hotspot(result, temp, power, Cap_1, Rx_1, Ry_1, Rz_1);
+       
+       hotspot(temp, result, power, Cap_1, Rx_1, Ry_1, Rz_1);
 
     }
 
-return;
-
-
+    return;
 }
 
 }
