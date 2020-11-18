@@ -10,12 +10,9 @@ float heaviside(float x) {
     return out; 
 }
 
-
 float lc_mgvf(float result[GRID_ROWS * GRID_COLS], float imgvf[GRID_ROWS * GRID_COLS], float I[GRID_ROWS * GRID_COLS])
 {
     float total_diff = 0.0;
-
-
 
     for (int i = 0; i < GRID_ROWS; i++) {
         for (int j = 0; j < GRID_COLS; j++) {
@@ -45,11 +42,8 @@ float lc_mgvf(float result[GRID_ROWS * GRID_COLS], float imgvf[GRID_ROWS * GRID_
     return (total_diff / (float)(GRID_ROWS * GRID_COLS));
 }
 
-
-
 void workload(float result[GRID_ROWS * GRID_COLS], float imgvf[GRID_ROWS * GRID_COLS], float I[GRID_ROWS * GRID_COLS])
 {
-
     #pragma HLS INTERFACE m_axi port=result offset=slave bundle=result
     #pragma HLS INTERFACE m_axi port=imgvf offset=slave bundle=imgvf
     #pragma HLS INTERFACE m_axi port=I offset=slave bundle=I
@@ -60,7 +54,6 @@ void workload(float result[GRID_ROWS * GRID_COLS], float imgvf[GRID_ROWS * GRID_
     
     #pragma HLS INTERFACE s_axilite port=return bundle=control
 
-    
     int i;
     float diff = 1.0;
     for (i = 0; i < ITERATION / 2; i++) {

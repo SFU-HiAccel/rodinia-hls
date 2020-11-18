@@ -12,9 +12,6 @@ float heaviside(float x) {
     return out; 
 }
 
-
-
-
 float lc_mgvf_stencil_core(float c, float ul, float u, float ur, float l, float r, float dl, float d, float dr, float vI)
 {
     float UL = ul - c;
@@ -39,17 +36,15 @@ float lc_mgvf_stencil_core(float c, float ul, float u, float ur, float l, float 
 
     float new_val = vHe - (ONE_O_LAMBDA * vI * (vHe - vI));
 
-
     return new_val;
-
 }
+
 void lc_mgvf(float result[TILE_ROWS * GRID_COLS], float imgvf[(TILE_ROWS + 2) * GRID_COLS], float I[TILE_ROWS * GRID_COLS], int which_boundary)
 {
 	int cols = GRID_COLS;
 	int rows = GRID_ROWS;
 	float imgvf_rf[GRID_COLS * (2 * MAX_RADIUS) + MAX_RADIUS * 2 + PARA_FACTOR];
 #pragma HLS array_partition variable=imgvf_rf complete dim=0
-
 
 	int i;
 	for (i = 0; i < GRID_COLS * (2 * MAX_RADIUS) + MAX_RADIUS + PARA_FACTOR; i++) {
@@ -58,11 +53,7 @@ void lc_mgvf(float result[TILE_ROWS * GRID_COLS], float imgvf[(TILE_ROWS + 2) * 
 		imgvf_rf[i + MAX_RADIUS] = imgvf[i];
 	}
 
-
-
-
 	for (i = 0; i < GRID_COLS / PARA_FACTOR * TILE_ROWS; i++) {
-
 		int k;
 #pragma HLS pipeline II=1
 
@@ -100,17 +91,11 @@ void lc_mgvf(float result[TILE_ROWS * GRID_COLS], float imgvf[(TILE_ROWS + 2) * 
 
 	}
 
-
 	return;
 }
 
-
-
-
-
 void workload(float result[GRID_ROWS * GRID_COLS], float imgvf[GRID_ROWS * GRID_COLS], float I[GRID_ROWS * GRID_COLS])
 {
-
     #pragma HLS INTERFACE m_axi port=result offset=slave bundle=result
     #pragma HLS INTERFACE m_axi port=imgvf offset=slave bundle=imgvf
     #pragma HLS INTERFACE m_axi port=I offset=slave bundle=I
@@ -125,22 +110,18 @@ void workload(float result[GRID_ROWS * GRID_COLS], float imgvf[GRID_ROWS * GRID_
 	float imgvf_inner [(TILE_ROWS + 2) * GRID_COLS];
 	float I_inner [TILE_ROWS * GRID_COLS];
 
-
-
-    
-    	int i;
-    	float diff = 1.0;
-    	for (i = 0; i < ITERATION / 2; i++) {
+	int i;
+	float diff = 1.0;
+	for (i = 0; i < ITERATION / 2; i++) {
 		int k;
 		for(k = 0; k < GRID_ROWS / TILE_ROWS; k++) {
 
 			memcpy(imgvf_inner, imgvf + k * TILE_ROWS * GRID_COLS - GRID_COLS, sizeof(float) * (TILE_ROWS + 2) * GRID_COLS);
 			memcpy(I_inner, I + k * TILE_ROWS * GRID_COLS, sizeof(float) * TILE_ROWS * GRID_COLS);
 
-        		lc_mgvf(result_inner, imgvf_inner, I_inner, k);
+	    		lc_mgvf(result_inner, imgvf_inner, I_inner, k);
 
 			memcpy(result + k * TILE_ROWS * GRID_COLS, result_inner, sizeof(float) * TILE_ROWS * GRID_COLS);
-
 		}
 
 		for(k = 0; k < GRID_ROWS / TILE_ROWS; k++) {
@@ -148,23 +129,13 @@ void workload(float result[GRID_ROWS * GRID_COLS], float imgvf[GRID_ROWS * GRID_
 			memcpy(imgvf_inner, result + k * TILE_ROWS * GRID_COLS - GRID_COLS, sizeof(float) * (TILE_ROWS + 2) * GRID_COLS);
 			memcpy(I_inner, I + k * TILE_ROWS * GRID_COLS, sizeof(float) * TILE_ROWS * GRID_COLS);
 
-        		lc_mgvf(result_inner, imgvf_inner, I_inner, k);
+	    		lc_mgvf(result_inner, imgvf_inner, I_inner, k);
 
 			memcpy(imgvf + k * TILE_ROWS * GRID_COLS, result_inner, sizeof(float) * TILE_ROWS * GRID_COLS);
-
 		}
 
-    	}
+	}
 
     return;
-
 }
-
-
-
-
-
-
-
-
 }

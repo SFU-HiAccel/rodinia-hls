@@ -39,7 +39,4 @@ struct bench_args_t {
     float I[GRID_ROWS * GRID_COLS];
 };
 
-
-
-
 #endif

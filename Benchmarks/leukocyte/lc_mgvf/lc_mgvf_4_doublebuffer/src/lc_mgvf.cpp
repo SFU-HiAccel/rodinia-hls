@@ -11,7 +11,6 @@ float heaviside(float x) {
     return out; 
 }
 
-
 float lc_mgvf_stencil_core(float c, float ul, float u, float ur, float l, float r, float dl, float d, float dr, float vI)
 {
     float UL = ul - c;
@@ -38,15 +37,14 @@ float lc_mgvf_stencil_core(float c, float ul, float u, float ur, float l, float 
 
 
     return new_val;
-
 }
+
 void lc_mgvf(float result[TILE_ROWS * GRID_COLS], float imgvf[(TILE_ROWS + 2) * GRID_COLS], float I[TILE_ROWS * GRID_COLS], int which_boundary)
 {
 	int cols = GRID_COLS;
 	int rows = GRID_ROWS;
 	float imgvf_rf[GRID_COLS * (2 * MAX_RADIUS) + MAX_RADIUS * 2 + PARA_FACTOR];
 #pragma HLS array_partition variable=imgvf_rf complete dim=0
-
 
 	int i;
 	for (i = 0; i < GRID_COLS * (2 * MAX_RADIUS) + MAX_RADIUS + PARA_FACTOR; i++) {
@@ -55,11 +53,7 @@ void lc_mgvf(float result[TILE_ROWS * GRID_COLS], float imgvf[(TILE_ROWS + 2) * 
 		imgvf_rf[i + MAX_RADIUS] = imgvf[i];
 	}
 
-
-
-
 	for (i = 0; i < GRID_COLS / PARA_FACTOR * TILE_ROWS; i++) {
-
 		int k;
 #pragma HLS pipeline II=1
 
@@ -94,9 +88,7 @@ void lc_mgvf(float result[TILE_ROWS * GRID_COLS], float imgvf[(TILE_ROWS + 2) * 
 #pragma HLS unroll
 			imgvf_rf[GRID_COLS * (2 * MAX_RADIUS) + MAX_RADIUS * 2 + k] = imgvf[GRID_COLS * (2 * MAX_RADIUS) + MAX_RADIUS + (i + 1) * PARA_FACTOR + k];
 		}
-
 	}
-
 
 	return;
 }
@@ -152,18 +144,13 @@ __kernel void workload(float result[GRID_ROWS * GRID_COLS], float imgvf[GRID_ROW
     #pragma HLS INTERFACE s_axilite port=I bundle=control
     
     #pragma HLS INTERFACE s_axilite port=return bundle=control
-    
-
-
-
+  
     float result_inner_0 [TILE_ROWS * GRID_COLS];
 #pragma HLS array_partition variable=result_inner_0 cyclic factor=16
     float imgvf_inner_0   [(TILE_ROWS + 2) * GRID_COLS];
 #pragma HLS array_partition variable=imgvf_inner_0   cyclic factor=16
     float I_inner_0  [TILE_ROWS * GRID_COLS];
 #pragma HLS array_partition variable=I_inner_0  cyclic factor=16
-
-
 
     float result_inner_1 [TILE_ROWS * GRID_COLS];
 #pragma HLS array_partition variable=result_inner_1 cyclic factor=16
@@ -172,14 +159,12 @@ __kernel void workload(float result[GRID_ROWS * GRID_COLS], float imgvf[GRID_ROW
     float I_inner_1  [TILE_ROWS * GRID_COLS];
 #pragma HLS array_partition variable=I_inner_1  cyclic factor=16
 
-
     float result_inner_2 [TILE_ROWS * GRID_COLS];
 #pragma HLS array_partition variable=result_inner_2 cyclic factor=16
     float imgvf_inner_2   [(TILE_ROWS + 2) * GRID_COLS];
 #pragma HLS array_partition variable=imgvf_inner_2   cyclic factor=16
     float I_inner_2  [TILE_ROWS * GRID_COLS];
 #pragma HLS array_partition variable=I_inner_2  cyclic factor=16
-
 
     float result_inner_3 [TILE_ROWS * GRID_COLS];
 #pragma HLS array_partition variable=result_inner_3 cyclic factor=16
@@ -188,93 +173,82 @@ __kernel void workload(float result[GRID_ROWS * GRID_COLS], float imgvf[GRID_ROW
     float I_inner_3  [TILE_ROWS * GRID_COLS];
 #pragma HLS array_partition variable=I_inner_3  cyclic factor=16
 
-
-
-
     int i , r , c;
     int k;
 
-
     for (i = 0; i < ITERATION/2; i++) {
 
-for (k = 0; k < GRID_ROWS / TILE_ROWS + 3; k++) {
-    int load_imgvf_flag = k >= 0 && k < GRID_ROWS / TILE_ROWS;
-    int load_I_flag = k >= 1 && k < GRID_ROWS / TILE_ROWS + 1;
-    int compute_flag = k >= 2 && k < GRID_ROWS / TILE_ROWS + 2;
-    int store_flag = k >= 3 && k < GRID_ROWS / TILE_ROWS + 3;
-    
-    if (k % 4 == 0) {
-        buffer_load_imgvf(load_imgvf_flag, k, imgvf_inner_0, imgvf);
-        buffer_load_I(load_I_flag, k - 1, I_inner_3, I);
-        buffer_compute(compute_flag, result_inner_2, imgvf_inner_2, I_inner_2, k - 2);
-        buffer_store(store_flag, k - 3, result, result_inner_1);
+        for (k = 0; k < GRID_ROWS / TILE_ROWS + 3; k++) {
+            int load_imgvf_flag = k >= 0 && k < GRID_ROWS / TILE_ROWS;
+            int load_I_flag = k >= 1 && k < GRID_ROWS / TILE_ROWS + 1;
+            int compute_flag = k >= 2 && k < GRID_ROWS / TILE_ROWS + 2;
+            int store_flag = k >= 3 && k < GRID_ROWS / TILE_ROWS + 3;
+            
+            if (k % 4 == 0) {
+                buffer_load_imgvf(load_imgvf_flag, k, imgvf_inner_0, imgvf);
+                buffer_load_I(load_I_flag, k - 1, I_inner_3, I);
+                buffer_compute(compute_flag, result_inner_2, imgvf_inner_2, I_inner_2, k - 2);
+                buffer_store(store_flag, k - 3, result, result_inner_1);
+            }
+
+            else if (k % 4 == 1) {
+                buffer_load_imgvf(load_imgvf_flag, k, imgvf_inner_1, imgvf);
+                buffer_load_I(load_I_flag, k - 1, I_inner_0, I);
+                buffer_compute(compute_flag, result_inner_3, imgvf_inner_3, I_inner_3, k - 2);
+                buffer_store(store_flag, k - 3, result, result_inner_2);
+            }
+            
+            else if (k % 4 ==2){
+                buffer_load_imgvf(load_imgvf_flag, k, imgvf_inner_2, imgvf);
+                buffer_load_I(load_I_flag, k - 1, I_inner_1, I);
+                buffer_compute(compute_flag, result_inner_0, imgvf_inner_0, I_inner_0, k - 2);
+                buffer_store(store_flag, k - 3, result, result_inner_3);
+            }
+            else {
+                buffer_load_imgvf(load_imgvf_flag, k, imgvf_inner_3, imgvf);
+                buffer_load_I(load_I_flag, k - 1, I_inner_2, I);
+                buffer_compute(compute_flag, result_inner_1, imgvf_inner_1, I_inner_1, k - 2);
+                buffer_store(store_flag, k - 3, result, result_inner_0);
+            }
+        }
+
+        for (k = 0; k < GRID_ROWS / TILE_ROWS + 3; k++) {
+            int load_imgvf_flag = k >= 0 && k < GRID_ROWS / TILE_ROWS;
+            int load_I_flag = k >= 1 && k < GRID_ROWS / TILE_ROWS + 1;
+            int compute_flag = k >= 2 && k < GRID_ROWS / TILE_ROWS + 2;
+            int store_flag = k >= 3 && k < GRID_ROWS / TILE_ROWS + 3;
+            
+            if (k % 4 == 0) {
+                buffer_load_imgvf(load_imgvf_flag, k, imgvf_inner_0, result);
+                buffer_load_I(load_I_flag, k - 1, I_inner_3, I);
+                buffer_compute(compute_flag, result_inner_2, imgvf_inner_2, I_inner_2, k - 2);
+                buffer_store(store_flag, k - 3, imgvf, result_inner_1);
+            }
+
+            else if (k % 4 == 1) {
+                buffer_load_imgvf(load_imgvf_flag, k, imgvf_inner_1, result);
+                buffer_load_I(load_I_flag, k - 1, I_inner_0, I);
+                buffer_compute(compute_flag, result_inner_3, imgvf_inner_3, I_inner_3, k - 2);
+                buffer_store(store_flag, k - 3, imgvf, result_inner_2);
+            }
+            
+            else if (k % 4 ==2){
+                buffer_load_imgvf(load_imgvf_flag, k, imgvf_inner_2, result);
+                buffer_load_I(load_I_flag, k - 1, I_inner_1, I);
+                buffer_compute(compute_flag, result_inner_0, imgvf_inner_0, I_inner_0, k - 2);
+                buffer_store(store_flag, k - 3, imgvf, result_inner_3);
+            }
+            else {
+                buffer_load_imgvf(load_imgvf_flag, k, imgvf_inner_3, result);
+                buffer_load_I(load_I_flag, k - 1, I_inner_2, I);
+                buffer_compute(compute_flag, result_inner_1, imgvf_inner_1, I_inner_1, k - 2);
+                buffer_store(store_flag, k - 3, imgvf, result_inner_0);
+            }
+
+        }
+
     }
 
-    else if (k % 4 == 1) {
-        buffer_load_imgvf(load_imgvf_flag, k, imgvf_inner_1, imgvf);
-        buffer_load_I(load_I_flag, k - 1, I_inner_0, I);
-        buffer_compute(compute_flag, result_inner_3, imgvf_inner_3, I_inner_3, k - 2);
-        buffer_store(store_flag, k - 3, result, result_inner_2);
-    }
-    
-    else if (k % 4 ==2){
-        buffer_load_imgvf(load_imgvf_flag, k, imgvf_inner_2, imgvf);
-        buffer_load_I(load_I_flag, k - 1, I_inner_1, I);
-        buffer_compute(compute_flag, result_inner_0, imgvf_inner_0, I_inner_0, k - 2);
-        buffer_store(store_flag, k - 3, result, result_inner_3);
-    }
-    else {
-        buffer_load_imgvf(load_imgvf_flag, k, imgvf_inner_3, imgvf);
-        buffer_load_I(load_I_flag, k - 1, I_inner_2, I);
-        buffer_compute(compute_flag, result_inner_1, imgvf_inner_1, I_inner_1, k - 2);
-        buffer_store(store_flag, k - 3, result, result_inner_0);
-    }
-
+    return;
 }
-
-
-for (k = 0; k < GRID_ROWS / TILE_ROWS + 3; k++) {
-    int load_imgvf_flag = k >= 0 && k < GRID_ROWS / TILE_ROWS;
-    int load_I_flag = k >= 1 && k < GRID_ROWS / TILE_ROWS + 1;
-    int compute_flag = k >= 2 && k < GRID_ROWS / TILE_ROWS + 2;
-    int store_flag = k >= 3 && k < GRID_ROWS / TILE_ROWS + 3;
-    
-    if (k % 4 == 0) {
-        buffer_load_imgvf(load_imgvf_flag, k, imgvf_inner_0, result);
-        buffer_load_I(load_I_flag, k - 1, I_inner_3, I);
-        buffer_compute(compute_flag, result_inner_2, imgvf_inner_2, I_inner_2, k - 2);
-        buffer_store(store_flag, k - 3, imgvf, result_inner_1);
-    }
-
-    else if (k % 4 == 1) {
-        buffer_load_imgvf(load_imgvf_flag, k, imgvf_inner_1, result);
-        buffer_load_I(load_I_flag, k - 1, I_inner_0, I);
-        buffer_compute(compute_flag, result_inner_3, imgvf_inner_3, I_inner_3, k - 2);
-        buffer_store(store_flag, k - 3, imgvf, result_inner_2);
-    }
-    
-    else if (k % 4 ==2){
-        buffer_load_imgvf(load_imgvf_flag, k, imgvf_inner_2, result);
-        buffer_load_I(load_I_flag, k - 1, I_inner_1, I);
-        buffer_compute(compute_flag, result_inner_0, imgvf_inner_0, I_inner_0, k - 2);
-        buffer_store(store_flag, k - 3, imgvf, result_inner_3);
-    }
-    else {
-        buffer_load_imgvf(load_imgvf_flag, k, imgvf_inner_3, result);
-        buffer_load_I(load_I_flag, k - 1, I_inner_2, I);
-        buffer_compute(compute_flag, result_inner_1, imgvf_inner_1, I_inner_1, k - 2);
-        buffer_store(store_flag, k - 3, imgvf, result_inner_0);
-    }
-
-}
-
-}
-
-
-return ;
-
-}
-
-
-
 }
