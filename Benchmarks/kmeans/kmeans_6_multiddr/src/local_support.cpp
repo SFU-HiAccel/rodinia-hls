@@ -11,9 +11,14 @@ void run_benchmark( void *vargs, cl_context& context, cl_command_queue& commands
 
 	timespec timer = tic();
 
-	cl_mem feature_buffer = clCreateBuffer(context, CL_MEM_READ_ONLY, sizeof(args->FEATURE), NULL, NULL);
-	cl_mem cluster_buffer = clCreateBuffer(context, CL_MEM_READ_ONLY, sizeof(args->CLUSTER), NULL, NULL);
-	cl_mem membership_buffer = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(args->MEMBERSHIP), NULL, NULL);
+	cl_mem_ext_ptr_t feature_ext; feature_ext.flags = XCL_MEM_DDR_BANK0; feature_ext.param=0; feature_ext.obj=0;
+	cl_mem feature_buffer = clCreateBuffer(context, CL_MEM_READ_ONLY | CL_MEM_EXT_PTR_XILINX, sizeof(args->FEATURE), &feature_ext, NULL);
+
+	cl_mem_ext_ptr_t cluster_ext; cluster_ext.flags = XCL_MEM_DDR_BANK1; cluster_ext.param=0; cluster_ext.obj=0;
+	cl_mem cluster_buffer = clCreateBuffer(context, CL_MEM_READ_ONLY | CL_MEM_EXT_PTR_XILINX, sizeof(args->CLUSTER), &cluster_ext, NULL);
+
+	cl_mem_ext_ptr_t membership_ext; membership_ext.flags = XCL_MEM_DDR_BANK2; membership_ext.param=0; membership_ext.obj=0;
+	cl_mem membership_buffer = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_EXT_PTR_XILINX, sizeof(args->MEMBERSHIP), &membership_ext, NULL);
 
 	if (!feature_buffer || !cluster_buffer || !membership_buffer)
 	{

@@ -74,8 +74,9 @@ void workload(MARS_WIDE_BUS_TYPE  *feature, /* [npoints][nfeatures] */
 			  MARS_WIDE_BUS_TYPE  *membership)
 {
 #pragma HLS INTERFACE m_axi port=feature offset=slave bundle=gmem0
-#pragma HLS INTERFACE m_axi port=membership offset=slave bundle=gmem1
-#pragma HLS INTERFACE m_axi port=clusters offset=slave bundle=gmem2
+#pragma HLS INTERFACE m_axi port=clusters offset=slave bundle=gmem1
+#pragma HLS INTERFACE m_axi port=membership offset=slave bundle=gmem2
+
 #pragma HLS INTERFACE s_axilite port=feature bundle=control
 #pragma HLS INTERFACE s_axilite port=membership bundle=control
 #pragma HLS INTERFACE s_axilite port=clusters bundle=control
