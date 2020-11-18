@@ -1,1 +1,0 @@
-./knn /curr/shaochong/nn/gpu/filelist 30 40 40 bin_knn_hw.xclbin

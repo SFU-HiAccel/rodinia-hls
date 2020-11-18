@@ -1,150 +1,139 @@
-#*******************************************************************************
-#Vendor: Xilinx 
-#Associated Filename: common.mk
-#Purpose: Common Makefile for SDAccel Compilation
-#
-#*******************************************************************************
-#Copyright (C) 2015-2016 XILINX, Inc.
-#
-#This file contains confidential and proprietary information of Xilinx, Inc. and 
-#is protected under U.S. and international copyright and other intellectual 
-#property laws.
-#
-#DISCLAIMER
-#This disclaimer is not a license and does not grant any rights to the materials 
-#distributed herewith. Except as otherwise provided in a valid license issued to 
-#you by Xilinx, and to the maximum extent permitted by applicable law: 
-#(1) THESE MATERIALS ARE MADE AVAILABLE "AS IS" AND WITH ALL FAULTS, AND XILINX 
-#HEREBY DISCLAIMS ALL WARRANTIES AND CONDITIONS, EXPRESS, IMPLIED, OR STATUTORY, 
-#INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, NON-INFRINGEMENT, OR 
-#FITNESS FOR ANY PARTICULAR PURPOSE; and (2) Xilinx shall not be liable (whether 
-#in contract or tort, including negligence, or under any other theory of 
-#liability) for any loss or damage of any kind or nature related to, arising under 
-#or in connection with these materials, including for any direct, or any indirect, 
-#special, incidental, or consequential loss or damage (including loss of data, 
-#profits, goodwill, or any type of loss or damage suffered as a result of any 
-#action brought by a third party) even if such damage or loss was reasonably 
-#foreseeable or Xilinx had been advised of the possibility of the same.
-#
-#CRITICAL APPLICATIONS
-#Xilinx products are not designed or intended to be fail-safe, or for use in any 
-#application requiring fail-safe performance, such as life-support or safety 
-#devices or systems, Class III medical devices, nuclear facilities, applications 
-#related to the deployment of airbags, or any other applications that could lead 
-#to death, personal injury, or severe property or environmental damage 
-#(individually and collectively, "Critical Applications"). Customer assumes the 
-#sole risk and liability of any use of Xilinx products in Critical Applications, 
-#subject only to applicable laws and regulations governing limitations on product 
-#liability. 
-#
-#THIS COPYRIGHT NOTICE AND DISCLAIMER MUST BE RETAINED AS PART OF THIS FILE AT 
-#ALL TIMES.
-#
-#*******************************************************************************
-SHELL = /bin/bash
-VPATH = ./
+.PHONY: help
 
-#supported flow: cpu_emu, hw_emu, hw
-CC = g++
-CLCC = xocc
+help::
+	$(ECHO) "Makefile Usage:"
+	$(ECHO) "  make all TARGET=<sw_emu/hw_emu/hw> DEVICE=<FPGA platform>"
+	$(ECHO) "      Command to generate the design for specified Target and Device."
+	$(ECHO) ""
+	$(ECHO) "  make clean "
+	$(ECHO) "      Command to remove the generated non-hardware files."
+	$(ECHO) ""
+	$(ECHO) "  make cleanall"
+	$(ECHO) "      Command to remove all the generated files."
+	$(ECHO) ""
+	$(ECHO) "  make check TARGET=<sw_emu/hw_emu/hw> DEVICE=<FPGA platform>"
+	$(ECHO) "      Command to run application in emulation."
+	$(ECHO) ""
+	$(ECHO) "  make build TARGET=<sw_emu/hw_emu/hw> DEVICE=<FPGA platform>"
+	$(ECHO) "      Command to build xclbin application."
+	$(ECHO) ""
+	$(ECHO) "  make run_nimbix DEVICE=<FPGA platform>"
+	$(ECHO) "      Command to run application on Nimbix Cloud."
+	$(ECHO) ""
+	$(ECHO) "  make aws_build DEVICE=<FPGA platform>"
+	$(ECHO) "      Command to build AWS xclbin application on AWS Cloud."
+	$(ECHO) ""
 
-ifeq ($(XDEVICE_REPO_PATH),)
-#no device repo path set. do nothing
-    DEVICE_REPO_OPT = 
+# Compiler tools
+# XILINX_SDX ?= /local-scratch/SDx/SDx/2019.1
+# XILINX_XRT ?= /opt/xilinx/xrt
+# XILINX_SDK ?= $(XILINX_SDX)/../../SDK/2019.1
+# XILINX_VIVADO ?= /local-scratch/SDx/Vivado/2019.1
+# XILINX_VIVADO_HLS ?= $(XILINX_SDX)/Vivado_HLS
+
+# Kernal Name
+APP=hotspot
+KERNAL_NAME=workload
+
+# Points to Utility Directory
+COMMON_REPO = ../../common
+ABS_COMMON_REPO = $(shell readlink -f $(COMMON_REPO))
+
+TARGETS := hw
+TARGET := $(TARGETS)
+DEVICE := $(DEVICES)
+XCLBIN := ./xclbin
+
+include ../utils.mk
+
+DSA := $(call device2dsa, $(DEVICE))
+BUILD_DIR := ./_x.$(TARGET).$(DSA)
+
+BUILD_DIR_KERNEL = $(BUILD_DIR)/$(APP)
+
+# CXX := $(XILINX_SDX)/bin/xcpp
+# XOCC := $(XILINX_SDX)/bin/xocc
+CXX := $(XILINX_VITIS)/bin/xcpp
+VPP := $(XILINX_VITIS)/bin/v++
+
+#Include Libraries
+include $(ABS_COMMON_REPO)/libs/opencl/opencl.mk
+include $(ABS_COMMON_REPO)/libs/xcl2/xcl2.mk
+CXXFLAGS += $(xcl2_CXXFLAGS)
+LDFLAGS += $(xcl2_LDFLAGS)
+HOST_SRCS += $(xcl2_SRCS)
+CXXFLAGS += $(opencl_CXXFLAGS) -Wall -O0 -g -std=c++14 -I$(ABS_COMMON_REPO)
+LDFLAGS += -lxilinxopencl -lpthread -lrt -lstdc++ -lmpfr -lgmp -lhlsmc++-GCC46 -lIp_floating_point_v7_0_bitacc_cmodel -lIp_xfft_v9_1_bitacc_cmodel -lIp_fir_compiler_v7_2_bitacc_cmodel -lIp_dds_compiler_v6_0_bitacc_cmodel -L$(XILINX_XRT)/lib/ -L$(XILINX_VIVADO)/lnx64/tools/fpo_v7_0 -L$(XILINX_VIVADO)/lnx64/lib/csim -L$(XILINX_VIVADO)/lnx64/tools/dds_v6_0 -L$(XILINX_VIVADO)/lnx64/tools/fir_v7_0 -L$(XILINX_VIVADO)/lnx64/tools/fft_v9_1 -Wl,-rpath-link,$(XILINX_XRT)/lib -Wl,-rpath,$(XILINX_VIVADO)/lnx64/lib/csim -Wl,-rpath,$(XILINX_VIVADO)/lnx64/tools/fpo_v7_0 -Wl,-rpath,$(XILINX_VIVADO)/lnx64/tools/fft_v9_1 -Wl,-rpath,$(XILINX_VIVADO)/lnx64/tools/fir_v7_0 -Wl,-rpath,$(XILINX_VIVADO)/lnx64/tools/dds_v6_0
+
+HOST_SRCS += $(ABS_COMMON_REPO)/harness.c $(ABS_COMMON_REPO)/support.c src/local_support.cpp
+HOST_HDRS += $(ABS_COMMON_REPO)/support.h 
+HOST_ARGS = ../data/input.data ../data/check.data
+
+# Host compiler global settings
+CXXFLAGS += -fmessage-length=0 -DSDX_PLATFORM=$(DEVICE) -D__USE_XOPEN2K8 -I$(XILINX_XRT)/include/ -I$(XILINX_VIVADO)/include/
+LDFLAGS += -lrt -lstdc++ 
+
+# Kernel compiler global settings
+CLFLAGS += -t $(TARGET) --platform $(DEVICE) --save-temps
+
+EXECUTABLE = host
+CMD_ARGS = $(XCLBIN)/$(APP).$(TARGET).$(DSA).xclbin
+
+EMCONFIG_DIR = $(XCLBIN)/$(DSA)
+
+BINARY_CONTAINERS += $(XCLBIN)/$(APP).$(TARGET).$(DSA).xclbin
+BINARY_CONTAINER_vadd_OBJS += $(XCLBIN)/$(APP).$(TARGET).$(DSA).xo
+
+CP = cp -rf
+
+.PHONY: all clean cleanall docs emconfig
+all: check-devices $(EXECUTABLE) $(BINARY_CONTAINERS) emconfig
+
+.PHONY: exe
+exe: $(EXECUTABLE)
+
+.PHONY: build
+build: $(BINARY_CONTAINERS)
+
+# Building kernel
+$(XCLBIN)/$(APP).$(TARGET).$(DSA).xo: src/$(APP).cpp
+	mkdir -p $(XCLBIN)
+	$(VPP) $(CLFLAGS) --temp_dir $(BUILD_DIR_KERNEL) -c -k $(KERNAL_NAME) -I'$(<D)' -o'$@' '$<'
+$(XCLBIN)/$(APP).$(TARGET).$(DSA).xclbin: $(BINARY_CONTAINER_vadd_OBJS)
+	mkdir -p $(XCLBIN)
+	$(VPP) $(CLFLAGS) --temp_dir $(BUILD_DIR_KERNEL) -R2 -l $(LDCLFLAGS) --nk $(KERNAL_NAME):1 -j 8 -o'$@' $(+) $(XOCC_LINK_OPTS)
+# 	$(XOCC) $(CLFLAGS) --temp_dir $(BUILD_DIR_KERNEL) -l $(LDCLFLAGS) --nk $(KERNAL_NAME):1 -o'$@' $(+)
+
+# Building Host
+$(EXECUTABLE): check-xrt $(HOST_SRCS) $(HOST_HDRS)
+	$(CXX) $(CXXFLAGS) $(HOST_SRCS) $(HOST_HDRS) -o '$@' $(LDFLAGS)
+
+emconfig:$(EMCONFIG_DIR)/emconfig.json
+$(EMCONFIG_DIR)/emconfig.json:
+	emconfigutil --platform $(DEVICE) --od $(EMCONFIG_DIR)
+
+check: all
+ifeq ($(TARGET),$(filter $(TARGET),sw_emu hw_emu))
+	$(CP) $(EMCONFIG_DIR)/emconfig.json .
+	XCL_EMULATION_MODE=$(TARGET) ./$(EXECUTABLE) $(HOST_ARGS) $(XCLBIN)/$(APP).$(TARGET).$(DSA).xclbin
 else
-    DEVICE_REPO_OPT = --xp prop:solution.device_repo_paths=${XDEVICE_REPO_PATH} 
+	 ./$(EXECUTABLE) $(HOST_ARGS) $(XCLBIN)/$(APP).$(TARGET).$(DSA).xclbin
 endif
+# 	sdx_analyze profile profile_summary.csv
 
-#HOST_LFLAGS += ${XILINX_SDACCEL}/lib/lnx64.o/libstdc++.so.6
-HOST_CFLAGS += -I${XILINX_SDX}/runtime/include/1_2
-HOST_LFLAGS += -L${XILINX_SDX}/runtime/lib/x86_64 -lxilinxopencl -llmx6.0 -lstdc++
-CLCC_OPT += $(CLCC_OPT_LEVEL) ${DEVICE_REPO_OPT} --xdevice ${XDEVICE} -o ${XCLBIN} ${KERNEL_DEFS} ${KERNEL_INCS}
+run_nimbix: all
+	$(COMMON_REPO)/utility/nimbix/run_nimbix.py $(EXECUTABLE) $(CMD_ARGS) $(DSA)
 
-ifeq (${KEEP_TEMP},1)
-    CLCC_OPT += -s
-endif
+aws_build: check-aws_repo $(BINARY_CONTAINERS)
+	$(COMMON_REPO)/utility/aws/run_aws.py $(BINARY_CONTAINERS)
 
-ifeq (${KERNEL_DEBUG},1)
-    CLCC_OPT += -g
-endif
-
-CLCC_OPT += --kernel ${KERNEL_NAME}
-OBJECTS := $(HOST_SRCS:.cpp=.o)
-
-.PHONY: all
-
-all: run
-
-host: ${HOST_EXE_DIR}/${HOST_EXE}
-
-xbin_cpu_em:
-	make SDA_FLOW=cpu_emu xbin -f sdaccel.mk
-
-xbin_hw_em:
-	make SDA_FLOW=hw_emu xbin -f sdaccel.mk
-
-xbin_hw :
-	make SDA_FLOW=hw xbin -f sdaccel.mk
-
-xbin: ${XCLBIN}
-
-run_cpu_em: 
-	make SDA_FLOW=cpu_emu run_em -f sdaccel.mk
-
-run_hw_em: 
-	make SDA_FLOW=hw_emu run_em -f sdaccel.mk
-
-run_hw : 
-	make SDA_FLOW=hw run_hw_int -f sdaccel.mk
-
-run_em: xconfig host xbin
-	XCL_EMULATION_MODE=true ${HOST_EXE_DIR}/${HOST_EXE} ${HOST_ARGS}
-
-run_hw_int : host xbin_hw
-	source ${BOARD_SETUP_FILE};${HOST_EXE_DIR}/${HOST_EXE} ${HOST_ARGS}
-
-estimate : 
-	${CLCC} -c -t hw_emu --xdevice ${XDEVICE} --report estimate ${KERNEL_SRCS}
-
-xconfig : emconfig.json
-
-emconfig.json :
-	emconfigutil --xdevice ${XDEVICE} ${DEVICE_REPO_OPT} --od .
-
-${HOST_EXE_DIR}/${HOST_EXE} : ${OBJECTS}
-	${CC} ${HOST_LFLAGS} ${OBJECTS} -o $@ 
-
-${XCLBIN}:
-	${CLCC} ${CLCC_OPT} ${KERNEL_SRCS}
-
-%.o: %.cpp
-	${CC} ${HOST_CFLAGS} -c $< -o $@
-
+# Cleaning stuff
 clean:
-	${RM} -rf ${HOST_EXE} ${OBJECTS} ${XCLBIN} emconfig.json _xocc_${XCLBIN_NAME}_*.dir .Xil
+	-$(RMDIR) $(EXECUTABLE) $(XCLBIN)/{*sw_emu*,*hw_emu*} 
+	-$(RMDIR) profile_* TempConfig system_estimate.xtxt *.rpt *.csv 
+	-$(RMDIR) src/*.ll _xocc_* .Xil emconfig.json dltmp* xmltmp* *.log *.jou *.wcfg *.wdb
 
 cleanall: clean
-	${RM} -rf *.xclbin sdaccel_profile_summary.* _xocc_compile* _xocc_link* _xocc_krnl* TempConfig
+	-$(RMDIR) $(XCLBIN)
+	-$(RMDIR) _x.*
 
-
-help:
-	@echo "Compile and run CPU emulation using default xilinx:adm-pcie-7v3:1ddr:3.0 DSA"
-	@echo "make -f sdaccel.mk run_cpu_em"
-	@echo ""
-	@echo "Compile and run hardware emulation using default xilinx:adm-pcie-7v3:1ddr:3.0 DSA"
-	@echo "make -f sdaccel.mk run_hw_em"
-	@echo ""
-	@echo "Compile host executable only"
-	@echo "make -f sdaccel.mk host"
-	@echo ""
-	@echo "Compile XCLBIN file for system run only"
-	@echo "make -f sdaccel.mk xbin_hw"
-	@echo ""
-	@echo "Compile and run CPU emulation using xilinx:tul-pcie3-ku115:2ddr:3.0 DSA"
-	@echo "make -f sdaccel.mk XDEVICE=xilinx:tul-pcie3-ku115:2ddr:3.0 run_cpu_em"
-	@echo ""
-	@echo "Clean working diretory"
-	@echo "make -f sdaccel.mk clean"
-	@echo ""
-	@echo "Super clean working directory"
-	@echo "make -f sdaccel.mk cleanall"
