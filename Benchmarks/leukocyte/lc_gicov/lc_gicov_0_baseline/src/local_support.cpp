@@ -41,9 +41,9 @@ void run_benchmark( void *vargs, cl_context& context, cl_command_queue& commands
 
   if (err != CL_SUCCESS)
   {
-      printf("Error: Failed to write to device memory!\n");
-      printf("Test failed\n");
-      exit(1);
+    printf("Error: Failed to write to device memory!\n");
+    printf("Test failed\n");
+    exit(1);
   }
 
   // 2nd: time of pageable-pinned memory copy
@@ -94,7 +94,7 @@ void run_benchmark( void *vargs, cl_context& context, cl_command_queue& commands
     printf("Error: Failed to read output array! %d\n", err);
     printf("Test failed\n");
     exit(1);
- }
+  }
 
   // 5th: time of data retrieving (PCIe + memcpy)
   toc(&timer, "data retrieving");
@@ -111,7 +111,7 @@ char[]: grad_y
 void input_to_data(int fd, void *vdata) {
   struct bench_args_t *data = (struct bench_args_t *)vdata;
   char *p, *s;
-int i;
+  int i;
   // Zero-out everything.
   memset(vdata,0,sizeof(struct bench_args_t));
   // Load input string
@@ -123,10 +123,9 @@ int i;
   STAC(parse_,TYPE,_array)(s, data -> grad_y, GRID_ROWS*GRID_COLS);
 //printf("%d FD:++++++++++++++++++++++++++++", fd);
 
-for (i = 0; i < GRID_COLS * GRID_ROWS; i++) {
-    data -> result[i] = 0;
-}
-
+  for (i = 0; i < GRID_COLS * GRID_ROWS; i++) {
+      data -> result[i] = 0;
+  }
 }
 
 void data_to_input(int fd, void *vdata) {
@@ -164,33 +163,27 @@ void output_to_data(int fd, void *vdata) {
 }
 
 
-
-
-
-
-
 void data_to_output(int fd, void *vdata) {
   struct bench_args_t *data = (struct bench_args_t *)vdata;
 
+  FILE* fid = fopen("output.data", "w");
 
-FILE* fid = fopen("output.data", "w");
+  for (int kk = 0; kk <GRID_ROWS*GRID_COLS;kk++){
+    fprintf(fid,"%.18f\n", data->result[kk]);
+  }
 
-for (int kk = 0; kk <GRID_ROWS*GRID_COLS;kk++){
-fprintf(fid,"%.18f\n", data->result[kk]);
-}
+  fclose(fid);
 
-fclose(fid);
+  printf("+++++++++++++++++++++++++++++++++++data_to_output");
 
+  for (int j = 0;j<10;j++){
+    printf("%f\n",data->result[j]);
+  }
 
-
-printf("+++++++++++++++++++++++++++++++++++data_to_output");
-for (int j = 0;j<10;j++){
-printf("%f\n",data->result[j]);
-}
-printf("%d\n",fd);
-  //write_section_header(fd);
-  //STAC(write_,TYPE,_array)(fd, data->result, GRID_ROWS * GRID_COLS);
-  //write_float_array(fd, data->grad_x, 100000);
+  printf("%d\n",fd);
+    //write_section_header(fd);
+    //STAC(write_,TYPE,_array)(fd, data->result, GRID_ROWS * GRID_COLS);
+    //write_float_array(fd, data->grad_x, 100000);
 }
 
 int check_data( void *vdata, void *vref ) {

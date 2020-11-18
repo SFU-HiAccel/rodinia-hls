@@ -34,7 +34,6 @@
 #define BOTTOM (GRID_ROWS / TILE_ROWS - 1)
 
 
-
 #define TYPE float
 
 struct bench_args_t {

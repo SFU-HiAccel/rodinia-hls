@@ -164,30 +164,24 @@ void output_to_data(int fd, void *vdata) {
 }
 
 
-
-
-
-
-
 void data_to_output(int fd, void *vdata) {
   struct bench_args_t *data = (struct bench_args_t *)vdata;
 
+  FILE* fid = fopen("output.data", "w");
 
-FILE* fid = fopen("output.data", "w");
+  for (int kk = 0; kk <GRID_ROWS*GRID_COLS;kk++){
+    fprintf(fid,"%.18f\n", data->result[kk]);
+  }
 
-for (int kk = 0; kk <GRID_ROWS*GRID_COLS;kk++){
-fprintf(fid,"%.18f\n", data->result[kk]);
-}
+  fclose(fid);
 
-fclose(fid);
-
-
-
-printf("+++++++++++++++++++++++++++++++++++data_to_output");
-for (int j = 0;j<10;j++){
-printf("%f\n",data->result[j]);
-}
-printf("%d\n",fd);
+  printf("+++++++++++++++++++++++++++++++++++data_to_output");
+  
+  for (int j = 0;j<10;j++){
+    printf("%f\n",data->result[j]);
+  }
+  
+  printf("%d\n",fd);
   //write_section_header(fd);
   //STAC(write_,TYPE,_array)(fd, data->result, GRID_ROWS * GRID_COLS);
   //write_float_array(fd, data->grad_x, 100000);
@@ -198,7 +192,25 @@ int check_data( void *vdata, void *vref ) {
   struct bench_args_t *ref = (struct bench_args_t *)vref;
   int has_errors = 0;
 
-  has_errors |= memcmp(data->result, ref->result, GRID_ROWS * GRID_COLS);
+  for(int i = 0; i < GRID_ROWS * GRID_COLS; i++){
+    if(data->result[i] != ref->result[i]){
+      float tmp;
+
+      if(data->result[i] > ref -> result[i]){
+        tmp = data->result[i] - ref->result[i];
+      } else {
+        tmp = ref->result[i] - data->result[i];
+      }
+
+      float error_rate = tmp / ref->result[i];
+
+      if(error_rate > 0.005)
+        has_errors++;
+    }
+  }
+  
+  // has_errors |= memcmp(data->result, ref->result, GRID_ROWS * GRID_COLS);
+  // printf("%d\n", has_errors);
   // Return true if it's correct.
   return !has_errors;
 }

@@ -61,7 +61,6 @@ extern "C" {
 
 void workload(float result[GRID_ROWS * GRID_COLS], float grad_x[GRID_ROWS * GRID_COLS], float grad_y[GRID_ROWS * GRID_COLS])
 {
-
     #pragma HLS INTERFACE m_axi port=result offset=slave bundle=gmem
     #pragma HLS INTERFACE m_axi port=grad_x offset=slave bundle=gmem
     #pragma HLS INTERFACE m_axi port=grad_y offset=slave bundle=gmem
@@ -85,28 +84,21 @@ void workload(float result[GRID_ROWS * GRID_COLS], float grad_x[GRID_ROWS * GRID
 
     int tY[2][16] = {{0, 0, 0, 0, 0, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1, -1}, {0, 0, 1, 1, 1, 1, 1, 0, 0, -1, -2, -2, -2, -2, -2, -1}};
 
-
-
     float result_inner   [TILE_ROWS * GRID_COLS];
     float grad_x_inner   [(TILE_ROWS + 2 * MAX_RADIUS) * GRID_COLS];
     float grad_y_inner   [(TILE_ROWS + 2 * MAX_RADIUS) * GRID_COLS];
 
-
-for (k = 0; k < GRID_ROWS / TILE_ROWS; k++) {
-    memcpy(grad_x_inner, grad_x + k * TILE_ROWS * GRID_COLS - MAX_RADIUS * GRID_COLS, sizeof(float) * (TILE_ROWS + 2 * MAX_RADIUS) * GRID_COLS);
-    memcpy(grad_y_inner, grad_y + k * TILE_ROWS * GRID_COLS - MAX_RADIUS * GRID_COLS, sizeof(float) * (TILE_ROWS + 2 * MAX_RADIUS) * GRID_COLS);
-
-    
-    lc_gicov(result_inner, grad_x_inner, grad_y_inner, tX, tY, sin_angle, cos_angle, k);
-
-    
-    memcpy(result + k * TILE_ROWS * GRID_COLS, result_inner, sizeof(float) * (TILE_ROWS * GRID_COLS));
-}
+    for (k = 0; k < GRID_ROWS / TILE_ROWS; k++) {
+        memcpy(grad_x_inner, grad_x + k * TILE_ROWS * GRID_COLS - MAX_RADIUS * GRID_COLS, sizeof(float) * (TILE_ROWS + 2 * MAX_RADIUS) * GRID_COLS);
+        memcpy(grad_y_inner, grad_y + k * TILE_ROWS * GRID_COLS - MAX_RADIUS * GRID_COLS, sizeof(float) * (TILE_ROWS + 2 * MAX_RADIUS) * GRID_COLS);
+        
+        lc_gicov(result_inner, grad_x_inner, grad_y_inner, tX, tY, sin_angle, cos_angle, k);
+        
+        memcpy(result + k * TILE_ROWS * GRID_COLS, result_inner, sizeof(float) * (TILE_ROWS * GRID_COLS));
+    }
 
 
-
-return;
-
+    return;
 }
 
 }

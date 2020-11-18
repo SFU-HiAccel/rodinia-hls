@@ -28,7 +28,6 @@ float lc_gicov_stencil_core(float grad_x_sample[NPOINTS], float grad_y_sample[NP
 }
 
 
-
 extern "C" {
 
 void lc_gicov(float result[TILE_ROWS * GRID_COLS], float grad_x[(TILE_ROWS + 2 * MAX_RADIUS) * GRID_COLS], float grad_y[(TILE_ROWS + 2 * MAX_RADIUS) * GRID_COLS], int which_boundary) 
@@ -46,17 +45,27 @@ void lc_gicov(float result[TILE_ROWS * GRID_COLS], float grad_x[(TILE_ROWS + 2 *
     int i;
 
     float grad_x_rf[GRID_COLS * (2 * MAX_RADIUS) + MAX_RADIUS * 2 + PARA_FACTOR];
-#pragma HLS array_partition variable=grad_x_rf complete dim=0
+//#pragma HLS array_partition variable=grad_x_rf complete dim=0 
+#pragma HLS array_partition variable=grad_x_rf cyclic factor=4
     float grad_y_rf[GRID_COLS * (2 * MAX_RADIUS) + MAX_RADIUS * 2 + PARA_FACTOR];
-#pragma HLS array_partition variable=grad_y_rf complete dim=0
+// #pragma HLS array_partition variable=grad_y_rf complete dim=0
+#pragma HLS array_partition variable=grad_y_rf cyclic factor=4
 
+//Changes start
+    for (i = 0; i < GRID_COLS * (2 * MAX_RADIUS) + MAX_RADIUS + PARA_FACTOR; i++) {
+        #pragma HLS pipeline II=1
+        #pragma HLS unroll
+        grad_x_rf[i + MAX_RADIUS] = grad_x[i];
+        grad_y_rf[i + MAX_RADIUS] = grad_y[i];
+    }
 
-
-    for (i = -((GRID_COLS * (2 * MAX_RADIUS) + MAX_RADIUS + PARA_FACTOR) / PARA_FACTOR); i < GRID_COLS / PARA_FACTOR * TILE_ROWS; i++) {
+    for (i = 0; i < GRID_COLS / PARA_FACTOR * TILE_ROWS; i++) {
+    //for (i = -((GRID_COLS * (2 * MAX_RADIUS) + MAX_RADIUS + PARA_FACTOR) / PARA_FACTOR); i < GRID_COLS / PARA_FACTOR * TILE_ROWS; i++) {
+//Changes end
         int k;
-#pragma HLS pipeline II=1
+        #pragma HLS pipeline II=1
         for (k = 0; k < PARA_FACTOR; k++) {
-#pragma HLS unroll
+            #pragma HLS unroll
             if (( (which_boundary == TOP && i < GRID_COLS / PARA_FACTOR * MAX_RADIUS) || (which_boundary == BOTTOM && i >= GRID_COLS / PARA_FACTOR * (TILE_ROWS - MAX_RADIUS)) || (PARA_FACTOR * (i % (GRID_COLS / PARA_FACTOR)) + k < MAX_RADIUS) || (GRID_COLS - (PARA_FACTOR * (i % (GRID_COLS / PARA_FACTOR)) + k) <= MAX_RADIUS))) {
                 result[i * PARA_FACTOR + k] = 0;
                 continue;
@@ -65,14 +74,14 @@ void lc_gicov(float result[TILE_ROWS * GRID_COLS], float grad_x[(TILE_ROWS + 2 *
             int t;
             float gicov_max = 0;
             for (t = 0; t < NCIRCLES; t++) {
-#pragma HLS unroll
+                #pragma HLS unroll
                 float grad_x_sample[NPOINTS];
                 float grad_y_sample[NPOINTS];
 
                 int j;
                 
                 for (j = 0; j < NPOINTS; j++) {
-#pragma HLS unroll
+                #pragma HLS unroll
                     int x, y;
                     y = MAX_RADIUS + tY[t][j];
                     x = MAX_RADIUS + tX[t][j];
@@ -91,18 +100,17 @@ void lc_gicov(float result[TILE_ROWS * GRID_COLS], float grad_x[(TILE_ROWS + 2 *
         }
 
         for (k = 0; k < GRID_COLS * (2 * MAX_RADIUS) + MAX_RADIUS * 2; k++) {
-#pragma HLS unroll
+            #pragma HLS unroll
             grad_x_rf[k] = grad_x_rf[k + PARA_FACTOR];
             grad_y_rf[k] = grad_y_rf[k + PARA_FACTOR];
         }
 
         for (k = 0; k < PARA_FACTOR; k++) {
-#pragma HLS unroll
+            #pragma HLS unroll
             grad_x_rf[GRID_COLS * (2 * MAX_RADIUS) + MAX_RADIUS * 2 + k] = grad_x[GRID_COLS * (2 * MAX_RADIUS) + MAX_RADIUS + (i + 1) * PARA_FACTOR + k];
             grad_y_rf[GRID_COLS * (2 * MAX_RADIUS) + MAX_RADIUS * 2 + k] = grad_y[GRID_COLS * (2 * MAX_RADIUS) + MAX_RADIUS + (i + 1) * PARA_FACTOR + k];
         }
     }                                                              
-
 }
 }
 
