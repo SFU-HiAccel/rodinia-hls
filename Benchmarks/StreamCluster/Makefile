@@ -25,50 +25,57 @@ help::
 	$(ECHO) ""
 
 # Kernal Name
-APP=streamcluster
+APP=MurmurHash3
 KERNAL_NAME=workload
+KERNEL_NUM=6
 
 # Points to Utility Directory
-COMMON_REPO = ../../common
+COMMON_REPO = ./common
 ABS_COMMON_REPO = $(shell readlink -f $(COMMON_REPO))
 
 TARGETS := hw
 TARGET := $(TARGETS)
+#DEVICES := xilinx_u200_xdma_201830_2
+DEVICES :=xilinx_u280_xdma_201920_1
 DEVICE := $(DEVICES)
 XCLBIN := ./xclbin
 
-include ../utils.mk
+include ./utils.mk
+
+
+#LDCLFLAGS += --profile_kernel data:all:all:all:all --profile_kernel stall:all:all:all:all
 
 DSA := $(call device2dsa, $(DEVICE))
 BUILD_DIR := ./_x.$(TARGET).$(DSA)
 
 BUILD_DIR_KERNEL = $(BUILD_DIR)/$(APP)
 
-# Changed from SDX to Vitis
-#CXX := $(XILINX_SDX)/bin/xcpp
-# XOCC := $(XILINX_SDX)/bin/xocc
-CXX := $(XILINX_SDX)/bin/xcpp
+CXX := $(XILINX_VITIS)/bin/xcpp
 VPP := $(XILINX_VITIS)/bin/v++
 
-#Include Libraries
+# Include Libraries
 include $(ABS_COMMON_REPO)/libs/opencl/opencl.mk
 include $(ABS_COMMON_REPO)/libs/xcl2/xcl2.mk
 CXXFLAGS += $(xcl2_CXXFLAGS)
 LDFLAGS += $(xcl2_LDFLAGS)
+
+#HBM specification
+LDCLFLAGS += --config murmurHash3.ini
+
 HOST_SRCS += $(xcl2_SRCS)
 CXXFLAGS += $(opencl_CXXFLAGS) -Wall -O0 -g -std=c++14 -I$(ABS_COMMON_REPO)
 LDFLAGS += -lxilinxopencl -lpthread -lrt -lstdc++ -lmpfr -lgmp -lhlsmc++-GCC46 -lIp_floating_point_v7_0_bitacc_cmodel -lIp_xfft_v9_1_bitacc_cmodel -lIp_fir_compiler_v7_2_bitacc_cmodel -lIp_dds_compiler_v6_0_bitacc_cmodel -L$(XILINX_XRT)/lib/ -L$(XILINX_VIVADO)/lnx64/tools/fpo_v7_0 -L$(XILINX_VIVADO)/lnx64/lib/csim -L$(XILINX_VIVADO)/lnx64/tools/dds_v6_0 -L$(XILINX_VIVADO)/lnx64/tools/fir_v7_0 -L$(XILINX_VIVADO)/lnx64/tools/fft_v9_1 -Wl,-rpath-link,$(XILINX_XRT)/lib -Wl,-rpath,$(XILINX_VIVADO)/lnx64/lib/csim -Wl,-rpath,$(XILINX_VIVADO)/lnx64/tools/fpo_v7_0 -Wl,-rpath,$(XILINX_VIVADO)/lnx64/tools/fft_v9_1 -Wl,-rpath,$(XILINX_VIVADO)/lnx64/tools/fir_v7_0 -Wl,-rpath,$(XILINX_VIVADO)/lnx64/tools/dds_v6_0
 
-HOST_SRCS += $(ABS_COMMON_REPO)/harness.c $(ABS_COMMON_REPO)/support.c src/local_support.cpp
-HOST_HDRS += $(ABS_COMMON_REPO)/support.h 
+HOST_SRCS += $(ABS_COMMON_REPO)/harness.c $(ABS_COMMON_REPO)/support.c src/local_support.c
+HOST_HDRS += $(ABS_COMMON_REPO)/support.h
 HOST_ARGS = ../data/input.data ../data/check.data
 
 # Host compiler global settings
 CXXFLAGS += -fmessage-length=0 -DSDX_PLATFORM=$(DEVICE) -D__USE_XOPEN2K8 -I$(XILINX_XRT)/include/ -I$(XILINX_VIVADO)/include/
-LDFLAGS += -lrt -lstdc++ 
+LDFLAGS += -lrt -lstdc++
 
 # Kernel compiler global settings
-CLFLAGS += -t $(TARGET) --platform $(DEVICE) --save-temps
+CLFLAGS += -g -t $(TARGET) --platform $(DEVICE) --save-temps
 
 EXECUTABLE = host
 CMD_ARGS = $(XCLBIN)/$(APP).$(TARGET).$(DSA).xclbin
@@ -92,13 +99,11 @@ build: $(BINARY_CONTAINERS)
 # Building kernel
 $(XCLBIN)/$(APP).$(TARGET).$(DSA).xo: src/$(APP).cpp
 	mkdir -p $(XCLBIN)
-	$(VPP) $(CLFLAGS) --temp_dir $(BUILD_DIR_KERNEL) -c -k $(KERNAL_NAME) -I'$(<D)' -o'$@' '$<'
-	#$(XOCC) $(CLFLAGS) --temp_dir $(BUILD_DIR_KERNEL) -c -k $(KERNAL_NAME) -I'$(<D)' -o'$@' '$<'
+	$(VPP) $(CLFLAGS) --temp_dir $(BUILD_DIR_KERNEL) -c -k $(KERNAL_NAME) -I'$(<D)' -o'$@' '$<' --interactive impl
 $(XCLBIN)/$(APP).$(TARGET).$(DSA).xclbin: $(BINARY_CONTAINER_vadd_OBJS)
 	mkdir -p $(XCLBIN)
-	$(VPP) $(CLFLAGS) --temp_dir $(BUILD_DIR_KERNEL) -R2 -l $(LDCLFLAGS) --nk $(KERNAL_NAME):1 -j 8 -o'$@' $(+) $(XOCC_LINK_OPTS)
-# 	$(XOCC) $(CLFLAGS) --temp_dir $(BUILD_DIR_KERNEL) -l $(LDCLFLAGS) --nk $(KERNAL_NAME):1 -o'$@' $(+)
-	
+	$(VPP) $(CLFLAGS) --temp_dir $(BUILD_DIR_KERNEL) -R2 -l $(LDCLFLAGS) --nk $(KERNAL_NAME):$(KERNEL_NUM) -j 8 -o'$@' $(+) $(XOCC_LINK_OPTS)
+
 # Building Host
 $(EXECUTABLE): check-xrt $(HOST_SRCS) $(HOST_HDRS)
 	$(CXX) $(CXXFLAGS) $(HOST_SRCS) $(HOST_HDRS) -o '$@' $(LDFLAGS)
@@ -114,7 +119,7 @@ ifeq ($(TARGET),$(filter $(TARGET),sw_emu hw_emu))
 else
 	 ./$(EXECUTABLE) $(HOST_ARGS) $(XCLBIN)/$(APP).$(TARGET).$(DSA).xclbin
 endif
-# 	sdx_analyze profile profile_summary.csv
+#	sdx_analyze profile profile_summary.csv
 
 run_nimbix: all
 	$(COMMON_REPO)/utility/nimbix/run_nimbix.py $(EXECUTABLE) $(CMD_ARGS) $(DSA)
@@ -124,11 +129,12 @@ aws_build: check-aws_repo $(BINARY_CONTAINERS)
 
 # Cleaning stuff
 clean:
-	-$(RMDIR) $(EXECUTABLE) $(XCLBIN)/{*sw_emu*,*hw_emu*} 
-	-$(RMDIR) profile_* TempConfig system_estimate.xtxt *.rpt *.csv 
+	-$(RMDIR) $(EXECUTABLE) $(XCLBIN)/{*sw_emu*,*hw_emu*}
+	-$(RMDIR) profile_* TempConfig system_estimate.xtxt *.rpt *.csv
 	-$(RMDIR) src/*.ll _xocc_* .Xil emconfig.json dltmp* xmltmp* *.log *.jou *.wcfg *.wdb
 
 cleanall: clean
 	-$(RMDIR) $(XCLBIN)
 	-$(RMDIR) _x.*
-
+	-$(RMDIR) .run
+	-$(RMDIR) output.data
