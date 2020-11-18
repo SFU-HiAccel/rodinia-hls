@@ -18,9 +18,6 @@
 #define TOP 0
 #define BOTTOM (GRID_ROWS / TILE_ROWS - 1)
 
-
-
-
 #define GAMMA 1.4
 
 #define NDIM 3

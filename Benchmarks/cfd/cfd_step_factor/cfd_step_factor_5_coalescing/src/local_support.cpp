@@ -11,10 +11,10 @@ void run_benchmark( void *vargs, cl_context& context, cl_command_queue& commands
 
   // 0th: initialize the timer at the beginning of the program
   timespec timer = tic();
-    
-    cl_mem result_buffer = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(args -> result), NULL, NULL);
-    cl_mem variables_buffer = clCreateBuffer(context, CL_MEM_READ_ONLY, sizeof(args -> variables), NULL, NULL);
-    cl_mem areas_buffer = clCreateBuffer(context, CL_MEM_READ_ONLY , sizeof(args -> areas), NULL, NULL);
+  
+  cl_mem result_buffer = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(args -> result), NULL, NULL);
+  cl_mem variables_buffer = clCreateBuffer(context, CL_MEM_READ_ONLY, sizeof(args -> variables), NULL, NULL);
+  cl_mem areas_buffer = clCreateBuffer(context, CL_MEM_READ_ONLY , sizeof(args -> areas), NULL, NULL);
 
   if (!result_buffer || !variables_buffer || !areas_buffer)
   {
@@ -29,23 +29,23 @@ void run_benchmark( void *vargs, cl_context& context, cl_command_queue& commands
   // Write our data set into device buffers  
   //
   int err;
-    err  = clEnqueueWriteBuffer(commands, result_buffer  , CL_TRUE, 0, sizeof(args -> result), args -> result  , 0, NULL, NULL);
-    err |= clEnqueueWriteBuffer(commands, variables_buffer  , CL_TRUE, 0, sizeof(args -> variables), args -> variables  , 0, NULL, NULL);
-    err |= clEnqueueWriteBuffer(commands, areas_buffer  , CL_TRUE, 0, sizeof(args -> areas), args -> areas  , 0, NULL, NULL);
+  err  = clEnqueueWriteBuffer(commands, result_buffer  , CL_TRUE, 0, sizeof(args -> result), args -> result  , 0, NULL, NULL);
+  err |= clEnqueueWriteBuffer(commands, variables_buffer  , CL_TRUE, 0, sizeof(args -> variables), args -> variables  , 0, NULL, NULL);
+  err |= clEnqueueWriteBuffer(commands, areas_buffer  , CL_TRUE, 0, sizeof(args -> areas), args -> areas  , 0, NULL, NULL);
 
   if (err != CL_SUCCESS)
   {
-      printf("Error: Failed to write to device memory!\n");
-      printf("Test failed\n");
-      exit(1);
+    printf("Error: Failed to write to device memory!\n");
+    printf("Test failed\n");
+    exit(1);
   }
 
   // 2nd: time of pageable-pinned memory copy
   toc(&timer, "memory copy");
     
-    err  = clSetKernelArg(kernel, 0, sizeof(cl_mem), &result_buffer);
-    err |= clSetKernelArg(kernel, 1, sizeof(cl_mem), &variables_buffer);
-    err |= clSetKernelArg(kernel, 2, sizeof(cl_mem), &areas_buffer);
+  err  = clSetKernelArg(kernel, 0, sizeof(cl_mem), &result_buffer);
+  err |= clSetKernelArg(kernel, 1, sizeof(cl_mem), &variables_buffer);
+  err |= clSetKernelArg(kernel, 2, sizeof(cl_mem), &areas_buffer);
 
   if (err != CL_SUCCESS)
   {
@@ -78,21 +78,18 @@ void run_benchmark( void *vargs, cl_context& context, cl_command_queue& commands
   clFinish(commands);
   toc(&timer, "kernel execution");
 
-  // Read back the results from the device to verify the output
-  
-    err  = clEnqueueReadBuffer(commands, result_buffer,  CL_TRUE, 0, sizeof(args -> result)  , args -> result  , 0, NULL, NULL);  
-
+  // Read back the results from the device to verify the output  
+  err  = clEnqueueReadBuffer(commands, result_buffer,  CL_TRUE, 0, sizeof(args -> result)  , args -> result  , 0, NULL, NULL);  
 
   if (err != CL_SUCCESS)
   {
     printf("Error: Failed to read output array! %d\n", err);
     printf("Test failed\n");
     exit(1);
- }
+  }
 
   // 5th: time of data retrieving (PCIe + memcpy)
   toc(&timer, "data retrieving");
-
 }
 
 /* Input format:
@@ -105,7 +102,7 @@ char[]: areas
 void input_to_data(int fd, void *vdata) {
   struct bench_args_t *data = (struct bench_args_t *)vdata;
   char *p, *s;
-int i;
+  int i;
   // Zero-out everything.
   memset(vdata,0,sizeof(struct bench_args_t));
   // Load input string
@@ -115,11 +112,10 @@ int i;
 
   s = find_section_start(p,2);
   STAC(parse_,TYPE,_array)(s, data -> areas, SIZE);
-//printf("%d FD:++++++++++++++++++++++++++++", fd);
 
-for (i = 0; i < SIZE; i++) {
+  for (i = 0; i < SIZE; i++) {
     data -> result[i] = 0;
-}
+  }
 
 }
 
@@ -138,7 +134,6 @@ void data_to_input(int fd, void *vdata) {
   write_section_header(fd);
 }
 
-
 void output_to_data(int fd, void *vdata) {
   struct bench_args_t *data = (struct bench_args_t *)vdata;
   char *p, *s;
@@ -151,34 +146,24 @@ void output_to_data(int fd, void *vdata) {
   STAC(parse_,TYPE,_array)(s, data->result, SIZE);
 }
 
-
-
-
-
-
-
 void data_to_output(int fd, void *vdata) {
   struct bench_args_t *data = (struct bench_args_t *)vdata;
 
+  FILE* fid = fopen("output.data", "w");
 
-FILE* fid = fopen("output.data", "w");
+  for (int kk = 0; kk <SIZE;kk++){
+    fprintf(fid,"%.18f\n", data->result[kk]);
+  }
 
-for (int kk = 0; kk <SIZE;kk++){
-fprintf(fid,"%.18f\n", data->result[kk]);
-}
+  fclose(fid);
 
-fclose(fid);
+  printf("+++++++++++++++++++++++++++++++++++data_to_output");
 
-
-
-printf("+++++++++++++++++++++++++++++++++++data_to_output");
-for (int j = 0;j<10;j++){
-printf("%f\n",data->result[j]);
-}
-printf("%d\n",fd);
-//  write_section_header(fd);
-//  STAC(write_,TYPE,_array)(fd, data->result, SIZE);
-//  write_float_array(fd, data->variables, 100000);
+  for (int j = 0;j<10;j++){
+    printf("%f\n",data->result[j]);
+  }
+  
+  printf("%d\n",fd);
 }
 
 int check_data( void *vdata, void *vref ) {

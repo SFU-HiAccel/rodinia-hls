@@ -2,7 +2,6 @@
 
 extern "C" {
 
-
 inline void compute_velocity(float& density, float3& momentum, float3& velocity)
 {
 	velocity.x = momentum.x / density;
@@ -25,9 +24,7 @@ inline float compute_speed_of_sound(float& density, float& pressure)
 	return sqrt(float(GAMMA)*pressure / density);
 }
 
-
-
-void cfd_flux(float result[TILE_ROWS *              NVAR], float elements_surrounding_elements [TILE_ROWS * NNB], float normals [TILE_ROWS * NNB * NDIM], float variables [SIZE *              NVAR], float fc_momentum_x [SIZE *       NDIM], float fc_momentum_y [SIZE *       NDIM], float fc_momentum_z [SIZE *       NDIM], float fc_density_energy [SIZE *       NDIM])
+void cfd_flux(float result[TILE_ROWS * NVAR], float elements_surrounding_elements [TILE_ROWS * NNB], float normals [TILE_ROWS * NNB * NDIM], float variables [SIZE *              NVAR], float fc_momentum_x [SIZE *       NDIM], float fc_momentum_y [SIZE *       NDIM], float fc_momentum_z [SIZE *       NDIM], float fc_density_energy [SIZE *       NDIM])
 {
 
 
@@ -209,14 +206,10 @@ void cfd_flux(float result[TILE_ROWS *              NVAR], float elements_surrou
 }
 
 
-
-void workload(float result[SIZE *              NVAR], float elements_surrounding_elements [SIZE * NNB], float normals [SIZE * NNB * NDIM], float variables [SIZE *              NVAR], float fc_momentum_x [SIZE *       NDIM], float fc_momentum_y [SIZE *       NDIM], float fc_momentum_z [SIZE *       NDIM], float fc_density_energy [SIZE *       NDIM])
+void workload(float result[SIZE * NVAR], float elements_surrounding_elements [SIZE * NNB], float normals [SIZE * NNB * NDIM], float variables [SIZE *              NVAR], float fc_momentum_x [SIZE *       NDIM], float fc_momentum_y [SIZE *       NDIM], float fc_momentum_z [SIZE *       NDIM], float fc_density_energy [SIZE *       NDIM])
 {
-
-
     #pragma HLS INTERFACE m_axi port=result offset=slave bundle=result
-
-
+    
     #pragma HLS INTERFACE m_axi port=elements_surrounding_elements offset=slave bundle=elements_surrounding_elements
     #pragma HLS INTERFACE m_axi port=normals offset=slave bundle=normals
     #pragma HLS INTERFACE m_axi port=variables offset=slave bundle=variables
@@ -237,27 +230,27 @@ void workload(float result[SIZE *              NVAR], float elements_surrounding
 
     #pragma HLS INTERFACE s_axilite port=return bundle=control
 
-    float result_inner                          [TILE_ROWS  *              NVAR ];
+    float result_inner                          [TILE_ROWS  * NVAR ];
     #pragma HLS array_partition variable=result_inner cyclic factor=16
-    float elements_surrounding_elements_inner   [TILE_ROWS  * NNB               ];
+    float elements_surrounding_elements_inner   [TILE_ROWS  * NNB  ];
     #pragma HLS array_partition variable=elements_surrounding_elements_inner cyclic factor=16
-    float normals_inner                         [TILE_ROWS  * NNB * NDIM        ];
+    float normals_inner                         [TILE_ROWS  * NNB * NDIM ];
     #pragma HLS array_partition variable=normals_inner cyclic factor=16
 
 
-    float variables_inner                       [SIZE       *              NVAR ];
-    float fc_momentum_x_inner                   [SIZE       *       NDIM        ];
-    float fc_momentum_y_inner                   [SIZE       *       NDIM        ];
-    float fc_momentum_z_inner                   [SIZE       *       NDIM        ];
-    float fc_density_energy_inner               [SIZE       *       NDIM        ];
+    float variables_inner                       [SIZE       *       NVAR ];
+    float fc_momentum_x_inner                   [SIZE       *       NDIM ];
+    float fc_momentum_y_inner                   [SIZE       *       NDIM ];
+    float fc_momentum_z_inner                   [SIZE       *       NDIM ];
+    float fc_density_energy_inner               [SIZE       *       NDIM ];
 
 
 
-    memcpy(variables_inner, variables,                  sizeof(float) * SIZE       *              NVAR );
-    memcpy(fc_momentum_x_inner, fc_momentum_x,          sizeof(float) * SIZE       *       NDIM        );
-    memcpy(fc_momentum_y_inner, fc_momentum_y,          sizeof(float) * SIZE       *       NDIM        );
-    memcpy(fc_momentum_z_inner, fc_momentum_z,          sizeof(float) * SIZE       *       NDIM        );
-    memcpy(fc_density_energy_inner, fc_density_energy,  sizeof(float) * SIZE       *       NDIM        );
+    memcpy(variables_inner, variables,                  sizeof(float) * SIZE       *       NVAR );
+    memcpy(fc_momentum_x_inner, fc_momentum_x,          sizeof(float) * SIZE       *       NDIM );
+    memcpy(fc_momentum_y_inner, fc_momentum_y,          sizeof(float) * SIZE       *       NDIM );
+    memcpy(fc_momentum_z_inner, fc_momentum_z,          sizeof(float) * SIZE       *       NDIM );
+    memcpy(fc_density_energy_inner, fc_density_energy,  sizeof(float) * SIZE       *       NDIM );
 
 
     for (int k; k < SIZE / TILE_ROWS; k++) {

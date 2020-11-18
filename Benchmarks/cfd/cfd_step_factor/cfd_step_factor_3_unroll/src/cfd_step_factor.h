@@ -7,7 +7,7 @@
 #include <string.h>
 #include <math.h>
 
-#define GRID_ROWS (1024 * 1024)
+#define GRID_ROWS 1024//(1024 * 1024)
 
 #define SIZE GRID_ROWS
 
@@ -17,9 +17,6 @@
 
 #define TOP 0
 #define BOTTOM (GRID_ROWS / TILE_ROWS - 1)
-
-
-
 
 #define GAMMA 1.4
 

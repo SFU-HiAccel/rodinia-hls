@@ -29,20 +29,15 @@ float compute_speed_of_sound(float& density, float& pressure)
     return (float)sqrt((float)(float(GAMMA)*(float)pressure / (float)density));
 }
 
-
-
-
-
 void cfd_step_factor(float result[TILE_ROWS], float variables[TILE_ROWS * NVAR], float areas[TILE_ROWS])
 {
 #pragma HLS inline off
     for (int i = 0; i < TILE_ROWS / PARA_FACTOR; i++) {
 #pragma HLS pipeline II=1
 
-    float density[PARA_FACTOR];
-    float3 momentum[PARA_FACTOR];
-    float density_energy[PARA_FACTOR];
-    
+        float density[PARA_FACTOR];
+        float3 momentum[PARA_FACTOR];
+        float density_energy[PARA_FACTOR];
 
         int iii = i * PARA_FACTOR;
 
@@ -52,30 +47,21 @@ void cfd_step_factor(float result[TILE_ROWS], float variables[TILE_ROWS * NVAR],
         momentum[0].z = variables[NVAR*iii + (VAR_MOMENTUM      +   2 + 0)];
         density_energy[0] = variables[NVAR*iii + VAR_DENSITY_ENERGY   + 0 ];
 
-
-
-
-    for (int ii = 0; ii < PARA_FACTOR; ii++) {
+        for (int ii = 0; ii < PARA_FACTOR; ii++) {
 #pragma HLS unroll
-        int iii = i * PARA_FACTOR + ii;
-        float3 velocity;       compute_velocity(density[ii], momentum[ii], velocity);
-        float speed_sqd = compute_speed_sqd(velocity);
-        float pressure = compute_pressure(density[ii], density_energy[ii], speed_sqd);
-        float speed_of_sound = compute_speed_of_sound(density[ii], pressure);
-    
-            result[iii] = float(0.5f) / (float)((float)sqrt((float)areas[iii]) * (float)((float)sqrt((float)speed_sqd) + (float)speed_of_sound));
-    }
-    
-
-
-
+            int iii = i * PARA_FACTOR + ii;
+            float3 velocity;       compute_velocity(density[ii], momentum[ii], velocity);
+            float speed_sqd = compute_speed_sqd(velocity);
+            float pressure = compute_pressure(density[ii], density_energy[ii], speed_sqd);
+            float speed_of_sound = compute_speed_of_sound(density[ii], pressure);
+        
+                result[iii] = float(0.5f) / (float)((float)sqrt((float)areas[iii]) * (float)((float)sqrt((float)speed_sqd) + (float)speed_of_sound));
+        }
     }
 }
 
-
 void workload(float result[SIZE], float variables[SIZE * NVAR], float areas[SIZE])
 {
-
     #pragma HLS INTERFACE m_axi port=result offset=slave bundle=result
     #pragma HLS INTERFACE m_axi port=variables offset=slave bundle=variables
     #pragma HLS INTERFACE m_axi port=areas offset=slave bundle=areas
@@ -85,7 +71,6 @@ void workload(float result[SIZE], float variables[SIZE * NVAR], float areas[SIZE
     #pragma HLS INTERFACE s_axilite port=areas bundle=control
     
     #pragma HLS INTERFACE s_axilite port=return bundle=control
-
 
     float result_inner      [TILE_ROWS];
     float variables_inner   [TILE_ROWS * NVAR];
@@ -99,14 +84,9 @@ void workload(float result[SIZE], float variables[SIZE * NVAR], float areas[SIZE
         cfd_step_factor(result_inner, variables_inner, areas_inner);
 
         memcpy(result + k * TILE_ROWS, result_inner, sizeof(float) * TILE_ROWS);
-
     }
-
-
     
     return;
-
-
 }
 
 }

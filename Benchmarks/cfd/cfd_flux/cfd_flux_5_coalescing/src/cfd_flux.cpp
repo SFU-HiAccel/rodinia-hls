@@ -1,5 +1,5 @@
 #include"cfd_flux.h"
-#include"../../../common/mc.h"
+#include"../../../../common/mc.h"
 
 extern "C" {
 
@@ -206,7 +206,6 @@ void cfd_flux(float result[TILE_ROWS *              NVAR], float elements_surrou
     return;
 }
 
-
 void buffer_load(int flag, int k, float elements_surrounding_elements_inner[TILE_ROWS  * NNB], class ap_uint<LARGE_BUS> * elements_surrounding_elements, float normals_inner[TILE_ROWS  * NNB * NDIM ], class ap_uint<LARGE_BUS> * normals)
 {
 #pragma HLS inline off
@@ -217,9 +216,7 @@ void buffer_load(int flag, int k, float elements_surrounding_elements_inner[TILE
     return;
 }
 
-
-
-void buffer_compute(int flag, float result[TILE_ROWS  *              NVAR], float elements_surrounding_elements[TILE_ROWS  * NNB], float normals[TILE_ROWS  * NNB * NDIM], float variables [SIZE *              NVAR], float fc_momentum_x [SIZE *       NDIM], float fc_momentum_y [SIZE *       NDIM], float fc_momentum_z [SIZE *       NDIM], float fc_density_energy [SIZE *       NDIM], int k)
+void buffer_compute(int flag, float result[TILE_ROWS  * NVAR], float elements_surrounding_elements[TILE_ROWS  * NNB], float normals[TILE_ROWS  * NNB * NDIM], float variables [SIZE *              NVAR], float fc_momentum_x [SIZE *       NDIM], float fc_momentum_y [SIZE *       NDIM], float fc_momentum_z [SIZE *       NDIM], float fc_density_energy [SIZE *       NDIM], int k)
 {
 #pragma HLS inline off
  if (flag)   cfd_flux(result, elements_surrounding_elements, normals, variables, fc_momentum_x, fc_momentum_y, fc_momentum_z, fc_density_energy, k);
@@ -229,11 +226,9 @@ void buffer_compute(int flag, float result[TILE_ROWS  *              NVAR], floa
 void buffer_store(int flag, int k, class ap_uint<LARGE_BUS> * result, float result_inner[TILE_ROWS  *              NVAR])
 {
 #pragma HLS inline off
-    if (flag) memcpy_wide_bus_write_float(result + k * TILE_ROWS  *              NVAR / (LARGE_BUS / 32), result_inner,0, sizeof(float) * TILE_ROWS  *              NVAR);
+    if (flag) memcpy_wide_bus_write_float(result + k * TILE_ROWS  * NVAR / (LARGE_BUS / 32), result_inner,0, sizeof(float) * TILE_ROWS  *              NVAR);
     return;
 }
-
-
 
 void workload(class ap_uint<LARGE_BUS> * result, class ap_uint<LARGE_BUS> * elements_surrounding_elements , class ap_uint<LARGE_BUS> * normals , class ap_uint<LARGE_BUS> * variables, class ap_uint<LARGE_BUS> * fc_momentum_x, class ap_uint<LARGE_BUS> * fc_momentum_y, class ap_uint<LARGE_BUS> * fc_momentum_z, class ap_uint<LARGE_BUS> * fc_density_energy)
 {
@@ -262,38 +257,29 @@ void workload(class ap_uint<LARGE_BUS> * result, class ap_uint<LARGE_BUS> * elem
 
     #pragma HLS INTERFACE s_axilite port=return bundle=control
 
-
-
-
     float result_inner_0                          [TILE_ROWS  *              NVAR ];
     float elements_surrounding_elements_inner_0   [TILE_ROWS  * NNB               ];
     float normals_inner_0                         [TILE_ROWS  * NNB * NDIM        ];
-
-
 
     float result_inner_1                          [TILE_ROWS  *              NVAR ];
     float elements_surrounding_elements_inner_1   [TILE_ROWS  * NNB               ];
     float normals_inner_1                         [TILE_ROWS  * NNB * NDIM        ];
 
-
-
     float result_inner_2                          [TILE_ROWS  *              NVAR ];
     float elements_surrounding_elements_inner_2   [TILE_ROWS  * NNB               ];
     float normals_inner_2                         [TILE_ROWS  * NNB * NDIM        ];
 
-    float variables_inner                       [SIZE       *              NVAR ];
+    float variables_inner                       [SIZE       *       NVAR        ];
     float fc_momentum_x_inner                   [SIZE       *       NDIM        ];
     float fc_momentum_y_inner                   [SIZE       *       NDIM        ];
     float fc_momentum_z_inner                   [SIZE       *       NDIM        ];
     float fc_density_energy_inner               [SIZE       *       NDIM        ];
-
 
     memcpy_wide_bus_read_float(variables_inner, variables,0,                  sizeof(float) * SIZE       *              NVAR );
     memcpy_wide_bus_read_float(fc_momentum_x_inner, fc_momentum_x,0,          sizeof(float) * SIZE       *       NDIM        );
     memcpy_wide_bus_read_float(fc_momentum_y_inner, fc_momentum_y,0,          sizeof(float) * SIZE       *       NDIM        );
     memcpy_wide_bus_read_float(fc_momentum_z_inner, fc_momentum_z,0,          sizeof(float) * SIZE       *       NDIM        );
     memcpy_wide_bus_read_float(fc_density_energy_inner, fc_density_energy,0,  sizeof(float) * SIZE       *       NDIM        );
-
 
     for (int k = 0; k < SIZE / TILE_ROWS + 2; k++) {
 
@@ -319,21 +305,7 @@ void workload(class ap_uint<LARGE_BUS> * result, class ap_uint<LARGE_BUS> * elem
             buffer_compute(compute_flag, result_inner_1, elements_surrounding_elements_inner_1, normals_inner_1, variables_inner, fc_momentum_x_inner, fc_momentum_y_inner, fc_momentum_z_inner, fc_density_energy_inner, k);
             buffer_store(store_flag, k - 2, result, result_inner_0);
         }
-
-
-
-
-
-
-
-
-
     }
-
-
-
-    
-
 	return;
 
 }

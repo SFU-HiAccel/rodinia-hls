@@ -4,7 +4,6 @@
 
 extern "C" {
 
-
 inline void compute_velocity(float& density, float3& momentum, float3& velocity)
 {
 	velocity.x = momentum.x / density;
@@ -27,12 +26,8 @@ inline float compute_speed_of_sound(float& density, float& pressure)
 	return sqrt(float(GAMMA)*pressure / density);
 }
 
-
-
-void cfd_flux(float result[TILE_ROWS *              NVAR], float elements_surrounding_elements [TILE_ROWS * NNB], float normals [TILE_ROWS * NNB * NDIM], float variables [SIZE *              NVAR], float fc_momentum_x [SIZE *       NDIM], float fc_momentum_y [SIZE *       NDIM], float fc_momentum_z [SIZE *       NDIM], float fc_density_energy [SIZE *       NDIM])
+void cfd_flux(float result[TILE_ROWS * NVAR], float elements_surrounding_elements [TILE_ROWS * NNB], float normals [TILE_ROWS * NNB * NDIM], float variables [SIZE *              NVAR], float fc_momentum_x [SIZE *       NDIM], float fc_momentum_y [SIZE *       NDIM], float fc_momentum_z [SIZE *       NDIM], float fc_density_energy [SIZE *       NDIM])
 {
-
-
     const float smoothing_coefficient = float(0.2f);
 
     float ff_variable[NVAR] = {1.399999976158142090, 1.680000066757202148, 0.000000000000000000, 0.000000000000000000, 3.507999897003173828};
@@ -43,7 +38,6 @@ void cfd_flux(float result[TILE_ROWS *              NVAR], float elements_surrou
     ff_fc_momentum_y.x = 0.000000000000000000; ff_fc_momentum_y.y = 1.000000000000000000; ff_fc_momentum_y.z = 0.000000000000000000; 
     ff_fc_momentum_z.x = 0.000000000000000000; ff_fc_momentum_z.y = 0.000000000000000000; ff_fc_momentum_z.z = 1.000000000000000000; 
     ff_fc_density_energy.x = 5.409600257873535156; ff_fc_density_energy.y = 0.000000000000000000; ff_fc_density_energy.z = 0.000000000000000000;
-
 
     for(int i = 0; i < TILE_ROWS / PARA_FACTOR; i++)
     {
@@ -241,14 +235,11 @@ void workload(float result[SIZE *              NVAR], float elements_surrounding
     float elements_surrounding_elements_inner   [TILE_ROWS  * NNB               ];
     float normals_inner                         [TILE_ROWS  * NNB * NDIM        ];
 
-
     float variables_inner                       [SIZE       *              NVAR ];
     float fc_momentum_x_inner                   [SIZE       *       NDIM        ];
     float fc_momentum_y_inner                   [SIZE       *       NDIM        ];
     float fc_momentum_z_inner                   [SIZE       *       NDIM        ];
     float fc_density_energy_inner               [SIZE       *       NDIM        ];
-
-
 
     memcpy(variables_inner, variables,                  sizeof(float) * SIZE       *              NVAR );
     memcpy(fc_momentum_x_inner, fc_momentum_x,          sizeof(float) * SIZE       *       NDIM        );
@@ -268,10 +259,7 @@ void workload(float result[SIZE *              NVAR], float elements_surrounding
         
     }
 
-    
-
 	return;
-
 }
 
 }

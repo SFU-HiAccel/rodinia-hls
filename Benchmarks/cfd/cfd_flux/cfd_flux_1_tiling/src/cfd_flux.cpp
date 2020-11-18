@@ -27,7 +27,7 @@ inline float compute_speed_of_sound(float& density, float& pressure)
 
 
 
-void cfd_flux(float result[TILE_ROWS *              NVAR], float elements_surrounding_elements [TILE_ROWS * NNB], float normals [TILE_ROWS * NNB * NDIM], float variables [SIZE *              NVAR], float fc_momentum_x [SIZE *       NDIM], float fc_momentum_y [SIZE *       NDIM], float fc_momentum_z [SIZE *       NDIM], float fc_density_energy [SIZE *       NDIM])
+void cfd_flux(float result[TILE_ROWS * NVAR], float elements_surrounding_elements [TILE_ROWS * NNB], float normals [TILE_ROWS * NNB * NDIM], float variables [SIZE *              NVAR], float fc_momentum_x [SIZE *       NDIM], float fc_momentum_y [SIZE *       NDIM], float fc_momentum_z [SIZE *       NDIM], float fc_density_energy [SIZE *       NDIM])
 {
 
 
@@ -254,7 +254,7 @@ void workload(float result[SIZE *              NVAR], float elements_surrounding
         
         cfd_flux(result_inner, elements_surrounding_elements_inner, normals_inner, variables_inner, fc_momentum_x_inner, fc_momentum_y_inner, fc_momentum_z_inner, fc_density_energy_inner);
         
-        memcpy(result + k * TILE_ROWS  *              NVAR, result_inner, sizeof(float) * TILE_ROWS  *              NVAR);
+        memcpy(result + k * TILE_ROWS * NVAR, result_inner, sizeof(float) * TILE_ROWS * NVAR);
         
     }
 

@@ -106,7 +106,7 @@ void run_benchmark( void *vargs, cl_context& context, cl_command_queue& commands
     printf("Error: Failed to read output array! %d\n", err);
     printf("Test failed\n");
     exit(1);
- }
+  }
 
   // 5th: time of data retrieving (PCIe + memcpy)
   toc(&timer, "data retrieving");
@@ -146,27 +146,25 @@ void input_to_data(int fd, void *vdata) {
   STAC(parse_,TYPE,_array)(s, data -> normals, SIZE * NNB * NDIM);
 
   s = find_section_start(p,3);
-  STAC(parse_,TYPE,_array)(s, data -> variables, SIZE *              NVAR);
+  STAC(parse_,TYPE,_array)(s, data -> variables, SIZE * NVAR);
 
   s = find_section_start(p,4);
-  STAC(parse_,TYPE,_array)(s, data -> fc_momentum_x, SIZE *       NDIM);
+  STAC(parse_,TYPE,_array)(s, data -> fc_momentum_x, SIZE * NDIM);
 
   s = find_section_start(p,5);
-  STAC(parse_,TYPE,_array)(s, data -> fc_momentum_y, SIZE *       NDIM);
+  STAC(parse_,TYPE,_array)(s, data -> fc_momentum_y, SIZE * NDIM);
 
   s = find_section_start(p,6);
-  STAC(parse_,TYPE,_array)(s, data -> fc_momentum_z, SIZE *       NDIM);
+  STAC(parse_,TYPE,_array)(s, data -> fc_momentum_z, SIZE * NDIM);
 
   s = find_section_start(p,7);
-  STAC(parse_,TYPE,_array)(s, data -> fc_density_energy, SIZE *       NDIM);
-
-
+  STAC(parse_,TYPE,_array)(s, data -> fc_density_energy, SIZE * NDIM);
 
 //printf("%d FD:++++++++++++++++++++++++++++", fd);
 
-for (i = 0; i < SIZE *              NVAR; i++) {
-    data -> result[i] = 0;
-}
+  for (i = 0; i < SIZE * NVAR; i++) {
+      data -> result[i] = 0;
+  }
 
 }
 
@@ -195,34 +193,25 @@ void output_to_data(int fd, void *vdata) {
   p = readfile(fd);
 
   s = find_section_start(p,1);
-  STAC(parse_,TYPE,_array)(s, data->result, SIZE *              NVAR);
+  STAC(parse_,TYPE,_array)(s, data->result, SIZE * NVAR);
 }
-
-
-
-
-
-
 
 void data_to_output(int fd, void *vdata) {
   struct bench_args_t *data = (struct bench_args_t *)vdata;
 
+  FILE* fid = fopen("output.data", "w");
 
-FILE* fid = fopen("output.data", "w");
+  for (int kk = 0; kk <SIZE * NVAR;kk++){
+    fprintf(fid,"%.40f\n", data->result[kk]);
+  }
 
-for (int kk = 0; kk <SIZE *              NVAR;kk++){
-fprintf(fid,"%.40f\n", data->result[kk]);
-}
+  fclose(fid);
 
-fclose(fid);
-
-
-
-printf("+++++++++++++++++++++++++++++++++++data_to_output");
-for (int j = 0;j<10;j++){
-printf("%f\n",data->result[j]);
-}
-printf("%d\n",fd);
+  printf("+++++++++++++++++++++++++++++++++++data_to_output\n");
+  for (int j = 0;j<10;j++){
+    printf("%f\n",data->result[j]);
+  }
+  printf("%d\n",fd);
 //  write_section_header(fd);
 //  STAC(write_,TYPE,_array)(fd, data->result, SIZE);
 //  write_float_array(fd, data->variables, 100000);

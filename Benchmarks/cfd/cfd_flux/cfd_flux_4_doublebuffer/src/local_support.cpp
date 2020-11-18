@@ -47,9 +47,9 @@ void run_benchmark( void *vargs, cl_context& context, cl_command_queue& commands
 
   if (err != CL_SUCCESS)
   {
-      printf("Error: Failed to write to device memory!\n");
-      printf("Test failed\n");
-      exit(1);
+    printf("Error: Failed to write to device memory!\n");
+    printf("Test failed\n");
+    exit(1);
   }
 
   // 2nd: time of pageable-pinned memory copy
@@ -100,17 +100,15 @@ void run_benchmark( void *vargs, cl_context& context, cl_command_queue& commands
   
     err  = clEnqueueReadBuffer(commands, result_buffer,  CL_TRUE, 0, sizeof(args -> result)  , args -> result  , 0, NULL, NULL);  
 
-
   if (err != CL_SUCCESS)
   {
     printf("Error: Failed to read output array! %d\n", err);
     printf("Test failed\n");
     exit(1);
- }
+  }
 
   // 5th: time of data retrieving (PCIe + memcpy)
   toc(&timer, "data retrieving");
-
 }
 
 /* Input format:
@@ -146,28 +144,25 @@ void input_to_data(int fd, void *vdata) {
   STAC(parse_,TYPE,_array)(s, data -> normals, SIZE * NNB * NDIM);
 
   s = find_section_start(p,3);
-  STAC(parse_,TYPE,_array)(s, data -> variables, SIZE *              NVAR);
+  STAC(parse_,TYPE,_array)(s, data -> variables, SIZE * NVAR);
 
   s = find_section_start(p,4);
-  STAC(parse_,TYPE,_array)(s, data -> fc_momentum_x, SIZE *       NDIM);
+  STAC(parse_,TYPE,_array)(s, data -> fc_momentum_x, SIZE * NDIM);
 
   s = find_section_start(p,5);
-  STAC(parse_,TYPE,_array)(s, data -> fc_momentum_y, SIZE *       NDIM);
+  STAC(parse_,TYPE,_array)(s, data -> fc_momentum_y, SIZE * NDIM);
 
   s = find_section_start(p,6);
-  STAC(parse_,TYPE,_array)(s, data -> fc_momentum_z, SIZE *       NDIM);
+  STAC(parse_,TYPE,_array)(s, data -> fc_momentum_z, SIZE * NDIM);
 
   s = find_section_start(p,7);
-  STAC(parse_,TYPE,_array)(s, data -> fc_density_energy, SIZE *       NDIM);
-
-
+  STAC(parse_,TYPE,_array)(s, data -> fc_density_energy, SIZE * NDIM);
 
 //printf("%d FD:++++++++++++++++++++++++++++", fd);
 
-for (i = 0; i < SIZE *              NVAR; i++) {
-    data -> result[i] = 0;
-}
-
+  for (i = 0; i < SIZE * NVAR; i++) {
+      data -> result[i] = 0;
+  }
 }
 
 // void data_to_input(int fd, void *vdata) {
@@ -185,7 +180,6 @@ for (i = 0; i < SIZE *              NVAR; i++) {
 //   write_section_header(fd);
 // }
 
-
 void output_to_data(int fd, void *vdata) {
   struct bench_args_t *data = (struct bench_args_t *)vdata;
   char *p, *s;
@@ -195,37 +189,28 @@ void output_to_data(int fd, void *vdata) {
   p = readfile(fd);
 
   s = find_section_start(p,1);
-  STAC(parse_,TYPE,_array)(s, data->result, SIZE *              NVAR);
+  STAC(parse_,TYPE,_array)(s, data->result, SIZE * NVAR);
 }
-
-
-
-
-
-
 
 void data_to_output(int fd, void *vdata) {
   struct bench_args_t *data = (struct bench_args_t *)vdata;
 
+  FILE* fid = fopen("output.data", "w");
 
-FILE* fid = fopen("output.data", "w");
+  for (int kk = 0; kk <SIZE * NVAR;kk++){
+    fprintf(fid,"%.40f\n", data->result[kk]);
+  }
 
-for (int kk = 0; kk <SIZE *              NVAR;kk++){
-fprintf(fid,"%.40f\n", data->result[kk]);
-}
+  fclose(fid);
 
-fclose(fid);
-
-
-
-printf("+++++++++++++++++++++++++++++++++++data_to_output");
-for (int j = 0;j<10;j++){
-printf("%f\n",data->result[j]);
-}
-printf("%d\n",fd);
-//  write_section_header(fd);
-//  STAC(write_,TYPE,_array)(fd, data->result, SIZE);
-//  write_float_array(fd, data->variables, 100000);
+  printf("+++++++++++++++++++++++++++++++++++data_to_output");
+  for (int j = 0;j<10;j++){
+    printf("%f\n",data->result[j]);
+  }
+  printf("%d\n",fd);
+  //  write_section_header(fd);
+  //  STAC(write_,TYPE,_array)(fd, data->result, SIZE);
+  //  write_float_array(fd, data->variables, 100000);
 }
 
 int check_data( void *vdata, void *vref ) {
@@ -238,7 +223,8 @@ int check_data( void *vdata, void *vref ) {
 //     printf("%.18f\n",data->result[j]-ref->result[j]);
 //     }
 // }
-  has_errors |= memcmp(data->result, ref->result, SIZE *              NVAR);
+  has_errors |= memcmp(data->result, ref->result, SIZE * NVAR);
+  
   // Return true if it's correct.
   return !has_errors;
 }

@@ -43,11 +43,8 @@ struct float3 { float x, y, z; };
 struct bench_args_t {
 
     float result                          [SIZE *              NVAR];
-
     float elements_surrounding_elements   [SIZE * NNB];
-    
     float normals                         [SIZE * NNB * NDIM];
-    
     float variables                       [SIZE *              NVAR];
     
     float fc_momentum_x                   [SIZE *       NDIM];

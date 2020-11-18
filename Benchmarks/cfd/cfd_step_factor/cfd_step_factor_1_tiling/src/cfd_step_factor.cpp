@@ -2,11 +2,6 @@
 
 extern "C" {
 
-
-
-
-
-
 inline void compute_velocity(float& density, float3& momentum, float3& velocity)
 {
     velocity.x = momentum.x / density;
@@ -29,9 +24,6 @@ inline float compute_speed_of_sound(float& density, float& pressure)
     return sqrt(float(GAMMA)*pressure / density);
 }
 
-
-
-
 void cfd_step_factor(float result[TILE_ROWS], float variables[TILE_ROWS * NVAR], float areas[TILE_ROWS])
 {
     for (int i = 0; i < TILE_ROWS; i++)
@@ -52,7 +44,6 @@ void cfd_step_factor(float result[TILE_ROWS], float variables[TILE_ROWS * NVAR],
      result[i] = float(0.5f) / (sqrt(areas[i]) * (sqrt(speed_sqd) + speed_of_sound));
     }
 }
-
 
 void workload(float result[SIZE], float variables[SIZE * NVAR], float areas[SIZE])
 {
@@ -82,11 +73,8 @@ void workload(float result[SIZE], float variables[SIZE * NVAR], float areas[SIZE
         memcpy(result + k * TILE_ROWS, result_inner, sizeof(float) * TILE_ROWS);
 
     }
-
     
     return;
-
-
 }
 
 }

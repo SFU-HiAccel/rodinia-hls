@@ -4,10 +4,6 @@
 #include"../../../../common/mc.h"
 
 extern "C" {
-
-
-
-
 inline void compute_velocity(float& density, float3& momentum, float3& velocity)
 {
     velocity.x = (float)momentum.x / (float)density;
@@ -29,9 +25,6 @@ inline float compute_speed_of_sound(float& density, float& pressure)
 {
     return (float)sqrt((float)(float(GAMMA)*(float)pressure / (float)density));
 }
-
-
-
 
 void cfd_step_factor(float result[TILE_ROWS], float variables[TILE_ROWS * NVAR], float areas[TILE_ROWS])
 {
@@ -198,13 +191,8 @@ void buffer_store(int flag, int k, class ap_uint<LARGE_BUS> * result, float resu
     return;
 }
 
-
-
-
-
 void workload(class ap_uint<LARGE_BUS> * result,  class ap_uint<LARGE_BUS> * variables, class ap_uint<LARGE_BUS> * areas)
 {
-
     #pragma HLS INTERFACE m_axi port=result offset=slave bundle=result
     #pragma HLS INTERFACE m_axi port=variables offset=slave bundle=variables
     #pragma HLS INTERFACE m_axi port=areas offset=slave bundle=areas
@@ -214,7 +202,6 @@ void workload(class ap_uint<LARGE_BUS> * result,  class ap_uint<LARGE_BUS> * var
     #pragma HLS INTERFACE s_axilite port=areas bundle=control
     
     #pragma HLS INTERFACE s_axilite port=return bundle=control
-
 
     float result_inner_0      [TILE_ROWS];
 #pragma HLS array_partition variable=result_inner_0       cyclic factor=16
@@ -278,13 +265,8 @@ void workload(class ap_uint<LARGE_BUS> * result,  class ap_uint<LARGE_BUS> * var
             buffer_store(store_flag, k - 3, result, result_inner_0);
         }
 
-}
-
-
-    
+    } 
     return;
-
-
 }
 
 }

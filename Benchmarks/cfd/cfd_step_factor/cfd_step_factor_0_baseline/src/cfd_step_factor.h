@@ -7,26 +7,23 @@
 #include <string.h>
 #include <math.h>
 
-#define GRID_ROWS (1024 * 1024)
+#define GRID_ROWS 1024//(1024 * 1024)
 
 #define SIZE GRID_ROWS
 
-#define TILE_ROWS (1024)
+#define TILE_ROWS 32 //(1024)
 
 #define PARA_FACTOR 16
 
 #define TOP 0
 #define BOTTOM (GRID_ROWS / TILE_ROWS - 1)
 
-
-
-
 #define GAMMA 1.4
 
 #define NDIM 3
 #define NNB 4
 
-#define RK 3	// 3rd order RK
+#define RK 3    // 3rd order RK
 #define ff_mach 1.2
 #define deg_angle_of_attack 0.0f
 
@@ -42,10 +39,9 @@ struct float3 { float x, y, z; };
 
 
 struct bench_args_t {
-    	float result[SIZE];
-	float variables[SIZE * NVAR];
-	float areas[SIZE];
+    float result[SIZE];
+    float variables[SIZE * NVAR];
+    float areas[SIZE];
 };
-
 
 #endif

@@ -1,9 +1,6 @@
 #include"cfd_step_factor.h"
 
 extern "C" {
-
-
-
 inline void compute_velocity(float& density, float3& momentum, float3& velocity)
 {
     velocity.x = momentum.x / density;
@@ -25,9 +22,6 @@ inline float compute_speed_of_sound(float& density, float& pressure)
 {
     return sqrt(float(GAMMA)*pressure / density);
 }
-
-
-
 
 void cfd_step_factor(float result[TILE_ROWS], float variables[TILE_ROWS * NVAR], float areas[TILE_ROWS])
 {
@@ -163,7 +157,6 @@ void cfd_step_factor(float result[TILE_ROWS], float variables[TILE_ROWS * NVAR],
     }
 }
 
-
 void buffer_load_variables(int flag, int k, float variables_inner[TILE_ROWS * NVAR], float* variables)
 {
 #pragma HLS inline off
@@ -192,10 +185,6 @@ void buffer_store(int flag, int k, float* result, float result_inner[TILE_ROWS])
     return;
 }
 
-
-
-
-
 void workload(float result[SIZE], float variables[SIZE * NVAR], float areas[SIZE])
 {
 
@@ -208,7 +197,6 @@ void workload(float result[SIZE], float variables[SIZE * NVAR], float areas[SIZE
     #pragma HLS INTERFACE s_axilite port=areas bundle=control
     
     #pragma HLS INTERFACE s_axilite port=return bundle=control
-
 
     float result_inner_0      [TILE_ROWS];
 #pragma HLS array_partition variable=result_inner_0       cyclic factor=16
@@ -274,13 +262,8 @@ void workload(float result[SIZE], float variables[SIZE * NVAR], float areas[SIZE
         }
 
     }
-
-
-
     
     return;
-
-
 }
 
 }

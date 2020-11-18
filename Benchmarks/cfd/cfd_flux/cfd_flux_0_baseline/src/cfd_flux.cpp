@@ -27,7 +27,7 @@ inline float compute_speed_of_sound(float& density, float& pressure)
 
 
 
-void cfd_flux(float result[SIZE * NVAR], float elements_surrounding_elements [SIZE * NNB], float normals [SIZE * NNB * NDIM], float variables [SIZE * NVAR], float fc_momentum_x [SIZE * NDIM], float fc_momentum_y [SIZE *       NDIM], float fc_momentum_z [SIZE *       NDIM], float fc_density_energy [SIZE *       NDIM])
+void cfd_flux(float result[SIZE * NVAR], float elements_surrounding_elements [SIZE * NNB], float normals [SIZE * NNB * NDIM], float variables [SIZE * NVAR], float fc_momentum_x [SIZE * NDIM], float fc_momentum_y [SIZE * NDIM], float fc_momentum_z [SIZE * NDIM], float fc_density_energy [SIZE * NDIM])
 {
 
 
@@ -102,6 +102,7 @@ void cfd_flux(float result[SIZE * NVAR], float elements_surrounding_elements [SI
             normal.z = normals[(i*NNB + j)*NDIM + 2];
             normal_len = sqrt(normal.x*normal.x + normal.y*normal.y + normal.z*normal.z);
 
+            if(nb >= 0)
             {
                 density_nb =        variables[nb*NVAR + VAR_DENSITY];
                 momentum_nb.x =     variables[nb*NVAR + (VAR_MOMENTUM+0)];
@@ -157,11 +158,13 @@ void cfd_flux(float result[SIZE * NVAR], float elements_surrounding_elements [SI
                 flux_i_momentum.y += factor*(fc_nb_momentum_y.z+fc_i_momentum_y.z);
                 flux_i_momentum.z += factor*(fc_nb_momentum_z.z+fc_i_momentum_z.z);
             }
+            else if(nb == -1)
             {
                 flux_i_momentum.x += normal.x*pressure_i;
                 flux_i_momentum.y += normal.y*pressure_i;
                 flux_i_momentum.z += normal.z*pressure_i;
             }
+            else if(nb == -2)
             {
                 factor = float(0.5f)*normal.x;
                 flux_i_density += factor*(ff_variable[VAR_MOMENTUM+0]+momentum_i.x);
