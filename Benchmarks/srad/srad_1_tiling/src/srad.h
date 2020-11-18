@@ -2,13 +2,15 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define TILE_ROWS 16
-#define ROWS 1024
-#define COLS 1024
+#define TILE_ROWS 256//16
+#define ROWS 256//1024
+#define COLS 256//1024
 #define R1 0
-#define R2 63
+#define R2 127
+//#define R2 63
 #define C1 0
-#define C2 63
+#define C2 127
+// #define C2 63
 #define LAMBDA 0.5 
 #define PARA_FACTOR 16
 #define NITER 2

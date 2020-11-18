@@ -29,11 +29,11 @@ void run_benchmark( void *vargs, cl_context& context, cl_command_queue& commands
   err  = clEnqueueWriteBuffer(commands, J_buffer, CL_TRUE, 0, sizeof(args->J), args->J, 0, NULL, NULL);
 
   if (err != CL_SUCCESS)
-    {
-      printf("Error: Failed to write to device memory!\n");
-      printf("Test failed\n");
-      exit(1);
-    }
+  {
+    printf("Error: Failed to write to device memory!\n");
+    printf("Test failed\n");
+    exit(1);
+  }
 
   // 2nd: time of pageable-pinned memory copy
   toc(&timer, "memory copy");

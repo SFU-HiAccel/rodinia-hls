@@ -17,7 +17,7 @@ float srad_core1 (float dN, float dS, float dW, float dE,
   // diffusion coefficent (equ 33)
   den = (qsqr-q0sqr) / (q0sqr * (1+q0sqr)) ;
   c = 1.0 / (1.0+den) ;
-  //printf("core1: d = %.16f, %.16f, %.16f, %.16f; Jc = %.16f, q0sqr = %.16f, den = %.16f, c = %.16f\n", dN, dS, dW, dE, Jc, q0sqr, den, c);
+  
   return c;
 }
 
@@ -91,53 +91,43 @@ void srad_kernel2(float J[(TILE_ROWS+3)*COLS], float Jout[TILE_ROWS*COLS], float
   float c[(TILE_ROWS+1)*COLS];
   //#pragma HLS array_partition variable=c cyclic factor=32
   
-  //initialize the line buffer
-  /*KERNEL1: for (i = 0; i < COLS * 2 / PARA_FACTOR + 1; i++) {
-    //#pragma HLS pipeline II=1 
-    for (ii = 0; ii < PARA_FACTOR; ii++) {
-      J_rf[ii][i] = J[i*PARA_FACTOR + ii];
-    }
-  }*/
-
-  /*printf ("========q0sqr = %.16f\n", q0sqr);
-  for (i = 0; i < (TILE_ROWS+3)*COLS; i++)
-  printf("J[%d] = %.16f\n", i, J[i]);*/
-  
   MAIN_KERNEL1: for (i = -2*COLS/PARA_FACTOR-1; i < COLS / PARA_FACTOR * (TILE_ROWS+1); i++) {
     //#pragma HLS pipeline II=1
     for (k = 0; k < PARA_FACTOR; k++) {
       //#pragma HLS unroll
       //read from line buffer, handle borders as well
       J_center[k]  = J_rf[k][COLS / PARA_FACTOR];
-      
       J_top[k]     = (tile == TOP_TILE && i < COLS / PARA_FACTOR) ? J_center[k] : J_rf[k][0];
-
       J_left[k]    = ((i % (COLS / PARA_FACTOR)) == 0 && k == 0) ? J_center[k] : J_rf[(k - 1 + PARA_FACTOR) % PARA_FACTOR][COLS / PARA_FACTOR - (k == 0) ];
-
       J_right[k]   = ((i % (COLS / PARA_FACTOR)) == (COLS / PARA_FACTOR - 1) && k == PARA_FACTOR - 1) ? J_center[k] : J_rf[(k + 1 + PARA_FACTOR) % PARA_FACTOR][COLS / PARA_FACTOR + (k == (PARA_FACTOR - 1)) ];
-
       J_bottom[k]  = (tile == BOTTOM_TILE && i >= COLS / PARA_FACTOR * (TILE_ROWS - 1)) ? J_center[k] : J_rf[k][COLS / PARA_FACTOR * 2];
 
       if (i >= 0) {
 	// directional derivates
 	// note that in srad, we have two stencil cores
 	// and we have to store the intermediate data
-	dN[i*PARA_FACTOR+k] = J_top[k] - J_center[k];
-	dS[i*PARA_FACTOR+k] = J_bottom[k] - J_center[k];
-	dW[i*PARA_FACTOR+k] = J_left[k] - J_center[k];
-	dE[i*PARA_FACTOR+k] = J_right[k] - J_center[k];
+      	dN[i*PARA_FACTOR+k] = J_top[k] - J_center[k];
+      	dS[i*PARA_FACTOR+k] = J_bottom[k] - J_center[k];
+      	dW[i*PARA_FACTOR+k] = J_left[k] - J_center[k];
+      	dE[i*PARA_FACTOR+k] = J_right[k] - J_center[k];
 
 	// call the stencil core
-	c_tmp[k] = srad_core1(dN[i*PARA_FACTOR+k],
-			      dS[i*PARA_FACTOR+k],
-			      dW[i*PARA_FACTOR+k],
-			      dE[i*PARA_FACTOR+k],
-			      J_center[k], q0sqr);
-                
+      	c_tmp[k] = srad_core1(dN[i*PARA_FACTOR+k],
+      			      dS[i*PARA_FACTOR+k],
+      			      dW[i*PARA_FACTOR+k],
+      			      dE[i*PARA_FACTOR+k],
+      			      J_center[k], q0sqr);
+                      
 	// saturate diffusion coefficent
-	if (c_tmp[k] < 0) {c[i*PARA_FACTOR+k] = 0;}
-	else if (c_tmp[k] > 1) {c[i*PARA_FACTOR+k] = 1;}
-	else {c[i*PARA_FACTOR+k] = c_tmp[k];}
+      	if (c_tmp[k] < 0) {
+          c[i*PARA_FACTOR+k] = 0;
+        }
+      	else if (c_tmp[k] > 1) {
+          c[i*PARA_FACTOR+k] = 1;
+        }
+      	else {
+          c[i*PARA_FACTOR+k] = c_tmp[k];
+        }
 	//printf("index = %d, c_tmp = %.16f, c = %.16f\n", i*PARA_FACTOR+k, c_tmp[k], c[i*PARA_FACTOR+k]);
       }
     }
@@ -172,16 +162,14 @@ void srad_kernel2(float J[(TILE_ROWS+3)*COLS], float Jout[TILE_ROWS*COLS], float
       //#pragma HLS unroll
       //read from line buffer, handle borders as well
       c_center[k]  = c_rf[k][0];
-
       c_right[k]   = ((i % (COLS / PARA_FACTOR)) == (COLS / PARA_FACTOR - 1) && k == PARA_FACTOR - 1) ? c_center[k] : c_rf[(k + 1 + PARA_FACTOR) % PARA_FACTOR][ (k == (PARA_FACTOR - 1)) ];
-
       c_bottom[k]  = (tile == BOTTOM_TILE && i >= COLS / PARA_FACTOR * (TILE_ROWS - 1)) ? c_center[k] : c_rf[k][COLS / PARA_FACTOR];
 
       if (i >= 0) {
-	Jout[i*PARA_FACTOR+k] = srad_core2(dN[i*PARA_FACTOR+k], dS[i*PARA_FACTOR+k],
-					   dW[i*PARA_FACTOR+k], dE[i*PARA_FACTOR+k],
-					   c_center[k], c_bottom[k], c_center[k], c_right[k],
-					   J[COLS+i*PARA_FACTOR+k]);
+      	Jout[i*PARA_FACTOR+k] = srad_core2(dN[i*PARA_FACTOR+k], dS[i*PARA_FACTOR+k],
+      					   dW[i*PARA_FACTOR+k], dE[i*PARA_FACTOR+k],
+      					   c_center[k], c_bottom[k], c_center[k], c_right[k],
+      					   J[COLS+i*PARA_FACTOR+k]);
 	//printf("========inside Jout[%d]=%.16f\n", i*PARA_FACTOR+k, Jout[i*PARA_FACTOR+k]);
       }
     }

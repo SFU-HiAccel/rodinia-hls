@@ -2,7 +2,7 @@
 #include "support.h"
 #include <string.h>
 #include "my_timer.h"
-
+//This is 0
 int INPUT_SIZE = sizeof(struct bench_args_t);
 
 void run_benchmark( void *vargs, cl_context& context, cl_command_queue& commands, cl_program& program, cl_kernel& kernel ) 
@@ -142,7 +142,7 @@ void data_to_output(int fd, void *vdata) {
   printf("%f\n",data->Jout[COLS]);
 
   write_section_header(fd);
-  STAC(write_,TYPE,_array)(fd, data->J+COLS, ROWS * COLS);
+  STAC(write_,TYPE,_array)(fd, data->Jout+COLS, ROWS * COLS);
   write_section_header(fd);
 }
 
@@ -156,7 +156,7 @@ int check_data( void *vdata, void *vref ) {
 
   //note that we only print useful data into the output.data file
   // has_errors |= memcmp(data->J, ref->J, ROWS * COLS);
-  has_errors |= memcmp(data->J, ref->Jout, ROWS * COLS);
+  has_errors |= memcmp(data->Jout, ref->Jout, ROWS * COLS);
   //printf("finished comparing\n");
   
   // Return true if it's correct.
