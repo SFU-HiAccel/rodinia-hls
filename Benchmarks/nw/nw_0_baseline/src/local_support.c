@@ -9,10 +9,12 @@ void run_benchmark( void *vargs, cl_context& context, cl_command_queue& commands
   struct bench_args_t *args = (struct bench_args_t *)vargs;
   int num_jobs = 1 << 10;
 
+// Create host buffer
   char* seqA_batch = (char *)malloc(sizeof(args->seqA) * num_jobs);
   char* seqB_batch = (char *)malloc(sizeof(args->seqB) * num_jobs);
   char* alignedA_batch = (char *)malloc(sizeof(args->alignedA) * num_jobs);
   char* alignedB_batch = (char *)malloc(sizeof(args->alignedB) * num_jobs);
+  
   int i;
   for (i=0; i<num_jobs; i++) {
     memcpy(seqA_batch + i*sizeof(args->seqA), args->seqA, sizeof(args->seqA));
@@ -37,12 +39,12 @@ void run_benchmark( void *vargs, cl_context& context, cl_command_queue& commands
     printf("Error: Failed to allocate device memory!\n");
     printf("Test failed\n");
     exit(1);
-  }    
+  }
 
   // 1st: time of buffer allocation
   toc(&timer, "buffer allocation");
 
-  // Write our data set into device buffers  
+  // Write our data set into device buffers
   //
   int err;
   err = clEnqueueWriteBuffer(commands, seqA_buffer, CL_TRUE, 0, sizeof(args->seqA)*num_jobs, seqA_batch, 0, NULL, NULL);
@@ -56,7 +58,7 @@ void run_benchmark( void *vargs, cl_context& context, cl_command_queue& commands
 
   // 2nd: time of pageable-pinned memory copy
   toc(&timer, "memory copy");
-    
+
   // Set the arguments to our compute kernel
   //
   err  = clSetKernelArg(kernel, 0, sizeof(cl_mem), &seqA_buffer);
@@ -97,8 +99,8 @@ void run_benchmark( void *vargs, cl_context& context, cl_command_queue& commands
 
   // Read back the results from the device to verify the output
   //
-  err = clEnqueueReadBuffer( commands, alignedA_buffer, CL_TRUE, 0, sizeof(args->alignedA)*num_jobs, alignedA_batch, 0, NULL, NULL );  
-  err |= clEnqueueReadBuffer( commands, alignedB_buffer, CL_TRUE, 0, sizeof(args->alignedB)*num_jobs, alignedB_batch, 0, NULL, NULL );  
+  err = clEnqueueReadBuffer( commands, alignedA_buffer, CL_TRUE, 0, sizeof(args->alignedA)*num_jobs, alignedA_batch, 0, NULL, NULL );
+  err |= clEnqueueReadBuffer( commands, alignedB_buffer, CL_TRUE, 0, sizeof(args->alignedB)*num_jobs, alignedB_batch, 0, NULL, NULL );
   if (err != CL_SUCCESS)
   {
     printf("Error: Failed to read output array! %d\n", err);

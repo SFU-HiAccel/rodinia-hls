@@ -133,7 +133,6 @@ void input_to_data(int fd, void *vdata) {
 
   s = find_section_start(p,2);
   parse_string(s, data->seqB, BLEN);
-
 }
 
 void data_to_input(int fd, void *vdata) {

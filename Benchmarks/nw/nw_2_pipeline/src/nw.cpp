@@ -15,7 +15,6 @@
 #define UNROLL_FACTOR 64
 #define JOBS_PER_PE ((JOBS_PER_BATCH)/(UNROLL_FACTOR))
 
-
 void needwun(char SEQA[ALEN], char SEQB[BLEN],
              char alignedA[ALEN+BLEN], char alignedB[ALEN+BLEN]){
 
@@ -44,53 +43,55 @@ void needwun(char SEQA[ALEN], char SEQB[BLEN],
     fill_out: for(b_idx=1; b_idx<(BLEN+1); b_idx++){
         fill_in: for(a_idx=0; a_idx<(ALEN+1); a_idx++){
 	#pragma HLS PIPELINE
-	    if (a_idx == 0) {
-	        M_latter[0] = b_idx * GAP_SCORE;
-		ptr[b_idx*(ALEN+1)] = SKIPA;
-	    }
-	    else {
-                if(SEQA[a_idx-1] == SEQB[b_idx-1]){
-                    score = MATCH_SCORE;
-                } else {
-                    score = MISMATCH_SCORE;
-                }
+    	    if (a_idx == 0) {
+    	        M_latter[0] = b_idx * GAP_SCORE;
+                ptr[b_idx*(ALEN+1)] = SKIPA;
+    	    }
+    	    else {
+                    if(SEQA[a_idx-1] == SEQB[b_idx-1]){
+                        score = MATCH_SCORE;
+                    } else {
+                        score = MISMATCH_SCORE;
+                    }
 
-	        char x = M_former[ALEN];
-                char y = M_former[0  ];
-                char z = M_latter[ALEN];
+    	        char x = M_former[ALEN];
+                    char y = M_former[0  ];
+                    char z = M_latter[ALEN];
 
-                up_left = x + score;
-                up      = y + GAP_SCORE;
-                left    = z + GAP_SCORE;
+                    up_left = x + score;
+                    up      = y + GAP_SCORE;
+                    left    = z + GAP_SCORE;
 
-                max = MAX(up_left, MAX(up, left));
+                    max = MAX(up_left, MAX(up, left));
 
-                M_latter[0] = max;
+                    M_latter[0] = max;
 
-                row = (b_idx)*(ALEN+1);
-                if(max == left){
-                    ptr[row + a_idx] = SKIPB;
-                } else if(max == up){
-                    ptr[row + a_idx] = SKIPA;
-                } else{
-                    ptr[row + a_idx] = ALIGN;
-                }
-	    }
+                    row = (b_idx)*(ALEN+1);
+                    if(max == left){
+                        ptr[row + a_idx] = SKIPB;
+                    } else if(max == up){
+                        ptr[row + a_idx] = SKIPA;
+                    } else{
+                        ptr[row + a_idx] = ALIGN;
+                    }
+    	    }
 	    //-- shifting register
-	    char tmp_former = M_former[0];
-	    char tmp_latter = M_latter[0];
-	    for(int i=0; i<ALEN+1-1; i++){
-	        M_former[i] = M_former[i+1] ; 
-	        M_latter[i] = M_latter[i+1] ; 
-	    }
-	    M_former[ALEN+1-1] = tmp_former;
-	    M_latter[ALEN+1-1] = tmp_latter;
+    	    char tmp_former = M_former[0];
+    	    char tmp_latter = M_latter[0];
+
+    	    for(int i=0; i<ALEN+1-1; i++){
+    	        M_former[i] = M_former[i+1] ; 
+    	        M_latter[i] = M_latter[i+1] ; 
+	        }
+
+    	    M_former[ALEN+1-1] = tmp_former;
+    	    M_latter[ALEN+1-1] = tmp_latter;
         }
 
-	for (int k=0; k<ALEN+1; k++) {
-	#pragma HLS UNROLL
-	    M_former[k] = M_latter[k];
-	}
+    	for (int k=0; k<ALEN+1; k++) {
+    	#pragma HLS UNROLL
+    	    M_former[k] = M_latter[k];
+    	}
     }
 
     // TraceBack (n.b. aligned sequences are backwards to avoid string appending)
@@ -142,7 +143,6 @@ void needwun_tiling(char* SEQA, char* SEQB,
 }
 
 extern "C" {
-
 void workload(char* SEQA, char* SEQB,
              char* alignedA, char* alignedB, int num_jobs) {
 #pragma HLS INTERFACE m_axi port=SEQA offset=slave bundle=gmem
@@ -167,7 +167,6 @@ void workload(char* SEQA, char* SEQB,
 
 	int num_batches = num_jobs / JOBS_PER_BATCH;
 
-
 	int i, j, k;
 	major_loop: for (i=0; i<num_batches; i++) {
 	    // step 1: copy data in
@@ -179,8 +178,8 @@ void workload(char* SEQA, char* SEQB,
 	    }
 	    // step 2: do the jobs
 	    unroll_loop: for (j=0; j<UNROLL_FACTOR; j++) {
-	    #pragma HLS UNROLL
-		needwun_tiling(seqA_buf[j], seqB_buf[j], alignedA_buf[j], alignedB_buf[j]);
+            #pragma HLS UNROLL
+            needwun_tiling(seqA_buf[j], seqB_buf[j], alignedA_buf[j], alignedB_buf[j]);
 	    }
 	    // step 3: copy results back
 	    reshape2_a: for (j=0; j<UNROLL_FACTOR; j++) {

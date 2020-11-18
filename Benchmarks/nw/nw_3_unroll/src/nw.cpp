@@ -14,7 +14,6 @@
 #define UNROLL_FACTOR 64
 #define JOBS_PER_PE ((JOBS_PER_BATCH)/(UNROLL_FACTOR))
 
-
 void needwun(char SEQA[ALEN], char SEQB[BLEN],
              char alignedA[ALEN+BLEN], char alignedB[ALEN+BLEN]){
 
@@ -39,13 +38,13 @@ void needwun(char SEQA[ALEN], char SEQB[BLEN],
     // b_idx = 0
     for (a_idx=0; a_idx<ALEN+1; a_idx++) {
         M_former[a_idx] = a_idx*GAP_SCORE;
-	ptr[a_idx] = SKIPB;
+        ptr[a_idx] = SKIPB;
     }
 
     // Matrix filling loop
     fill_out: for(b_idx=1; b_idx<(BLEN+1); b_idx++){
-	M_latter[0] = M_former[0] + GAP_SCORE;
-	ptr[b_idx*(ALEN+1)] = SKIPA;
+	    M_latter[0] = M_former[0] + GAP_SCORE;
+	    ptr[b_idx*(ALEN+1)] = SKIPA;
         fill_in: for(a_idx=1; a_idx<(ALEN+1); a_idx++){
             if(SEQA[a_idx-1] == SEQB[b_idx-1]){
                 score = MATCH_SCORE;
@@ -70,9 +69,10 @@ void needwun(char SEQA[ALEN], char SEQB[BLEN],
                 ptr[row + a_idx] = ALIGN;
             }
         }
-	for (int k=0; k<ALEN+1; k++) {
-	    M_former[k] = M_latter[k];
-	}
+
+    	for (int k=0; k<ALEN+1; k++) {
+    	    M_former[k] = M_latter[k];
+    	}
     }
 
     // TraceBack (n.b. aligned sequences are backwards to avoid string appending)
@@ -143,7 +143,6 @@ void workload(char* SEQA, char* SEQB,
 	#pragma HLS ARRAY_PARTITION variable=alignedB_buf complete dim=1
 
 	int num_batches = num_jobs / JOBS_PER_BATCH;
-
 
 	int i, j, k;
 	major_loop: for (i=0; i<num_batches; i++) {

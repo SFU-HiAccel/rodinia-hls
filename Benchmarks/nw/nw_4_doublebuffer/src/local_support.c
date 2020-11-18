@@ -14,6 +14,7 @@ void run_benchmark( void *vargs, cl_context& context, cl_command_queue& commands
   char* alignedA_batch = (char *)malloc(sizeof(args->alignedA) * num_jobs);
   char* alignedB_batch = (char *)malloc(sizeof(args->alignedB) * num_jobs);
   int i;
+  
   for (i=0; i<num_jobs; i++) {
     memcpy(seqA_batch + i*sizeof(args->seqA), args->seqA, sizeof(args->seqA));
     memcpy(seqB_batch + i*sizeof(args->seqB), args->seqB, sizeof(args->seqB));

@@ -44,53 +44,55 @@ void needwun(char SEQA[ALEN], char SEQB[BLEN],
     fill_out: for(b_idx=1; b_idx<(BLEN+1); b_idx++){
         fill_in: for(a_idx=0; a_idx<(ALEN+1); a_idx++){
 	#pragma HLS PIPELINE
-	    if (a_idx == 0) {
-	        M_latter[0] = b_idx * GAP_SCORE;
-		ptr[b_idx*(ALEN+1)] = SKIPA;
-	    }
-	    else {
-                if(SEQA[a_idx-1] == SEQB[b_idx-1]){
-                    score = MATCH_SCORE;
-                } else {
-                    score = MISMATCH_SCORE;
-                }
+      	    if (a_idx == 0) {
+      	        M_latter[0] = b_idx * GAP_SCORE;
+      		      ptr[b_idx*(ALEN+1)] = SKIPA;
+      	    }
+      	    else {
+                      if(SEQA[a_idx-1] == SEQB[b_idx-1]){
+                          score = MATCH_SCORE;
+                      } else {
+                          score = MISMATCH_SCORE;
+                      }
 
-	        char x = M_former[ALEN];
-                char y = M_former[0  ];
-                char z = M_latter[ALEN];
+      	        char x = M_former[ALEN];
+                      char y = M_former[0  ];
+                      char z = M_latter[ALEN];
 
-                up_left = x + score;
-                up      = y + GAP_SCORE;
-                left    = z + GAP_SCORE;
+                      up_left = x + score;
+                      up      = y + GAP_SCORE;
+                      left    = z + GAP_SCORE;
 
-                max = MAX(up_left, MAX(up, left));
+                      max = MAX(up_left, MAX(up, left));
 
-                M_latter[0] = max;
+                      M_latter[0] = max;
 
-                row = (b_idx)*(ALEN+1);
-                if(max == left){
-                    ptr[row + a_idx] = SKIPB;
-                } else if(max == up){
-                    ptr[row + a_idx] = SKIPA;
-                } else{
-                    ptr[row + a_idx] = ALIGN;
-                }
-	    }
+                      row = (b_idx)*(ALEN+1);
+                      if(max == left){
+                          ptr[row + a_idx] = SKIPB;
+                      } else if(max == up){
+                          ptr[row + a_idx] = SKIPA;
+                      } else{
+                          ptr[row + a_idx] = ALIGN;
+                      }
+      	    }
 	    //-- shifting register
-	    char tmp_former = M_former[0];
-	    char tmp_latter = M_latter[0];
-	    for(int i=0; i<ALEN+1-1; i++){
-	        M_former[i] = M_former[i+1] ; 
-	        M_latter[i] = M_latter[i+1] ; 
-	    }
-	    M_former[ALEN+1-1] = tmp_former;
-	    M_latter[ALEN+1-1] = tmp_latter;
+      	    char tmp_former = M_former[0];
+      	    char tmp_latter = M_latter[0];
+
+      	    for(int i=0; i<ALEN+1-1; i++){
+      	        M_former[i] = M_former[i+1] ; 
+      	        M_latter[i] = M_latter[i+1] ; 
+      	    }
+
+      	    M_former[ALEN+1-1] = tmp_former;
+      	    M_latter[ALEN+1-1] = tmp_latter;
         }
 
-	for (int k=0; k<ALEN+1; k++) {
-	#pragma HLS UNROLL
-	    M_former[k] = M_latter[k];
-	}
+    	for (int k=0; k<ALEN+1; k++) {
+    	#pragma HLS UNROLL
+    	    M_former[k] = M_latter[k];
+    	}
     }
 
     // TraceBack (n.b. aligned sequences are backwards to avoid string appending)
@@ -164,8 +166,8 @@ void buffer_store(int flag, char* global_buf_A, char part_buf_A[UNROLL_FACTOR][(
 
 void buffer_compute(int flag, char seqA_buf[UNROLL_FACTOR][ALEN*JOBS_PER_PE],
 	                      char seqB_buf[UNROLL_FACTOR][BLEN*JOBS_PER_PE],
-		              char alignedA_buf[UNROLL_FACTOR][(ALEN+BLEN)*JOBS_PER_PE],      
-                              char alignedB_buf[UNROLL_FACTOR][(ALEN+BLEN)*JOBS_PER_PE]) {
+		                    char alignedA_buf[UNROLL_FACTOR][(ALEN+BLEN)*JOBS_PER_PE],      
+                        char alignedB_buf[UNROLL_FACTOR][(ALEN+BLEN)*JOBS_PER_PE]) {
 #pragma HLS INLINE off
   int j;
   if (flag) {

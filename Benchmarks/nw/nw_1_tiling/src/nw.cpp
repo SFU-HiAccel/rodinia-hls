@@ -84,7 +84,7 @@ void needwun(char SEQA[ALEN], char SEQB[BLEN],
             b_idx--;
         }
     }
-
+    
     // Pad the result
     pad_a: for( ; a_str_idx<ALEN+BLEN; a_str_idx++ ) {
       alignedA[a_str_idx] = '_';
@@ -114,7 +114,6 @@ void workload(char* SEQA, char* SEQB,
 	char alignedB_buf[(ALEN+BLEN) * JOBS_PER_BATCH];
 
 	int num_batches = num_jobs / JOBS_PER_BATCH;
-
 
 	int i, j, k;
 	for (i=0; i<num_batches; i++) {

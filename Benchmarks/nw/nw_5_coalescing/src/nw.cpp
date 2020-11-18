@@ -16,7 +16,6 @@
 #define UNROLL_FACTOR 64
 #define JOBS_PER_PE ((JOBS_PER_BATCH)/(UNROLL_FACTOR))
 
-
 void needwun(char SEQA[ALEN], char SEQB[BLEN],
              char alignedA[ALEN+BLEN], char alignedB[ALEN+BLEN]){
 
@@ -45,18 +44,18 @@ void needwun(char SEQA[ALEN], char SEQB[BLEN],
     fill_out: for(b_idx=1; b_idx<(BLEN+1); b_idx++){
         fill_in: for(a_idx=0; a_idx<(ALEN+1); a_idx++){
 	#pragma HLS PIPELINE
-	    if (a_idx == 0) {
-	        M_latter[0] = b_idx * GAP_SCORE;
-		ptr[b_idx*(ALEN+1)] = SKIPA;
-	    }
-	    else {
+      	    if (a_idx == 0) {
+      	        M_latter[0] = b_idx * GAP_SCORE;
+      		      ptr[b_idx*(ALEN+1)] = SKIPA;
+      	    }
+      	    else {
                 if(SEQA[a_idx-1] == SEQB[b_idx-1]){
                     score = MATCH_SCORE;
                 } else {
                     score = MISMATCH_SCORE;
                 }
 
-	        char x = M_former[ALEN];
+      	        char x = M_former[ALEN];
                 char y = M_former[0  ];
                 char z = M_latter[ALEN];
 
@@ -76,22 +75,24 @@ void needwun(char SEQA[ALEN], char SEQB[BLEN],
                 } else{
                     ptr[row + a_idx] = ALIGN;
                 }
-	    }
-	    //-- shifting register
-	    char tmp_former = M_former[0];
-	    char tmp_latter = M_latter[0];
-	    for(int i=0; i<ALEN+1-1; i++){
-	        M_former[i] = M_former[i+1] ; 
-	        M_latter[i] = M_latter[i+1] ; 
-	    }
-	    M_former[ALEN+1-1] = tmp_former;
-	    M_latter[ALEN+1-1] = tmp_latter;
+      	    }
+  	    //-- shifting register
+      	    char tmp_former = M_former[0];
+      	    char tmp_latter = M_latter[0];
+
+      	    for(int i=0; i<ALEN+1-1; i++){
+      	        M_former[i] = M_former[i+1] ; 
+      	        M_latter[i] = M_latter[i+1] ; 
+      	    }
+
+      	    M_former[ALEN+1-1] = tmp_former;
+      	    M_latter[ALEN+1-1] = tmp_latter;
         }
 
-	for (int k=0; k<ALEN+1; k++) {
-	#pragma HLS UNROLL
-	    M_former[k] = M_latter[k];
-	}
+        for (int k=0; k<ALEN+1; k++) {
+        #pragma HLS UNROLL
+            M_former[k] = M_latter[k];
+        }
     }
 
     // TraceBack (n.b. aligned sequences are backwards to avoid string appending)
