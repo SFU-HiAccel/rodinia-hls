@@ -45,7 +45,6 @@ void buffer_compute(int flag, int kk, float delta_buf[16], float ly_buf[65536], 
                 oldw_buf[k][j] = new_dw;
             }
         }
-
     }
 }
 
@@ -117,7 +116,6 @@ void workload(float delta[17], float ly[65537], float w[65537 * 16], float oldw[
             buffer_compute(compute_flag, kk, delta_buf, ly_buf, w_buf_y, oldw_buf_y);
             buffer_store(store_flag, w+(kk+1)*16-2*TILE_SIZE*16, w_buf_x, oldw+(kk+1)*16-2*TILE_SIZE*16, oldw_buf_x);
         }
-
     }
 
     LOOP4: for (j = 0; j < 16; j++) {
@@ -126,9 +124,9 @@ void workload(float delta[17], float ly[65537], float w[65537 * 16], float oldw[
         w0_buf[j] += new_dw;
         oldw0_buf[j] = new_dw;
     }
+
     memcpy(w, w0_buf, sizeof(float)*16);
     memcpy(oldw, oldw0_buf, sizeof(float)*16);
-
 }
 
 }

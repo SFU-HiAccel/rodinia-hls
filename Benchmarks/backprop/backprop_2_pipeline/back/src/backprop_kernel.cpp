@@ -70,6 +70,7 @@ void workload(float delta[17], float ly[65537], float w[65537 * 16], float oldw[
         w0_buf[j] += new_dw;
         oldw0_buf[j] = new_dw;
     }
+    
     memcpy(w, w0_buf, sizeof(float)*16);
     memcpy(oldw, oldw0_buf, sizeof(float)*16);
 }

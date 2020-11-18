@@ -24,30 +24,23 @@ void bpnn_adjust_weights_FPGA(float *hidden, float *input, float *weight, float 
   timespec timer = tic();
 
   // Create device buffers
-  d_hidden = clCreateBuffer(context, CL_MEM_READ_WRITE, 17 * sizeof(float), NULL, &err);
+  cl_mem_ext_ptr_t d_hidden_ext; d_hidden_ext.flags = XCL_MEM_DDR_BANK0; d_hidden_ext.param = 0; d_hidden_ext.obj = 0;
+  d_hidden = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_EXT_PTR_XILINX, 17 * sizeof(float), &d_hidden_ext, &err);
   if (err != CL_SUCCESS) { printf("ERROR: clCreateBuffer d_hidden (size:17) => %d\n", err); }
-  d_input = clCreateBuffer(context, CL_MEM_READ_WRITE, 65537 * sizeof(float), NULL, &err);
-  if (err != CL_SUCCESS) { printf("ERROR: clCreateBuffer d_input (size:65537) => %d\n", err); }
-  d_weight = clCreateBuffer(context, CL_MEM_READ_WRITE, 65537 * 17 * sizeof(float), NULL, &err);
-  if (err != CL_SUCCESS) { printf("ERROR: clCreateBuffer d_weight (size:65537*17) => %d\n", err);}
-  d_prev_weight = clCreateBuffer(context, CL_MEM_READ_WRITE, 65537 * 17 * sizeof(float), NULL, &err);
-  if (err != CL_SUCCESS) { printf("ERROR: clCreateBuffer d_prev_weight (size:65537*17) => %d\n", err); }
 
+  cl_mem_ext_ptr_t d_input_ext; d_input_ext.flags = XCL_MEM_DDR_BANK1; d_input_ext.param = 0; d_input_ext.obj = 0;
+  d_input = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_EXT_PTR_XILINX, 65537 * sizeof(float), &d_input_ext, &err);
+  if (err != CL_SUCCESS) { printf("ERROR: clCreateBuffer d_input (size:65537) => %d\n", err); }
+
+  cl_mem_ext_ptr_t d_weight_ext; d_weight_ext.flags = XCL_MEM_DDR_BANK2; d_weight_ext.param = 0; d_weight_ext.obj = 0;
+  d_weight = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_EXT_PTR_XILINX, 65537 * 16 * sizeof(float), &d_weight_ext, &err);
+  if (err != CL_SUCCESS) { printf("ERROR: clCreateBuffer d_weight (size:65537*16) => %d\n", err); }
+
+  cl_mem_ext_ptr_t d_prev_weight_ext; d_prev_weight_ext.flags = XCL_MEM_DDR_BANK3; d_prev_weight_ext.param =0; d_prev_weight_ext.obj = 0;
+  d_prev_weight = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_EXT_PTR_XILINX, 65537 * 16 * sizeof(float), &d_prev_weight_ext, &err);
+  if (err != CL_SUCCESS) { printf("ERROR: clCreateBuffer d_prev_weight (size:65537*16) => %d\n", err); }
   // 1st: time of buffer allocation
   toc(&timer, "buffer allocation");
-
-  // Write our data set into device buffers
-  err = clEnqueueWriteBuffer(commands, d_hidden, 1, 0, 17 * sizeof(float), hidden, 0, 0, 0);
-  if (err != CL_SUCCESS) { printf("ERROR: clEnqueueWriteBuffer d_hidden (size:17) => %d\n", err); }
-  err = clEnqueueWriteBuffer(commands, d_input, 1, 0, 65537 * sizeof(float), input, 0, 0, 0);
-  if (err != CL_SUCCESS) { printf("ERROR: clEnqueueWriteBuffer d_input (size:65537) => %d\n", err); }
-  err = clEnqueueWriteBuffer(commands, d_weight, 1, 0, 65537 * 17 * sizeof(float), weight, 0, 0, 0);
-  if (err != CL_SUCCESS) { printf("ERROR: clEnqueueWriteBuffer d_weight (size:65537*17) => %d\n", err); }
-  err = clEnqueueWriteBuffer(commands, d_prev_weight, 1, 0, 65537 * 17 * sizeof(float), prev_weight, 0, 0, 0);
-  if (err != CL_SUCCESS) { printf("ERROR: clEnqueueWriteBuffer d_prev_weight (size:65537*17) => %d\n", err);}
-
-  // 2nd: time of pageable-pinned memory copy
-  toc(&timer, "memory copy");
 
   // Set the arguments to our compute kernel
   err = clSetKernelArg(kernel, 0, sizeof(void *), (void *) &d_hidden);
@@ -63,6 +56,19 @@ void bpnn_adjust_weights_FPGA(float *hidden, float *input, float *weight, float 
 
   // 3rd: time of setting arguments
   toc(&timer, "set arguments");
+  // Write our data set into device buffers
+
+  err = clEnqueueWriteBuffer(commands, d_hidden, 1, 0, 17 * sizeof(float), hidden, 0, 0, 0);
+  if (err != CL_SUCCESS) { printf("ERROR: clEnqueueWriteBuffer d_hidden (size:17) => %d\n", err); }
+  err = clEnqueueWriteBuffer(commands, d_input, 1, 0, 65537 * sizeof(float), input, 0, 0, 0);
+  if (err != CL_SUCCESS) { printf("ERROR: clEnqueueWriteBuffer d_input (size:65537) => %d\n", err); }
+  err = clEnqueueWriteBuffer(commands, d_weight, 1, 0, 65537 * 16 * sizeof(float), weight, 0, 0, 0);
+  if (err != CL_SUCCESS) { printf("ERROR: clEnqueueWriteBuffer d_weight (size:65537*16) => %d\n", err); }
+  err = clEnqueueWriteBuffer(commands, d_prev_weight, 1, 0, 65537 * 16 * sizeof(float), prev_weight, 0, 0, 0);
+  if (err != CL_SUCCESS) { printf("ERROR: clEnqueueWriteBuffer d_prev_weight (size:65537*16) => %d\n", err); }
+
+  // 2nd: time of pageable-pinned memory copy
+  toc(&timer, "memory copy");
 
   // Execute the kernel over the entire range of our 1d input data set
   // using the maximum number of work group items for this device
@@ -78,10 +84,9 @@ void bpnn_adjust_weights_FPGA(float *hidden, float *input, float *weight, float 
   // 4th: time of kernel execution
   toc(&timer, "kernel execution");
 
-  err = clEnqueueReadBuffer(commands, d_weight, 1, 0, 65537 * 17 * sizeof(float), weight, 0, 0, 0);
+  err = clEnqueueReadBuffer(commands, d_weight, 1, 0, 65537 * 16 * sizeof(float), weight, 0, 0, 0);
   if (err != CL_SUCCESS) { printf("ERROR: Memcopy Out\n"); }
-
-  err = clEnqueueReadBuffer(commands, d_prev_weight, 1, 0, 65537 * 17 * sizeof(float), prev_weight, 0, 0, 0);
+  err = clEnqueueReadBuffer(commands, d_prev_weight, 1, 0, 65537 * 16 * sizeof(float), prev_weight, 0, 0, 0);
   if (err != CL_SUCCESS) { printf("ERROR: Memcopy Out\n"); }
 
   // 5th: time of data retrieving (PCIe + memcpy)

@@ -28,7 +28,6 @@ void workload(float l1[65537], float l2[17], float conn[65537 * 17]) {
 
     /*** For each unit in second layer ***/
     for (j = 1; j <= 16; j++) {
-
         /*** Compute weighted sum of its inputs ***/
         sum = 0.0;
 
@@ -42,7 +41,7 @@ void workload(float l1[65537], float l2[17], float conn[65537 * 17]) {
                 }
             }
         }
-
+        
         l2_buf[j] = (1.0 / (1.0 + exp(-sum)));
     }
     memcpy(l2, l2_buf, sizeof(float) * 17);
