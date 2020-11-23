@@ -5,10 +5,10 @@
 
 extern "C" {
 void workload(float delta[17], float ly[65537], float w[65537 * 17], float oldw[65537 * 17]) {
-#pragma HLS INTERFACE m_axi port=delta offset=slave bundle=delta
-#pragma HLS INTERFACE m_axi port=ly offset=slave bundle=ly
-#pragma HLS INTERFACE m_axi port=w offset=slave bundle=w
-#pragma HLS INTERFACE m_axi port=oldw offset=slave bundle=oldw
+#pragma HLS INTERFACE m_axi port=delta offset=slave bundle=delta1
+#pragma HLS INTERFACE m_axi port=ly offset=slave bundle=ly1
+#pragma HLS INTERFACE m_axi port=w offset=slave bundle=w1
+#pragma HLS INTERFACE m_axi port=oldw offset=slave bundle=oldw1
 
 #pragma HLS INTERFACE s_axilite port=delta bundle=control
 #pragma HLS INTERFACE s_axilite port=ly bundle=control

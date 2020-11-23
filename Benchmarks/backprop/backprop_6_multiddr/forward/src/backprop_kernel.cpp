@@ -45,9 +45,9 @@ void buffer_compute(int flag, int kk, float l1_buf[65537], float conn_buf[TILE_S
 }
 
 void workload(class ap_uint< 512 > *l1, class ap_uint< 512 > *l2, class ap_uint< 512 > *conn) {
-#pragma HLS INTERFACE m_axi port=l1 offset=slave bundle=l1
-#pragma HLS INTERFACE m_axi port=l2 offset=slave bundle=l2
-#pragma HLS INTERFACE m_axi port=conn offset=slave bundle=conn
+#pragma HLS INTERFACE m_axi port=l1 offset=slave bundle=l11
+#pragma HLS INTERFACE m_axi port=l2 offset=slave bundle=l21
+#pragma HLS INTERFACE m_axi port=conn offset=slave bundle=conn1
 
 
 #pragma HLS INTERFACE s_axilite port=l1 bundle=control

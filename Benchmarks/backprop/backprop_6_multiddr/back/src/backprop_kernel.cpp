@@ -83,10 +83,10 @@ void buffer_compute(int flag, int kk, float delta_buf[16], float ly_buf[TILE_SIZ
 }
 
 void workload(class ap_uint< 512 > *delta, class ap_uint< 512 > *ly, class ap_uint< 512 > *w, class ap_uint< 512 > *oldw) {
-#pragma HLS INTERFACE m_axi port=delta offset=slave bundle=delta
-#pragma HLS INTERFACE m_axi port=ly offset=slave bundle=ly
-#pragma HLS INTERFACE m_axi port=w offset=slave bundle=w
-#pragma HLS INTERFACE m_axi port=oldw offset=slave bundle=oldw
+#pragma HLS INTERFACE m_axi port=delta offset=slave bundle=delta1
+#pragma HLS INTERFACE m_axi port=ly offset=slave bundle=ly1
+#pragma HLS INTERFACE m_axi port=w offset=slave bundle=w1
+#pragma HLS INTERFACE m_axi port=oldw offset=slave bundle=oldw1
 
 #pragma HLS INTERFACE s_axilite port=delta bundle=control
 #pragma HLS INTERFACE s_axilite port=ly bundle=control
