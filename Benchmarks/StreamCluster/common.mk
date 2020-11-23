@@ -47,7 +47,7 @@ BUILD_DIR_KERNEL = $(BUILD_DIR)/$(APP)
 # Changed from SDX to Vitis
 #CXX := $(XILINX_SDX)/bin/xcpp
 # XOCC := $(XILINX_SDX)/bin/xocc
-CXX := $(XILINX_SDX)/bin/xcpp
+CXX := $(XILINX_VITIS)/bin/xcpp
 VPP := $(XILINX_VITIS)/bin/v++
 
 #Include Libraries
@@ -130,5 +130,6 @@ clean:
 
 cleanall: clean
 	-$(RMDIR) $(XCLBIN)
-	-$(RMDIR) _x.*
+	-$(RMDIR) _x.* output.txt
+
 
