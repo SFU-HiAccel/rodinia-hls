@@ -96,9 +96,9 @@ void buffer_store(int flag, int k, class ap_uint<LARGE_BUS> *result_dest, float 
 void workload(class ap_uint<LARGE_BUS> *result, class ap_uint<LARGE_BUS> *temp, class ap_uint<LARGE_BUS> *power)
 {
 
-    #pragma HLS INTERFACE m_axi port=result offset=slave bundle=result max_write_burst_length=32 max_read_burst_length=32
-    #pragma HLS INTERFACE m_axi port=temp offset=slave bundle=temp max_write_burst_length=32 max_read_burst_length=32
-    #pragma HLS INTERFACE m_axi port=power offset=slave bundle=power max_write_burst_length=32 max_read_burst_length=32
+    #pragma HLS INTERFACE m_axi port=result offset=slave bundle=result1 max_write_burst_length=32 max_read_burst_length=32
+    #pragma HLS INTERFACE m_axi port=temp offset=slave bundle=temp1 max_write_burst_length=32 max_read_burst_length=32
+    #pragma HLS INTERFACE m_axi port=power offset=slave bundle=power1 max_write_burst_length=32 max_read_burst_length=32
     
     #pragma HLS INTERFACE s_axilite port=result bundle=control
     #pragma HLS INTERFACE s_axilite port=temp bundle=control
