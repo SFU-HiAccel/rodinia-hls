@@ -19,9 +19,9 @@ CLFLAGS += --dk protocol:all:all:all
 endif
 
 #Checks for XILINX_SDX
-ifndef XILINX_SDX
-$(error XILINX_SDX variable is not set, please set correctly and rerun)
-endif
+#ifndef XILINX_SDX
+#$(error XILINX_SDX variable is not set, please set correctly and rerun)
+#endif
 
 #Checks for XILINX_XRT
 check-xrt:
