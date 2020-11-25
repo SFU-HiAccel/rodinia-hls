@@ -31,9 +31,9 @@ help::
 # XILINX_VIVADO ?= /local-scratch/SDx/Vivado/2019.1
 # XILINX_VIVADO_HLS ?= $(XILINX_SDX)/Vivado_HLS
 
-XOCC_LINK_OPTS += --sp $(KERNAL_NAME)_1.m_axi_result:DDR[0]
-XOCC_LINK_OPTS += --sp $(KERNAL_NAME)_1.m_axi_imgvf:DDR[1]
-XOCC_LINK_OPTS += --sp $(KERNAL_NAME)_1.m_axi_I:DDR[2]	
+XOCC_LINK_OPTS += --connectivity.sp $(KERNAL_NAME)_1.m_axi_result:DDR[0]
+XOCC_LINK_OPTS += --connectivity.sp $(KERNAL_NAME)_1.m_axi_imgvf:DDR[1]
+XOCC_LINK_OPTS += --connectivity.sp $(KERNAL_NAME)_1.m_axi_I:DDR[2]	
 
 # Kernal Name
 APP=lc_mgvf
@@ -55,8 +55,11 @@ BUILD_DIR := ./_x.$(TARGET).$(DSA)
 
 BUILD_DIR_KERNEL = $(BUILD_DIR)/$(APP)
 
-CXX := $(XILINX_SDX)/bin/xcpp
-XOCC := $(XILINX_SDX)/bin/xocc
+#CXX := $(XILINX_SDX)/bin/xcpp
+#XOCC := $(XILINX_SDX)/bin/xocc
+CXX := $(XILINX_VITIS)/bin/xcpp
+VPP := $(XILINX_VITIS)/bin/v++
+
 
 #Include Libraries
 include $(ABS_COMMON_REPO)/libs/opencl/opencl.mk
@@ -100,10 +103,12 @@ build: $(BINARY_CONTAINERS)
 # Building kernel
 $(XCLBIN)/$(APP).$(TARGET).$(DSA).xo: src/$(APP).cpp
 	mkdir -p $(XCLBIN)
-	$(XOCC) $(CLFLAGS) --temp_dir $(BUILD_DIR_KERNEL) -c -k $(KERNAL_NAME) -I'$(<D)' -o'$@' '$<'
+	$(VPP) $(CLFLAGS) --temp_dir $(BUILD_DIR_KERNEL) -c -k $(KERNAL_NAME) -I'$(<D)' -o'$@' '$<'
+#	$(XOCC) $(CLFLAGS) --temp_dir $(BUILD_DIR_KERNEL) -c -k $(KERNAL_NAME) -I'$(<D)' -o'$@' '$<'
 $(XCLBIN)/$(APP).$(TARGET).$(DSA).xclbin: $(BINARY_CONTAINER_vadd_OBJS)
 	mkdir -p $(XCLBIN)
-	$(XOCC) $(CLFLAGS) --temp_dir $(BUILD_DIR_KERNEL) -l $(LDCLFLAGS) --nk $(KERNAL_NAME):1 -o'$@' $(+)
+	$(VPP) $(CLFLAGS) --temp_dir $(BUILD_DIR_KERNEL) -R2 -l $(LDCLFLAGS) --coonectivity.nk $(KERNAL_NAME):1 -j 8 -o'$@' $(+) $(XOCC_LINK_OPTS)
+#	$(XOCC) $(CLFLAGS) --temp_dir $(BUILD_DIR_KERNEL) -l $(LDCLFLAGS) --nk $(KERNAL_NAME):1 -o'$@' $(+)
 
 # Building Host
 $(EXECUTABLE): check-xrt $(HOST_SRCS) $(HOST_HDRS)
@@ -136,5 +141,5 @@ clean:
 
 cleanall: clean
 	-$(RMDIR) $(XCLBIN)
-	-$(RMDIR) _x.*
+	-$(RMDIR) _x.* output.txt .run
 

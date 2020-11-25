@@ -158,9 +158,9 @@ extern "C" {
 void workload(class ap_uint<LARGE_BUS> *result, class ap_uint<LARGE_BUS> *grad_x, class ap_uint<LARGE_BUS> *grad_y)
 {
 
-    #pragma HLS INTERFACE m_axi port=result offset=slave bundle=result
-    #pragma HLS INTERFACE m_axi port=grad_x offset=slave bundle=grad_x
-    #pragma HLS INTERFACE m_axi port=grad_y offset=slave bundle=grad_y
+    #pragma HLS INTERFACE m_axi port=result offset=slave bundle=result1
+    #pragma HLS INTERFACE m_axi port=grad_x offset=slave bundle=grad_x1
+    #pragma HLS INTERFACE m_axi port=grad_y offset=slave bundle=grad_y1
     
     #pragma HLS INTERFACE s_axilite port=result bundle=control
     #pragma HLS INTERFACE s_axilite port=grad_x bundle=control

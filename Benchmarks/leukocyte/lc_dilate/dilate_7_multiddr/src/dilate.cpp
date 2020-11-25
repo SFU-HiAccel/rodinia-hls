@@ -237,8 +237,8 @@ extern "C" {
 	void workload(ap_uint<LARGE_BUS> *result, ap_uint<LARGE_BUS>* img)
 	{
 
-	    #pragma HLS INTERFACE m_axi port=result offset=slave bundle=result
-	    #pragma HLS INTERFACE m_axi port=img offset=slave bundle=img
+	    #pragma HLS INTERFACE m_axi port=result offset=slave bundle=result1
+	    #pragma HLS INTERFACE m_axi port=img offset=slave bundle=img1
 
 	    #pragma HLS INTERFACE s_axilite port=result bundle=control
 	    #pragma HLS INTERFACE s_axilite port=img bundle=control

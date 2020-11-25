@@ -96,9 +96,9 @@ void lc_mgvf(float result[TILE_ROWS * GRID_COLS], float imgvf[(TILE_ROWS + 2) * 
 
 void workload(float result[GRID_ROWS * GRID_COLS], float imgvf[GRID_ROWS * GRID_COLS], float I[GRID_ROWS * GRID_COLS])
 {
-    #pragma HLS INTERFACE m_axi port=result offset=slave bundle=result
-    #pragma HLS INTERFACE m_axi port=imgvf offset=slave bundle=imgvf
-    #pragma HLS INTERFACE m_axi port=I offset=slave bundle=I
+    #pragma HLS INTERFACE m_axi port=result offset=slave bundle=result1
+    #pragma HLS INTERFACE m_axi port=imgvf offset=slave bundle=imgvf1
+    #pragma HLS INTERFACE m_axi port=I offset=slave bundle=I1
     
     #pragma HLS INTERFACE s_axilite port=result bundle=control
     #pragma HLS INTERFACE s_axilite port=imgvf bundle=control
