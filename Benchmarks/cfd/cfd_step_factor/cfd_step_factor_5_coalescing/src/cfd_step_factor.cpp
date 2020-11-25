@@ -193,9 +193,9 @@ void buffer_store(int flag, int k, class ap_uint<LARGE_BUS> * result, float resu
 
 void workload(class ap_uint<LARGE_BUS> * result,  class ap_uint<LARGE_BUS> * variables, class ap_uint<LARGE_BUS> * areas)
 {
-    #pragma HLS INTERFACE m_axi port=result offset=slave bundle=result
-    #pragma HLS INTERFACE m_axi port=variables offset=slave bundle=variables
-    #pragma HLS INTERFACE m_axi port=areas offset=slave bundle=areas
+    #pragma HLS INTERFACE m_axi port=result offset=slave bundle=result1
+    #pragma HLS INTERFACE m_axi port=variables offset=slave bundle=variables1
+    #pragma HLS INTERFACE m_axi port=areas offset=slave bundle=areas1
     
     #pragma HLS INTERFACE s_axilite port=result bundle=control
     #pragma HLS INTERFACE s_axilite port=variables bundle=control

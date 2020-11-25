@@ -234,16 +234,16 @@ void workload(class ap_uint<LARGE_BUS> * result, class ap_uint<LARGE_BUS> * elem
 {
 
 
-    #pragma HLS INTERFACE m_axi port=result offset=slave bundle=result
+    #pragma HLS INTERFACE m_axi port=result offset=slave bundle=result1
 
 
-    #pragma HLS INTERFACE m_axi port=elements_surrounding_elements offset=slave bundle=elements_surrounding_elements
-    #pragma HLS INTERFACE m_axi port=normals offset=slave bundle=normals
-    #pragma HLS INTERFACE m_axi port=variables offset=slave bundle=variables
-    #pragma HLS INTERFACE m_axi port=fc_momentum_x offset=slave bundle=fc_momentum_x
-    #pragma HLS INTERFACE m_axi port=fc_momentum_y offset=slave bundle=fc_momentum_y
-    #pragma HLS INTERFACE m_axi port=fc_momentum_z offset=slave bundle=fc_momentum_z
-    #pragma HLS INTERFACE m_axi port=fc_density_energy offset=slave bundle=fc_density_energy
+    #pragma HLS INTERFACE m_axi port=elements_surrounding_elements offset=slave bundle=elements_surrounding_elements1
+    #pragma HLS INTERFACE m_axi port=normals offset=slave bundle=normals1
+    #pragma HLS INTERFACE m_axi port=variables offset=slave bundle=variable1s
+    #pragma HLS INTERFACE m_axi port=fc_momentum_x offset=slave bundle=fc_momentum_x1
+    #pragma HLS INTERFACE m_axi port=fc_momentum_y offset=slave bundle=fc_momentum_y1
+    #pragma HLS INTERFACE m_axi port=fc_momentum_z offset=slave bundle=fc_momentum_z1
+    #pragma HLS INTERFACE m_axi port=fc_density_energy offset=slave bundle=fc_density_energy1
     
     #pragma HLS INTERFACE s_axilite port=result bundle=control
 

@@ -62,9 +62,9 @@ void cfd_step_factor(float result[TILE_ROWS], float variables[TILE_ROWS * NVAR],
 
 void workload(float result[SIZE], float variables[SIZE * NVAR], float areas[SIZE])
 {
-    #pragma HLS INTERFACE m_axi port=result offset=slave bundle=result
-    #pragma HLS INTERFACE m_axi port=variables offset=slave bundle=variables
-    #pragma HLS INTERFACE m_axi port=areas offset=slave bundle=areas
+    #pragma HLS INTERFACE m_axi port=result offset=slave bundle=result1
+    #pragma HLS INTERFACE m_axi port=variables offset=slave bundle=variables1
+    #pragma HLS INTERFACE m_axi port=areas offset=slave bundle=areas1
     
     #pragma HLS INTERFACE s_axilite port=result bundle=control
     #pragma HLS INTERFACE s_axilite port=variables bundle=control
