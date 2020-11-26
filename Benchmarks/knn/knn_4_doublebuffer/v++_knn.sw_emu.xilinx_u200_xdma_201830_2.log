@@ -1,0 +1,18 @@
+INFO: [v++ 60-1306] Additional information associated with this v++ compile can be found at:
+	Reports: /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/reports/knn.sw_emu.xilinx_u200_xdma_201830_2
+	Log files: /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/logs/knn.sw_emu.xilinx_u200_xdma_201830_2
+INFO: [v++ 60-1657] Initializing dispatch client.
+INFO: [v++ 60-1548] Creating build summary session with primary output /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/xclbin/knn.sw_emu.xilinx_u200_xdma_201830_2.xo.compile_summary, at Wed Nov 25 16:47:58 2020
+INFO: [v++ 60-1316] Initiating connection to rulecheck server, at Wed Nov 25 16:47:58 2020
+INFO: [v++ 60-1315] Creating rulecheck session with output '/localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/reports/knn.sw_emu.xilinx_u200_xdma_201830_2/v++_compile_knn.sw_emu.xilinx_u200_xdma_201830_2_guidance.html', at Wed Nov 25 16:47:59 2020
+INFO: [v++ 60-895]   Target platform: /opt/xilinx/platforms/xilinx_u200_xdma_201830_2/xilinx_u200_xdma_201830_2.xpfm
+INFO: [v++ 60-1578]   This platform contains Device Support Archive '/opt/xilinx/platforms/xilinx_u200_xdma_201830_2/hw/xilinx_u200_xdma_201830_2.dsa'
+INFO: [v++ 60-1302] Platform 'xilinx_u200_xdma_201830_2.xpfm' has been explicitly enabled for this release.
+INFO: [v++ 60-585] Compiling for software emulation target
+INFO: [v++ 60-423]   Target device: xilinx_u200_xdma_201830_2
+INFO: [v++ 60-242] Creating kernel: 'workload'
+INFO: [v++ 60-594] Finished kernel compilation
+ERROR: [v++ 17-70] Application Exception: Failed to add kernel 'workload' to XO container because the kernel name '_Z8workloadPfS_S_' defined in kernel.xml does not match.
+
+ERROR: [v++ 60-604] Unable to copy output file xclbin/knn.sw_emu.xilinx_u200_xdma_201830_2.xo
+INFO: [v++ 60-1653] Closing dispatch client.

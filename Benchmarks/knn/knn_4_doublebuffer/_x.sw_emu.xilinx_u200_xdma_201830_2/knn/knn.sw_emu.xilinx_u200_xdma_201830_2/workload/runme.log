@@ -1,0 +1,37 @@
+
+*** Running vitis_hls
+    with args -f workload.tcl -messageDb vitis_hls.pb
+
+
+****** Vitis HLS - High-Level Synthesis from C, C++ and OpenCL v2020.1 (64-bit)
+  **** SW Build 2902540 on Wed May 27 19:54:35 MDT 2020
+  **** IP Build 2902112 on Wed May 27 22:43:36 MDT 2020
+    ** Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
+
+source /local-scratch/Xilinx/Vitis/2020.1/scripts/vitis_hls/hls.tcl -notrace
+INFO: [HLS 200-10] Running '/local-scratch/Xilinx/Vitis/2020.1/bin/unwrapped/lnx64.o/vitis_hls'
+INFO: [HLS 200-10] For user 'xingyut' on host 'ensc-hacc-1.research.sfu.ca' (Linux_x86_64 version 5.4.0-49-generic) on Wed Nov 25 16:48:11 PST 2020
+INFO: [HLS 200-10] On os Ubuntu 18.04.2 LTS
+INFO: [HLS 200-10] In directory '/localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload'
+Sourcing Tcl script 'workload.tcl'
+INFO: [HLS 200-10] Creating and opening project '/localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload'.
+INFO: [HLS 200-10] Adding design file '/localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/src/knn.cpp' to the project
+INFO: [HLS 200-10] Creating and opening solution '/localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution'.
+INFO: [HLS 200-1505] Using flow_target 'vitis'
+Resolution: For help on HLS 200-1505 see www.xilinx.com/html_docs/xilinx2020_1/hls-guidance/200-1505.html
+INFO: [HLS 200-435] Setting 'config_flow -target' configuration: config_interface -m_axi_latency=64
+INFO: [HLS 200-435] Setting 'config_flow -target' configuration: config_interface -m_axi_alignment_byte_size=64
+INFO: [HLS 200-435] Setting 'config_flow -target' configuration: config_interface -m_axi_max_widen_bitwidth=512
+INFO: [HLS 200-435] Setting 'config_flow -target' configuration: config_interface -default_slave_interface=s_axilite
+INFO: [HLS 200-435] Setting 'config_flow -target' configuration: config_rtl -register_reset_num=3
+INFO: [HLS 200-10] Setting target device to 'xcu200-fsgd2104-2-e'
+INFO: [SYN 201-201] Setting up clock 'default' with a period of 3.333ns.
+INFO: [SYN 201-201] Setting up clock 'default' with an uncertainty of 0.9ns.
+INFO: [HLS 200-10] Analyzing design file '/localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/src/knn.cpp' ... 
+INFO: [HLS 200-777] Using interface defaults for 'Vitis' target.
+INFO: [HLS 214-186] Unrolling loop 'anonymous' (/localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/src/knn.cpp:23:2) in function 'compute' completely with a factor of 2 (/localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/src/knn.cpp:23:2)
+INFO: [HLS 200-111] Finished Linking Time (s): cpu = 00:00:06 ; elapsed = 00:00:06 . Memory (MB): peak = 1686.148 ; gain = 1235.910 ; free physical = 174580 ; free virtual = 197620
+INFO: [HLS 200-111] Finished Checking Pragmas Time (s): cpu = 00:00:06 ; elapsed = 00:00:06 . Memory (MB): peak = 1686.148 ; gain = 1235.910 ; free physical = 174580 ; free virtual = 197620
+INFO: [HLS 200-1493] Running only source code synthesis checks, skipping scheduling and RTL generation.
+HLS completed successfully
+INFO: [Common 17-206] Exiting vitis_hls at Wed Nov 25 16:48:16 2020...

@@ -1,5 +1,5 @@
 #include "knn.h"
-
+extern "C"{
 void load (int load_idx, float* searchSpace, float* local_searchSpace)
 {
 #pragma HLS INLINE OFF
@@ -70,4 +70,5 @@ void workload(
 	}
 
 	return;
+}
 }

@@ -1,0 +1,2 @@
+performing high-level synthesis for kernel: workload
+Log file: /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/vitis_hls.log

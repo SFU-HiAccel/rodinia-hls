@@ -1,0 +1,10 @@
+Wed Nov 25 16:47:59 2020: Server was asked to start on port: '45079'
+Wed Nov 25 16:47:59 2020: Server is using token UUID: 'e69e594c-9321-41a2-a3b5-9ae37acf2fcf'
+Wed Nov 25 16:47:59 2020: Attempting to start server on port '45079'
+Wed Nov 25 16:47:59 2020: XRC main fifo: created main fifo '/tmp/xrcmaine69e594c-9321-41a2-a3b5-9ae37acf2fcf', fd read = 13
+Wed Nov 25 16:47:59 2020: Running Rule Check Server
+Wed Nov 25 16:47:59 2020: Version 1.6.1
+Wed Nov 25 16:47:59 2020: Rule Check Server: Accepted socket connection from client
+Wed Nov 25 16:47:59 2020: EXCHANGE_TOKEN received, server token: e69e594c-9321-41a2-a3b5-9ae37acf2fcf, passed token: e69e594c-9321-41a2-a3b5-9ae37acf2fcf
+Wed Nov 25 16:47:59 2020: SESSION_MGR: creating session with session uuid: '07921f7b-ecb5-41dc-8e7e-19e9977ffab1' and name 'v++_compile_knn.sw_emu.xilinx_u200_xdma_201830_2'
+Wed Nov 25 16:48:17 2020: SESSION_MGR: closing session for UUID '07921f7b-ecb5-41dc-8e7e-19e9977ffab1' with name 'v++_compile_knn.sw_emu.xilinx_u200_xdma_201830_2'

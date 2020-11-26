@@ -28,10 +28,17 @@ const int UNROLL_FACTOR = 2;
     const int WIDTH_FACTOR = DWIDTH/32;
 #endif 
 
-void workload(
-    float inputQuery[NUM_FEATURE],
-    float searchSpace[NUM_PT_IN_SEARCHSPACE*NUM_FEATURE],
-    float distance[NUM_PT_IN_SEARCHSPACE]
-);
+// Definition for testbench
+// void workload(
+//     float inputQuery[NUM_FEATURE],
+//     float searchSpace[NUM_PT_IN_SEARCHSPACE*NUM_FEATURE],
+//     float distance[NUM_PT_IN_SEARCHSPACE]
+// );
+
+struct bench_args_t {
+    float input_query[NUM_FEATURE];
+    float search_space_data[NUM_PT_IN_SEARCHSPACE*NUM_FEATURE];
+    float distance[NUM_PT_IN_SEARCHSPACE];
+};
 
 #endif

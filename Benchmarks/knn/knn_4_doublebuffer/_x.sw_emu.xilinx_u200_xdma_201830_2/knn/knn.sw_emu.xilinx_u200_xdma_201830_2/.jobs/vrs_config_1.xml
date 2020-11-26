@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<Runs Version="1" Minor="0">
+	<Run Id="workload" LaunchDir="/localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload" FlowId="Build_IP" FromStepId="vitis_hls" ToStepId="vitis_hls"/>
+</Runs>
+

@@ -1,0 +1,10 @@
+<root versionMajor = "1" versionMinor = "5">
+  <kernel src_name="_Z8workloadPfS_S_" language="c" hwCtrl="ap_ctrl_chain" mem_layout="fpga64-xilinx-none">
+    <args>
+      <arg id="0" access_type="rw" src_name="inputQuery" src_type="float*" src_isptr="1" src_bitwidth="32" src_size_or_depth="2" hw_interface="MAXI" hw_name="gmem" hw_bitwidth="32" hw_size_or_depth="0" offset_bundle_interface="S_AXILite" offset_bundle_interface_name="control" offset="0x10"/>
+      <arg id="1" access_type="rw" src_name="searchSpace" src_type="float*" src_isptr="1" src_bitwidth="32" src_size_or_depth="2097152" hw_interface="MAXI" hw_name="gmem" hw_bitwidth="32" hw_size_or_depth="0" offset_bundle_interface="S_AXILite" offset_bundle_interface_name="control" offset="0x1C"/>
+      <arg id="2" access_type="rw" src_name="distance" src_type="float*" src_isptr="1" src_bitwidth="32" src_size_or_depth="1048576" hw_interface="MAXI" hw_name="gmem" hw_bitwidth="32" hw_size_or_depth="0" offset_bundle_interface="S_AXILite" offset_bundle_interface_name="control" offset="0x28"/>
+    </args>
+    <return src_type="void" src_bitwidth="0" hw_interface="" hw_name="" hw_bitwidth="0" offset="0x0"/>
+  </kernel>
+</root>

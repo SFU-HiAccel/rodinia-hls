@@ -1,0 +1,212 @@
+INFO-FLOW: Workspace /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution opened at Wed Nov 25 16:48:11 PST 2020
+Execute       send_msg_by_id INFO @200-1505@%s%s  vitis 
+INFO: [HLS 200-1505] Using flow_target 'vitis'
+Execute       get_config_interface -m_axi_latency 
+Execute       send_msg_by_id INFO @200-435@%s%s 'config_flow -target' config_interface -m_axi_latency=64 
+INFO: [HLS 200-435] Setting 'config_flow -target' configuration: config_interface -m_axi_latency=64
+Execute       config_interface -m_axi_latency=64 
+Execute       get_config_interface -m_axi_alignment_byte_size 
+Execute       send_msg_by_id INFO @200-435@%s%s 'config_flow -target' config_interface -m_axi_alignment_byte_size=64 
+INFO: [HLS 200-435] Setting 'config_flow -target' configuration: config_interface -m_axi_alignment_byte_size=64
+Execute       config_interface -m_axi_alignment_byte_size=64 
+Execute       get_config_interface -m_axi_max_widen_bitwidth 
+Execute       send_msg_by_id INFO @200-435@%s%s 'config_flow -target' config_interface -m_axi_max_widen_bitwidth=512 
+INFO: [HLS 200-435] Setting 'config_flow -target' configuration: config_interface -m_axi_max_widen_bitwidth=512
+Execute       config_interface -m_axi_max_widen_bitwidth=512 
+Execute       get_config_interface -default_interface 
+INFO-FLOW: Setting macro_cmd 'config_flow -target' configuration: config_interface -default_interface=kernel
+Execute       config_interface -default_interface=kernel 
+Execute       get_config_interface -default_slave_interface 
+Execute       send_msg_by_id INFO @200-435@%s%s 'config_flow -target' config_interface -default_slave_interface=s_axilite 
+INFO: [HLS 200-435] Setting 'config_flow -target' configuration: config_interface -default_slave_interface=s_axilite
+Execute       config_interface -default_slave_interface=s_axilite 
+Execute       get_config_rtl -register_reset_num 
+Execute       send_msg_by_id INFO @200-435@%s%s 'config_flow -target' config_rtl -register_reset_num=3 
+INFO: [HLS 200-435] Setting 'config_flow -target' configuration: config_rtl -register_reset_num=3
+Execute       config_rtl -register_reset_num=3 
+Execute     set_part xcu200-fsgd2104-2-e 
+INFO-FLOW: DBG:set_part: XILINX_VIVADO=/local-scratch/Xilinx/Vivado/2020.1
+INFO-FLOW: DBG:set_part: RDI_DATADIR=/local-scratch/Xilinx/Vivado/2020.1/data:/local-scratch/Xilinx/Vitis/2020.1/data
+Execute       ap_part_info -name xcu200-fsgd2104-2-e -data single -quiet 
+DBG:HLSDevice: Trying to load device library: /local-scratch/Xilinx/Vitis/2020.1/lib/lnx64.o/librdi_hlsvwrap.so
+DBG:HLSDevice: first parts/arch.xml in RDI_DATADIR: /local-scratch/Xilinx/Vivado/2020.1/data/parts/arch.xml
+Command       ap_part_info done; 1.2 sec.
+Execute       ap_part_info -name xcu200-fsgd2104-2-e -data info 
+Execute       ap_family_info -name virtexuplus -data info 
+Execute       add_library xilinx/virtexuplus/virtexuplus:xcu200:-fsgd2104:-2-e 
+Execute         get_default_platform 
+Execute         open_platform DefaultPlatform 
+Execute         import_lib /local-scratch/Xilinx/Vitis/2020.1/common/technology/xilinx/virtexuplus/virtexuplus 
+Execute           source /local-scratch/Xilinx/Vitis/2020.1/common/technology/xilinx/common/xilinx.lib 
+Execute             source /local-scratch/Xilinx/Vitis/2020.1/common/technology/xilinx/common/dsp48.lib 
+Execute           source /local-scratch/Xilinx/Vitis/2020.1/common/technology/xilinx/common/xilinx.hlp 
+Execute             source /local-scratch/Xilinx/Vitis/2020.1/common/technology/xilinx/interface/xilinx_interface.hlp 
+Execute               source /local-scratch/Xilinx/Vitis/2020.1/common/technology/xilinx/interface/maxi.hlp 
+Execute               source /local-scratch/Xilinx/Vitis/2020.1/common/technology/xilinx/interface/saxilite.hlp 
+Execute             source /local-scratch/Xilinx/Vitis/2020.1/common/technology/xilinx/common/dsp48.hlp 
+Execute           source /local-scratch/Xilinx/Vitis/2020.1/common/technology/xilinx/virtexuplus/dsp48e2.hlp 
+Execute         source /local-scratch/Xilinx/Vitis/2020.1/common/technology/xilinx/virtexuplus/virtexuplus.gen 
+Execute           source /local-scratch/Xilinx/Vitis/2020.1/common/technology/xilinx/common/xilinx.gen 
+Execute             source /local-scratch/Xilinx/Vitis/2020.1/common/technology/xilinx/interface/plb46.gen 
+Execute             source /local-scratch/Xilinx/Vitis/2020.1/common/technology/xilinx/interface/axi4.gen 
+Execute             source /local-scratch/Xilinx/Vitis/2020.1/common/technology/xilinx/interface/nativeAXI4.gen 
+Execute               source /local-scratch/Xilinx/Vitis/2020.1/common/technology/xilinx/interface/saxilite.gen 
+Execute               source /local-scratch/Xilinx/Vitis/2020.1/common/technology/xilinx/interface/maxi.gen 
+Execute             source /local-scratch/Xilinx/Vitis/2020.1/common/technology/xilinx/scripts/xilinxcoregen.gen 
+Execute             source /local-scratch/Xilinx/Vitis/2020.1/common/technology/xilinx/interface/XilEDKCoreGen.gen 
+Execute             source /local-scratch/Xilinx/Vitis/2020.1/common/technology/xilinx/ip/dds_compiler.gen 
+Execute             source /local-scratch/Xilinx/Vitis/2020.1/common/technology/xilinx/ip/util.gen 
+Execute             source /local-scratch/Xilinx/Vitis/2020.1/common/technology/xilinx/ip/xfft.gen 
+Execute             source /local-scratch/Xilinx/Vitis/2020.1/common/technology/xilinx/ip/xfir.gen 
+Execute             source /local-scratch/Xilinx/Vitis/2020.1/common/technology/xilinx/common/dsp48.gen 
+Execute         ap_part_info -data single -name xcu200-fsgd2104-2-e 
+Execute         ap_part_info -name xcu200-fsgd2104-2-e -data resources 
+Execute         config_chip_info -resource {SLICE 147780} {LUT 1182240} {FF 2364480} {DSP 6840} {BRAM 4320} {URAM 960} {SLR 3} 
+Execute         ap_part_info -name xcu200-fsgd2104-2-e -data info 
+Execute         config_chip_info -speed medium 
+Command       add_library done; 0.13 sec.
+Execute       add_library xilinx/virtexuplus/virtexuplus_fpv7 
+Execute         get_default_platform 
+Execute         open_platform DefaultPlatform 
+Execute         import_lib /local-scratch/Xilinx/Vitis/2020.1/common/technology/xilinx/virtexuplus/virtexuplus_fpv7 
+Execute           source /local-scratch/Xilinx/Vitis/2020.1/common/technology/xilinx/common/xilinx_fp.lib 
+Execute           source /local-scratch/Xilinx/Vitis/2020.1/common/technology/xilinx/common/xilinx_fp.hlp 
+Execute             source /local-scratch/Xilinx/Vitis/2020.1/common/technology/xilinx/common/xilinx.hlp 
+Execute               source /local-scratch/Xilinx/Vitis/2020.1/common/technology/xilinx/interface/xilinx_interface.hlp 
+Execute                 source /local-scratch/Xilinx/Vitis/2020.1/common/technology/xilinx/interface/maxi.hlp 
+Execute                 source /local-scratch/Xilinx/Vitis/2020.1/common/technology/xilinx/interface/saxilite.hlp 
+Execute               source /local-scratch/Xilinx/Vitis/2020.1/common/technology/xilinx/common/dsp48.hlp 
+Execute         source /local-scratch/Xilinx/Vitis/2020.1/common/technology/xilinx/virtexuplus/virtexuplus_fpv7.gen 
+Execute           source /local-scratch/Xilinx/Vitis/2020.1/common/technology/xilinx/common/xilinx_fp.gen 
+INFO: [HLS 200-10] Setting target device to 'xcu200-fsgd2104-2-e'
+Execute       ap_part_info -name xcu200-fsgd2104-2-e -data info 
+Execute       get_default_platform 
+Command     set_part done; 1.38 sec.
+Execute     create_clock -period 300.000000MHz -name default 
+Execute       ap_set_clock -name default -period 3.333 -unit ns -default=false 
+INFO: [SYN 201-201] Setting up clock 'default' with a period of 3.333ns.
+Execute     config_export -vivado_optimization_level 0 
+Execute       get_config_export -vivado_impl_strategy 
+Execute       get_config_export -vivado_phys_opt 
+Execute     config_dataflow -strict_mode warning 
+Execute     set_clock_uncertainty 27.000000% 
+Execute       get_clock_period -default -name=default 
+Execute       ap_set_clock -name default -uncertainty 0.9 -unit % 
+INFO: [SYN 201-201] Setting up clock 'default' with an uncertainty of 0.9ns.
+Execute     config_rtl -m_axi_conservative_mode=1 
+Execute     config_interface -m_axi_addr64 
+Execute     config_interface -default_slave_interface s_axilite 
+Execute     config_export -format ip_catalog -ipname workload 
+Execute       get_config_export -vivado_impl_strategy 
+Execute       get_config_export -vivado_phys_opt 
+Execute     csynth_design -synthesis_check 
+Execute       get_config_compile -dump_cfg 
+Execute       get_config_compile -effort 
+Execute       get_config_compile -enable_clang39 
+Execute       get_config_compile -g 
+Execute       get_config_compile -ng 
+Execute       get_config_compile -opt_fp 
+Execute       get_config_compile -skip_cdt 
+Execute       get_config_compile -skip_syncheck 
+Execute       get_config_compile -skip_transform 
+Execute       get_config_compile -keep_printf 
+Execute       elaborate -effort=medium -skip_syncheck=0 -keep_printf=0 -skip_cdt=0 -skip_transform=2 -ng=0 -g=0 -opt_fp=0 -from_csynth_design=1 
+INFO: [HLS 200-10] Analyzing design file '/localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/src/knn.cpp' ... 
+INFO-FLOW: Compiling one TU...
+Execute         get_config_compile -pragma_strict_mode 
+INFO-FLOW: Handling /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/src/knn.cpp as C++
+Execute         ap_part_info -name xcu200-fsgd2104-2-e -data info 
+INFO-FLOW: Running: GCC PP 39
+INFO-FLOW: Source preprocessing
+Execute         ap_eval exec -ignorestderr /local-scratch/Xilinx/Vitis/2020.1/lnx64/tools/clang-3.9-csynth/bin/clang -fsave-optimization-record -foptimization-record-file=/localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/clang.knn.cpp.diag.yml -fno-limit-debug-info -gcc-toolchain /local-scratch/Xilinx/Vivado/2020.1/tps/lnx64/gcc-6.2.0 -fhls -fno-exceptions -E /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/src/knn.cpp -I/localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/src -fno-math-errno -c -emit-llvm -mllvm -disable-llvm-optzns -Werror=implicit-function-declaration -Werror=implicit-hls-streams -Werror=return-type -Wpragmas -Wunused-parameter -fno-threadsafe-statics -fno-use-cxa-atexit -std=gnu++14 -target fpga64-xilinx-linux-gnu -fno-threadsafe-statics -fno-use-cxa-atexit -I /local-scratch/Xilinx/Vitis/2020.1/common/technology/autopilot/39 -DAESL_SYN -D__SYNTHESIS__ -D__HLS_SYN__ -I /local-scratch/Xilinx/Vitis/2020.1/common/technology/autopilot -I /local-scratch/Xilinx/Vitis/2020.1/common/technology/autopilot/ap_sysc -include etc/autopilot_ssdm_op.h -D__DSP48E2__ -o /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/knn.pp.0.cpp > /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/clang.knn.cpp.out.log 2> /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/clang.knn.cpp.err.log 
+INFO-FLOW: Done: GCC PP 39 time: 0.1 seconds per iteration
+Execute         set_directive_top workload -name=workload 
+INFO-FLOW: Setting directive 'TOP' name=workload 
+INFO-FLOW: Setting directive 'TOP' name=workload 
+Execute         source /local-scratch/Xilinx/Vitis/2020.1/tps/tcl/tcllib1.11.1/yaml/huddle.tcl 
+Execute         source /local-scratch/Xilinx/Vitis/2020.1/tps/tcl/tcllib1.11.1/yaml/json2huddle.tcl 
+Execute           source /local-scratch/Xilinx/Vitis/2020.1/tps/tcl/tcllib1.11.1/try/try.tcl 
+INFO-FLOW: Setting directive 'TOP' name=workload 
+Execute         list_core -type functional_unit 
+Execute         clang_tidy xilinx-systemc-detector /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/knn.pp.0.cpp std=gnu++14 -target fpga  -directive=/localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/.systemc_flag 
+INFO-FLOW: exec /local-scratch/Xilinx/Vitis/2020.1/lnx64/tools/clang-3.9-csynth/bin/clang-tidy -header-filter=.* --checks=-*,xilinx-systemc-detector -import-directive=/localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/.systemc_flag -fix-errors /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/knn.pp.0.cpp -- -std=gnu++14 -target fpga -fhls -ferror-limit=0
+INFO-FLOW: Running: clang-tidy CDT preprocess 39
+Execute         clang_tidy xilinx-directive2pragma /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/knn.pp.0.cpp std=gnu++14 -target fpga  -directive=/localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/all.directive.json 
+INFO-FLOW: exec /local-scratch/Xilinx/Vitis/2020.1/lnx64/tools/clang-3.9-csynth/bin/clang-tidy -header-filter=.* --checks=-*,xilinx-directive2pragma -import-directive=/localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/all.directive.json -fix-errors /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/knn.pp.0.cpp -- -std=gnu++14 -target fpga -fhls -ferror-limit=0
+Execute         clang_tidy xilinx-constantarray-param,xilinx-remove-assert /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/knn.pp.0.cpp std=gnu++14 -target fpga  
+INFO-FLOW: exec /local-scratch/Xilinx/Vitis/2020.1/lnx64/tools/clang-3.9-csynth/bin/clang-tidy -header-filter=.* --checks=-*,xilinx-constantarray-param,xilinx-remove-assert -fix-errors /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/knn.pp.0.cpp -- -std=gnu++14 -target fpga -fhls -ferror-limit=0
+INFO-FLOW: Done: clang-tidy CDT preprocess 39 time: 0.1 seconds per iteration
+Execute         ap_part_info -name xcu200-fsgd2104-2-e -data info 
+INFO-FLOW: compiling source code to llvm bc
+Execute         ap_eval exec -ignorestderr /local-scratch/Xilinx/Vitis/2020.1/lnx64/tools/clang-3.9-csynth/bin/clang -fsave-optimization-record -foptimization-record-file=/localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/clang.knn.pragma.2.cpp.diag.yml -fno-limit-debug-info -fhls -flto -fno-exceptions -Wno-error=c++11-narrowing /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/knn.pragma.2.cpp -I/localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/src -fno-math-errno -c -emit-llvm -mllvm -disable-llvm-optzns -Werror=implicit-function-declaration -Werror=implicit-hls-streams -Werror=return-type -Wpragmas -Wunused-parameter -fno-threadsafe-statics -fno-use-cxa-atexit -std=gnu++14 -target fpga64-xilinx-linux-gnu -DAESL_SYN -D__SYNTHESIS__ -D__HLS_SYN__ -I /local-scratch/Xilinx/Vitis/2020.1/common/technology/autopilot -I /local-scratch/Xilinx/Vitis/2020.1/common/technology/autopilot/ap_sysc -include etc/autopilot_ssdm_op.h -D__DSP48E2__ -g -o /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/knn.bc > /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/clang.knn.pragma.2.cpp.out.log 2> /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/clang.knn.pragma.2.cpp.err.log 
+INFO-FLOW: Linking Debug ...
+INFO-FLOW: Linking dut bc code.
+Execute         run_link_or_opt -out /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/a.g.ld.0.bc -args  "/localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/knn.g.bc"  
+Execute           ap_eval exec -ignorestderr /local-scratch/Xilinx/Vitis/2020.1/lnx64/tools/clang-3.9-csynth/bin/llvm-link /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/knn.g.bc -o /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/a.g.ld.0.bc > /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/llvm-link.a.g.ld.0.bc.out.log 2> /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/llvm-link.a.g.ld.0.bc.err.log 
+INFO-FLOW: 
+Execute         run_link_or_opt -opt -out /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/a.g.ld.1.lower.bc -args /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/a.g.ld.0.bc -reflow-lower-math-intrinsics 
+Execute           ap_eval exec -ignorestderr /local-scratch/Xilinx/Vitis/2020.1/lnx64/tools/clang-3.9-csynth/bin/opt -pass-remarks-missed=.* -pass-remarks-output=/localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/opt.a.g.ld.1.lower.bc.diag.yml /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/a.g.ld.0.bc -reflow-lower-math-intrinsics -o /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/a.g.ld.1.lower.bc > /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/opt.a.g.ld.1.lower.bc.out.log 2> /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/opt.a.g.ld.1.lower.bc.err.log 
+INFO-FLOW: 
+INFO-FLOW: Linking math bc lib
+Execute         run_link_or_opt -out /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/a.g.ld.2.m1.bc -args /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/a.g.ld.1.lower.bc -only-needed /local-scratch/Xilinx/Vitis/2020.1/lnx64/lib/libhlsm_39.bc /local-scratch/Xilinx/Vitis/2020.1/lnx64/lib/libhlsmc++_39.bc 
+Execute           ap_eval exec -ignorestderr /local-scratch/Xilinx/Vitis/2020.1/lnx64/tools/clang-3.9-csynth/bin/llvm-link /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/a.g.ld.1.lower.bc -only-needed /local-scratch/Xilinx/Vitis/2020.1/lnx64/lib/libhlsm_39.bc /local-scratch/Xilinx/Vitis/2020.1/lnx64/lib/libhlsmc++_39.bc -o /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/a.g.ld.2.m1.bc > /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/llvm-link.a.g.ld.2.m1.bc.out.log 2> /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/llvm-link.a.g.ld.2.m1.bc.err.log 
+Command           ap_eval done; 2.62 sec.
+INFO-FLOW: 
+Command         run_link_or_opt done; 2.62 sec.
+Execute         run_link_or_opt -opt -out /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/a.g.ld.3.fpc.bc -args /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/a.g.ld.2.m1.bc -reflow-globaldce -hls-top-function-name=workload -reflow-float-conversion 
+Execute           ap_eval exec -ignorestderr /local-scratch/Xilinx/Vitis/2020.1/lnx64/tools/clang-3.9-csynth/bin/opt -pass-remarks-missed=.* -pass-remarks-output=/localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/opt.a.g.ld.3.fpc.bc.diag.yml /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/a.g.ld.2.m1.bc -reflow-globaldce -hls-top-function-name=workload -reflow-float-conversion -o /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/a.g.ld.3.fpc.bc > /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/opt.a.g.ld.3.fpc.bc.out.log 2> /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/opt.a.g.ld.3.fpc.bc.err.log 
+Command           ap_eval done; 0.87 sec.
+INFO-FLOW: 
+Command         run_link_or_opt done; 0.87 sec.
+Execute         run_link_or_opt -out /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/a.g.ld.4.m2.bc -args /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/a.g.ld.3.fpc.bc -only-needed /local-scratch/Xilinx/Vitis/2020.1/lnx64/lib/libfloatconversion_39.bc 
+Execute           ap_eval exec -ignorestderr /local-scratch/Xilinx/Vitis/2020.1/lnx64/tools/clang-3.9-csynth/bin/llvm-link /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/a.g.ld.3.fpc.bc -only-needed /local-scratch/Xilinx/Vitis/2020.1/lnx64/lib/libfloatconversion_39.bc -o /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/a.g.ld.4.m2.bc > /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/llvm-link.a.g.ld.4.m2.bc.out.log 2> /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/llvm-link.a.g.ld.4.m2.bc.err.log 
+INFO-FLOW: 
+Execute         run_link_or_opt -opt -out /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/a.g.ld.5.gdce.bc -args /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/a.g.ld.4.m2.bc -reflow-globaldce -hls-top-function-name=workload 
+Execute           ap_eval exec -ignorestderr /local-scratch/Xilinx/Vitis/2020.1/lnx64/tools/clang-3.9-csynth/bin/opt -pass-remarks-missed=.* -pass-remarks-output=/localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/opt.a.g.ld.5.gdce.bc.diag.yml /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/a.g.ld.4.m2.bc -reflow-globaldce -hls-top-function-name=workload -o /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/a.g.ld.5.gdce.bc > /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/opt.a.g.ld.5.gdce.bc.out.log 2> /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/opt.a.g.ld.5.gdce.bc.err.log 
+INFO-FLOW: 
+Execute         get_solution -flow_target 
+Execute         get_config_rtl -module_prefix 
+Execute         get_config_interface -default_interface 
+Execute         send_msg_by_id INFO @200-777@%s Vitis 
+INFO: [HLS 200-777] Using interface defaults for 'Vitis' target.
+Execute         get_config_interface -default_slave_interface 
+Execute         get_solution -flow_target 
+Execute         get_config_interface -m_axi_offset 
+Execute         get_config_interface -m_axi_latency 
+Execute         get_config_interface -m_axi_alignment_byte_size 
+Execute         get_config_interface -m_axi_min_bitwidth 
+Execute         get_config_interface -m_axi_max_bitwidth 
+Execute         get_config_interface -m_axi_max_widen_bitwidth 
+Execute         get_config_interface -m_axi_num_read_outstanding 
+Execute         get_config_interface -m_axi_num_write_outstanding 
+Execute         get_config_interface -m_axi_max_read_burst_length 
+Execute         get_config_interface -m_axi_max_write_burst_length 
+Execute         get_config_interface -m_axi_min_bitwidth 
+Execute         get_config_interface -m_axi_max_bitwidth 
+Execute         get_config_interface -m_axi_latency 
+Execute         get_config_interface -m_axi_min_bitwidth 
+Execute         get_config_interface -m_axi_max_bitwidth 
+Execute         get_config_interface -m_axi_max_widen_bitwidth 
+Execute         get_config_interface -m_axi_auto_max_ports 
+Execute         get_config_interface -m_axi_num_read_outstanding 
+Execute         get_config_interface -m_axi_num_write_outstanding 
+Execute         get_config_interface -m_axi_max_read_burst_length 
+Execute         get_config_interface -m_axi_max_write_burst_length 
+Execute         get_config_interface -s_axilite_data64 
+Execute         get_config_interface -m_axi_alignment_byte_size 
+Execute         get_config_compile -pragma_strict_mode 
+INFO-FLOW: Doing LTO.
+Execute         ap_eval exec -ignorestderr /local-scratch/Xilinx/Vitis/2020.1/lnx64/tools/clang-3.9-csynth/bin/clang -fsave-optimization-record -foptimization-record-file=/localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/clang.a.g.ld.0.bc.diag.yml -fhls -mllvm -hls-top-function-name=workload -mllvm -hls-db-dir -mllvm /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db -emit-llvm -c -mllvm -hls-bitcode-version=3.1 -target fpga64-xilinx-none -mllvm -xcl-xmlinfo=/localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/../../../kernel.xml -mllvm -top-io-mapping-info=/localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/top-io-fe.xml -mllvm -pass-remarks=supported-subset -mllvm -xcl-target=cpu -mllvm -reflow-enable-interface-default-setting=true -mllvm -reflow-enable-slave-interface-default-setting=true -mllvm -gen-kernel-xml=true -mllvm -maxi-latency=64 -mllvm -hls-maxi-data-size-in-bits=8 -mllvm -hls-maxi-max-data-size-in-bits=1024 -mllvm -hls-max-widen-size-in-bits=512 -mllvm -xcl-kernel-max-mem-ports=0 -mllvm -maxi-read-trans=16 -mllvm -maxi-write-trans=16 -mllvm -maxi-read-burst-len=16 -mllvm -maxi-write-burst-len=16 -mllvm -reflow-enable-saxi-64bits=0 -mllvm -assume-maxi-align=64 -mllvm -no-unaligned-maxi-accesses=false -x ir /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/a.g.ld.5.gdce.bc -o /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/a.g.lto.bc > /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/clang.a.g.ld.0.bc.out.log 2> /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/clang.a.g.ld.0.bc.err.log 
+Execute         source /local-scratch/Xilinx/Vitis/2020.1/tps/tcl/tcllib1.11.1/yaml/yaml.tcl 
+Execute           source /local-scratch/Xilinx/Vitis/2020.1/tps/tcl/tcllib1.11.1/cmdline/cmdline.tcl 
+INFO: [HLS 214-186] Unrolling loop 'anonymous' (/localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/src/knn.cpp:23:2) in function 'compute' completely with a factor of 2 (/localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/src/knn.cpp:23:2)
+INFO-FLOW: DBG:CMD: copy_raw_kernel_xml ap_link_39: copying raw kernel.xml: /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/../../../kernel.xml -> /localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/knn.sw_emu.xilinx_u200_xdma_201830_2/workload/workload/solution/.autopilot/db/kernel.internal.xml
+INFO: [HLS 200-111] Finished Linking Time (s): cpu = 00:00:06 ; elapsed = 00:00:06 . Memory (MB): peak = 1686.148 ; gain = 1235.910 ; free physical = 174580 ; free virtual = 197620
+INFO: [HLS 200-111] Finished Checking Pragmas Time (s): cpu = 00:00:06 ; elapsed = 00:00:06 . Memory (MB): peak = 1686.148 ; gain = 1235.910 ; free physical = 174580 ; free virtual = 197620
+Command       elaborate done; 4.27 sec.
+Execute       send_msg_by_id INFO @200-1493@ 
+INFO: [HLS 200-1493] Running only source code synthesis checks, skipping scheduling and RTL generation.
+Command     csynth_design done; 4.27 sec.
+Execute     close_project 
+Execute       cleanup_all -project 
+Execute     cleanup_all 

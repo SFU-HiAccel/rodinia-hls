@@ -1,5 +1,5 @@
 #include "knn.h"
-
+extern "C"{
 void load (int load_idx, float* searchSpace, float* local_searchSpace)
 {
 	int start_idx = load_idx * NUM_PT_IN_BUFFER * NUM_FEATURE;
@@ -62,4 +62,5 @@ void workload(
 	}
 
 	return;
+}
 }

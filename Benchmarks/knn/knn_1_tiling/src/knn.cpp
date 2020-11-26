@@ -1,5 +1,5 @@
 #include "knn.h"
-
+extern "C"{
 void load (int load_idx, float* searchSpace, float* local_searchSpace)
 {
 	int start_idx = load_idx * NUM_PT_IN_BUFFER * NUM_FEATURE;
@@ -37,13 +37,13 @@ void workload(
 	float searchSpace[NUM_PT_IN_SEARCHSPACE*NUM_FEATURE],
     float distance[NUM_PT_IN_SEARCHSPACE]
 ){
-    // #pragma HLS INTERFACE m_axi port=inputQuery offset=slave bundle=gmem
-    // #pragma HLS INTERFACE s_axilite port=inputQuery bundle=control
-    // #pragma HLS INTERFACE m_axi port=searchSpace offset=slave bundle=gmem
-    // #pragma HLS INTERFACE s_axilite port=searchSpace bundle=control
-    // #pragma HLS INTERFACE m_axi port=distance offset=slave bundle=gmem
-    // #pragma HLS INTERFACE s_axilite port=distance bundle=control
-    // #pragma HLS INTERFACE s_axilite port=return bundle=control
+    #pragma HLS INTERFACE m_axi port=inputQuery offset=slave bundle=gmem
+    #pragma HLS INTERFACE s_axilite port=inputQuery bundle=control
+    #pragma HLS INTERFACE m_axi port=searchSpace offset=slave bundle=gmem
+    #pragma HLS INTERFACE s_axilite port=searchSpace bundle=control
+    #pragma HLS INTERFACE m_axi port=distance offset=slave bundle=gmem
+    #pragma HLS INTERFACE s_axilite port=distance bundle=control
+    #pragma HLS INTERFACE s_axilite port=return bundle=control
 
 	float local_inputQuery[NUM_FEATURE];
 	float local_searchSpace[NUM_PT_IN_BUFFER*NUM_FEATURE];
@@ -61,4 +61,5 @@ void workload(
 	}
 
 	return;
+}
 }

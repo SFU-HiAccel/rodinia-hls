@@ -4,11 +4,6 @@
 #include "my_timer.h"
 #include "knn.h"
 
-#include <string.h>
-#include <CL/opencl.h>
-#include "support.h"
-#include "my_timer.h"
-#include "hotspot.h"
 
 void run_benchmark( void *vargs, cl_context&, cl_command_queue&, cl_program&, cl_kernel& );
 extern void input_to_data(int fd, void *vdata);
@@ -143,15 +138,15 @@ void input_to_data(int fd, void *vdata) {
 }
 
 void data_to_input(int fd, void *vdata) {
-  struct bench_args_t *data = (struct bench_args_t *)vdata;
+  //struct bench_args_t *data = (struct bench_args_t *)vdata;
 
-  write_section_header(fd);
-  STAC(write_, TYPE, _array)(fd, data -> temp, GRID_ROWS * GRID_COLS);
+  //write_section_header(fd);
+  //STAC(write_, TYPE, _array)(fd, data -> temp, GRID_ROWS * GRID_COLS);
 
-  write_section_header(fd);
-  STAC(write_, TYPE, _array)(fd, data -> power, GRID_ROWS * GRID_COLS);
+  //write_section_header(fd);
+  //STAC(write_, TYPE, _array)(fd, data -> power, GRID_ROWS * GRID_COLS);
 
-  write_section_header(fd);
+  //write_section_header(fd);
 }
 
 /* Output format:
@@ -199,20 +194,20 @@ void data_to_output(int fd, void *vdata) {
   struct bench_args_t *data = (struct bench_args_t *)vdata;
 
 
-  FILE* fid = fopen("output.data", "w");
+  //FILE* fid = fopen("output.data", "w");
 
-  for (int kk = 0; kk <GRID_ROWS*GRID_COLS;kk++){
-    fprintf(fid,"%.7f\n", data->temp[kk]);
-  }
+  //for (int kk = 0; kk <GRID_ROWS*GRID_COLS;kk++){
+  //  fprintf(fid,"%.7f\n", data->temp[kk]);
+  //}
 
-  fclose(fid);
+  //fclose(fid);
 
-  printf("+++++++++++++++++++++++++++++++++++data_to_output");
-  for (int j = 0;j<10;j++){
-    printf("%f\n",data->temp[j]);
-  }
-  
-  printf("%d\n",fd);
+  //printf("+++++++++++++++++++++++++++++++++++data_to_output");
+  //for (int j = 0;j<10;j++){
+  //  printf("%f\n",data->temp[j]);
+  //}
+  //
+  //printf("%d\n",fd);
 }
 
 int check_data( void *vdata, void *vref ) {

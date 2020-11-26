@@ -1,0 +1,3 @@
+
+ª
+0v++_compile_knn.sw_emu.xilinx_u200_xdma_201830_2$07921f7b-ecb5-41dc-8e7e-19e9977ffab1Èv++  -t sw_emu --platform xilinx_u200_xdma_201830_2 --save-temps --temp_dir ./_x.sw_emu.xilinx_u200_xdma_201830_2/knn -c -k workload -Isrc -oxclbin/knn.sw_emu.xilinx_u200_xdma_201830_2.xo src/knn.cpp *Ø"Ó/localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/reports/knn.sw_emu.xilinx_u200_xdma_201830_2/v++_compile_knn.sw_emu.xilinx_u200_xdma_201830_2_guidance.html2©"¤/localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/_x.sw_emu.xilinx_u200_xdma_201830_2/knn/v++_compile_knn.sw_emu.xilinx_u200_xdma_201830_2_guidance.pb
