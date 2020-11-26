@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Messages>
-	<Message severity="INFO" prefix="[HLS 200-10]" key="HLS_10_1312" tag="" content="Analyzing design file &apos;/localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/src/knn.cpp&apos; ..." resolution=""/>
-	<Message severity="INFO" prefix="[HLS 200-777]" key="HLS 200-777" tag="" content="Using interface defaults for &apos;Vitis&apos; target." resolution=""/>
-	<Message severity="INFO" prefix="[HLS 214-186]" key="HLS 214-186" tag="" content="Unrolling loop &apos;anonymous&apos; (/localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/src/knn.cpp:23:2) in function &apos;compute&apos; completely with a factor of 2 (/localhdd/xingyut/rodinia-hls/Benchmarks/knn/knn_4_doublebuffer/src/knn.cpp:23:2)" resolution=""/>
-	<Message severity="INFO" prefix="[HLS 200-111]" key="HLS_111_965" tag="" content="Finished Linking Time (s): cpu = 00:00:06 ; elapsed = 00:00:06 . Memory (MB): peak = 1686.148 ; gain = 1235.910 ; free physical = 174580 ; free virtual = 197620" resolution=""/>
-	<Message severity="INFO" prefix="[HLS 200-111]" key="HLS_111_965" tag="" content="Finished Checking Pragmas Time (s): cpu = 00:00:06 ; elapsed = 00:00:06 . Memory (MB): peak = 1686.148 ; gain = 1235.910 ; free physical = 174580 ; free virtual = 197620" resolution=""/>
-	<Message severity="INFO" prefix="[HLS 200-1493]" key="HLS 200-1493" tag="" content="Running only source code synthesis checks, skipping scheduling and RTL generation." resolution=""/>
-</Messages>

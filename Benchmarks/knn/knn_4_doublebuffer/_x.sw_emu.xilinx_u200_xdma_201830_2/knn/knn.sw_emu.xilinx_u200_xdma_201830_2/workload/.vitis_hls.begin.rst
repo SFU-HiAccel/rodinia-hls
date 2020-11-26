@@ -1,5 +1,0 @@
-<?xml version="1.0"?>
-<ProcessHandle Version="1" Minor="0">
-    <Process Command="vitis_hls" Owner="xingyut" Host="" Pid="28558" HostCore="48" HostMemory="196659100">
-    </Process>
-</ProcessHandle>
