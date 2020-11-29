@@ -1,5 +1,9 @@
 # rodinia-hls
-Private repository for hosting the Rodinia HLS version for HiAccel
+Rodinia-hls is a HLS version of Rodinia Benchmark from HiAccel group. 
+
+If you use Rodinia-hls in your research, please cite out FCCM 2018 paper:
+
+> J. Cong, Z. Fang, M. Lo, H. Wang, J. Xu and S. Zhang, "Understanding Performance Differences of FPGAs and GPUs," 2018 IEEE 26th Annual International Symposium on Field-Programmable Custom Computing Machines (FCCM), Boulder, CO, 2018
 
 ## Download
 
@@ -39,6 +43,11 @@ make check TARGET=<sw_emu/hw_emu/hw> DEVICE=<FPGA platform>
 + Use ``make clean`` to remove all generated non-hardware files. 
 
 + Use ``make cleanall`` to remove all generated files. 
+
+## Team Members:
+
+Stuedents: [Alec Lu](http://www.sfu.ca/~fla30/), [Weihua Liu](http://www.sfu.ca/~weihual/), [Xingyu Tian](http://www.sfu.ca/~xingyut/)
+Faculty: [Zhenman Fang](http://www.sfu.ca/~zhenman/group.html)
 
 ## Kernel Introduction
 
