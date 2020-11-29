@@ -3,6 +3,7 @@
 #define coalescing
 
 #ifdef coalescing 
+extern "C"{
 void internal_load(int flag, float buffer[BSIZE][matrix_dim - BSIZE], class ap_uint<512> * src, int k, int idx){
 	if(flag){
 		for(int i = 0; i < BSIZE; i++){ //16 
@@ -58,7 +59,7 @@ void internal_compute(int flag, float buffer_inner[BSIZE][matrix_dim - BSIZE], f
 					 		buffer_up[m][j + BSIZE];
 				}
 
-				// buffer_inner[i][j] = tmp;
+				 buffer_inner[i][j] = tmp;
 			}
 		}
 	}
@@ -266,4 +267,5 @@ void workload(class ap_uint<512> * result){
 	}
 
 	return;
+}
 }

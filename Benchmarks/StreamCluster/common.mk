@@ -130,6 +130,6 @@ clean:
 
 cleanall: clean
 	-$(RMDIR) $(XCLBIN)
-	-$(RMDIR) _x.* output.txt .run
+	-$(RMDIR) _x.* output.data .run
 
 

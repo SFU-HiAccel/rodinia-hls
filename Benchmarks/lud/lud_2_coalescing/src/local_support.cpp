@@ -158,8 +158,26 @@ int check_data( void *vdata, void *vref ) {
   struct bench_args_t *ref = (struct bench_args_t *)vref;
   int has_errors = 0;
 
-  has_errors |= memcmp(data->result, ref->result, GRID_ROWS * GRID_COLS - 100);
-  printf("error num is %d \n", has_errors);
+  for(int i = 0; i < GRID_ROWS * GRID_COLS; i++){
+      if(data->result[i] != ref->result[i]){
+          float tmp; 
+          if(data->result[i] > ref->result[i])
+              tmp = data->result[i] - ref->result[i];
+          else
+              tmp = ref->result[i] - data->result[i];
+
+          float error_rate = tmp / data->result[i];
+          
+          if(error_rate > 0.005){
+              has_errors++;
+              if(has_errors < 10){
+                  printf("result is %d, reference is %d \n", data->result[i], ref->result[i]);
+              }
+          }
+      }
+  }
+ //has_errors |= memcmp(data->result, ref->result, GRID_ROWS * GRID_COLS - 100);
+  //printf("error num is %d \n", has_errors);
   // Return true if it's correct.
   return !has_errors;
 }

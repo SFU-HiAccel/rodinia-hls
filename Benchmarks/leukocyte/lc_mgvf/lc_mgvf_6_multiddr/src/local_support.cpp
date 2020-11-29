@@ -186,7 +186,22 @@ int check_data( void *vdata, void *vref ) {
   struct bench_args_t *ref = (struct bench_args_t *)vref;
   int has_errors = 0;
 
-  has_errors |= memcmp(data->imgvf, ref->imgvf, GRID_ROWS * GRID_COLS);
-  // Return true if it's correct.
+  for(int i = 0; i < GRID_ROWS * GRID_COLS; i++){
+    if(data->imgvf[i] != ref->imgvf[i]){
+      float tmp;
+
+      if(data->imgvf[i] > ref -> imgvf[i]){
+        tmp = data->imgvf[i] - ref->imgvf[i];
+      } else {
+        tmp = ref->imgvf[i] - data->imgvf[i];
+      }
+
+      float error_rate = tmp / ref->imgvf[i];
+
+      if(error_rate > 0.005)
+        has_errors++;
+    }
+  }
+
   return !has_errors;
 }

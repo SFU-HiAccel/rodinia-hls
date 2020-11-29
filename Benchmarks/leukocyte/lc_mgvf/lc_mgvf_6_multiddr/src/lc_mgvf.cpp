@@ -44,12 +44,18 @@ void lc_mgvf(float result[TILE_ROWS * GRID_COLS], float imgvf[(TILE_ROWS + 2) * 
 	int cols = GRID_COLS;
 	int rows = GRID_ROWS;
 	float imgvf_rf[GRID_COLS * (2 * MAX_RADIUS) + MAX_RADIUS * 2 + PARA_FACTOR];
-#pragma HLS array_partition variable=imgvf_rf cyclic dim=0 factor=128
+#pragma HLS array_partition variable=imgvf_rf cyclic dim=0 factor=64
 
 	int i;
+     for (i = 0; i < GRID_COLS * (2 * MAX_RADIUS) + MAX_RADIUS + PARA_FACTOR; i++) {
+#pragma HLS pipeline II=1
+#pragma HLS unroll
+        imgvf_rf[i + MAX_RADIUS] = imgvf[i];
+    }
 
-	for (i = -(GRID_COLS * (2 * MAX_RADIUS) + MAX_RADIUS + PARA_FACTOR) / PARA_FACTOR; i < GRID_COLS / PARA_FACTOR * TILE_ROWS; i++) {
 
+//for (i = -(GRID_COLS * (2 * MAX_RADIUS) + MAX_RADIUS + PARA_FACTOR) / PARA_FACTOR; i < GRID_COLS / PARA_FACTOR * TILE_ROWS; i++) {
+    for (i = 0; i < GRID_COLS / PARA_FACTOR * TILE_ROWS; i++) {
 		int k;
 #pragma HLS pipeline II=1
 
@@ -93,15 +99,15 @@ void lc_mgvf(float result[TILE_ROWS * GRID_COLS], float imgvf[(TILE_ROWS + 2) * 
 
 
 extern "C"{
-// void buffer_load(int flag, int k, float imgvf_dest[GRID_COLS * (TILE_ROWS + 2)], class ap_uint<LARGE_BUS> *imgvf_src, float I_dest[GRID_COLS * TILE_ROWS], class ap_uint<LARGE_BUS> *I_src)
-// {
-// #pragma HLS inline off
-//     if (flag) {
-// 		memcpy_wide_bus_read_float(imgvf_dest, (class ap_uint<LARGE_BUS> *)(imgvf_src + (k * TILE_ROWS * GRID_COLS - GRID_COLS) / (LARGE_BUS / 32)),0 * sizeof(float) , sizeof(float) *((unsigned long) ((TILE_ROWS + 2) * GRID_COLS)) );
-// 		memcpy_wide_bus_read_float(I_dest, (class ap_uint<LARGE_BUS> *)(I_src + (k * TILE_ROWS * GRID_COLS) / (LARGE_BUS / 32)),0 * sizeof(float) , sizeof(float) *((unsigned long) (TILE_ROWS * GRID_COLS)) );
-// 		}
-//     return;
-// }
+ void buffer_load(int flag, int k, float imgvf_dest[GRID_COLS * (TILE_ROWS + 2)], class ap_uint<LARGE_BUS> *imgvf_src, float I_dest[GRID_COLS * TILE_ROWS], class ap_uint<LARGE_BUS> *I_src)
+{
+#pragma HLS inline off
+     if (flag) {
+         memcpy_wide_bus_read_float(imgvf_dest, (class ap_uint<LARGE_BUS> *)(imgvf_src + (k * TILE_ROWS * GRID_COLS - GRID_COLS) / (LARGE_BUS / 32)),0 * sizeof(float) , sizeof(float) *((unsigned long) ((TILE_ROWS + 2) * GRID_COLS)) );
+         memcpy_wide_bus_read_float(I_dest, (class ap_uint<LARGE_BUS> *)(I_src + (k * TILE_ROWS * GRID_COLS) / (LARGE_BUS / 32)),0 * sizeof(float) , sizeof(float) *((unsigned long) (TILE_ROWS * GRID_COLS)) );
+         }
+    return;
+}
 
 void buffer_load_imgvf(int flag, int k, float imgvf_dest[GRID_COLS * (TILE_ROWS + 2)], class ap_uint<LARGE_BUS> *imgvf_src){
     #pragma HLS inline off
@@ -218,7 +224,7 @@ __kernel void workload(class ap_uint<LARGE_BUS> *result, class ap_uint<LARGE_BUS
             
             if (k % 3 == 0) {
                 //buffer_load(load_flag, k, imgvf_inner_0, result, I_inner_0, I);
-                buffer_load_imgvf(load_flag, k, imgvf_inner_0, imgvf);
+                buffer_load_imgvf(load_flag, k, imgvf_inner_0, result);
                 buffer_load_i(load_flag, k, I_inner_0, I);
                 buffer_compute(compute_flag, result_inner_2, imgvf_inner_2, I_inner_2, k - 1);
                 buffer_store(store_flag, k - 2, imgvf, result_inner_1);
@@ -226,7 +232,7 @@ __kernel void workload(class ap_uint<LARGE_BUS> *result, class ap_uint<LARGE_BUS
 
             else if (k % 3 == 1) {
                 //buffer_load(load_flag, k, imgvf_inner_1, result, I_inner_1, I);
-                buffer_load_imgvf(load_flag, k, imgvf_inner_1, imgvf);
+                buffer_load_imgvf(load_flag, k, imgvf_inner_1, result);
                 buffer_load_i(load_flag, k, I_inner_1, I);
                 buffer_compute(compute_flag, result_inner_0, imgvf_inner_0, I_inner_0, k - 1);
                 buffer_store(store_flag, k - 2, imgvf, result_inner_2);
@@ -234,7 +240,7 @@ __kernel void workload(class ap_uint<LARGE_BUS> *result, class ap_uint<LARGE_BUS
             
             else{
                 //buffer_load(load_flag, k, imgvf_inner_2, result, I_inner_2, I);
-                buffer_load_imgvf(load_flag, k, imgvf_inner_2, imgvf);
+                buffer_load_imgvf(load_flag, k, imgvf_inner_2, result);
                 buffer_load_i(load_flag, k, I_inner_2, I);
                 buffer_compute(compute_flag, result_inner_1, imgvf_inner_1, I_inner_1, k - 1);
                 buffer_store(store_flag, k - 2, imgvf, result_inner_0);

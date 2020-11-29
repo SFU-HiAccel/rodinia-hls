@@ -22,5 +22,7 @@ struct bench_args_t {
     float result[GRID_ROWS * GRID_COLS];
 };
 
+#define BSIZE 16
+#define matrix_dim GRID_ROWS
 // void workload(float result[GRID_ROWS * GRID_COLS]);
 #endif

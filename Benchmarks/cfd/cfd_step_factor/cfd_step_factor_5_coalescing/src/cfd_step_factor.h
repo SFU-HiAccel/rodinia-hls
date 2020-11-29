@@ -1,4 +1,5 @@
 #ifndef CFD_STEP_FACTOR_H
+
 #define CFD_STEP_FACTOR_H
 
 #include <assert.h>
@@ -7,7 +8,7 @@
 #include <string.h>
 #include <math.h>
 
-#define GRID_ROWS (1024 * 1024)
+#define GRID_ROWS 1024
 
 #define SIZE GRID_ROWS
 

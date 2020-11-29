@@ -119,7 +119,7 @@ ifeq ($(TARGET),$(filter $(TARGET),sw_emu hw_emu))
 else
 	 ./$(EXECUTABLE) $(HOST_ARGS) $(XCLBIN)/$(APP).$(TARGET).$(DSA).xclbin
 endif
-	sdx_analyze profile profile_summary.csv
+	#sdx_analyze profile profile_summary.csv
 
 run_nimbix: all
 	$(COMMON_REPO)/utility/nimbix/run_nimbix.py $(EXECUTABLE) $(CMD_ARGS) $(DSA)
@@ -135,5 +135,5 @@ clean:
 
 cleanall: clean
 	-$(RMDIR) $(XCLBIN)
-	-$(RMDIR) _x.* output.txt .run
+	-$(RMDIR) _x.* output.data *.run_summary .run
 

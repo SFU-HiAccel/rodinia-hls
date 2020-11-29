@@ -29,11 +29,11 @@ void run_benchmark( void *vargs, cl_context& context, cl_command_queue& commands
   err  = clEnqueueWriteBuffer(commands, J_buffer, CL_TRUE, 0, sizeof(args->J), args->J, 0, NULL, NULL);
 
   if (err != CL_SUCCESS)
-    {
-      printf("Error: Failed to write to device memory!\n");
-      printf("Test failed\n");
-      exit(1);
-    }
+  {
+    printf("Error: Failed to write to device memory!\n");
+    printf("Test failed\n");
+    exit(1);
+  }
 
   // 2nd: time of pageable-pinned memory copy
   toc(&timer, "memory copy");
@@ -72,8 +72,8 @@ void run_benchmark( void *vargs, cl_context& context, cl_command_queue& commands
   toc(&timer, "kernel execution");
 
   // Read back the results from the device to verify the output
-  //err  = clEnqueueReadBuffer(commands, Jout_buffer,  CL_TRUE, 0, sizeof(args->Jout), args->Jout, 0, NULL, NULL);   //For even NITRs, we also return J as output
-  err  = clEnqueueReadBuffer(commands, J_buffer,  CL_TRUE, 0, sizeof(args->J), args->J, 0, NULL, NULL);  
+  err  = clEnqueueReadBuffer(commands, Jout_buffer,  CL_TRUE, 0, sizeof(args->Jout), args->Jout, 0, NULL, NULL);   //For even NITRs, we also return J as output
+  //err  = clEnqueueReadBuffer(commands, J_buffer,  CL_TRUE, 0, sizeof(args->J), args->J, 0, NULL, NULL);  
 
   if (err != CL_SUCCESS) {
     printf("Error: Failed to read output array! %d\n", err);
@@ -98,8 +98,8 @@ void input_to_data(int fd, void *vdata) {
   // Load input string
   p = readfile(fd);
   s = find_section_start(p,1);
-  STAC(parse_,TYPE,_array)(s, data->J+COLS, ROWS*COLS);
   memset(data->J, 0, COLS*sizeof(TYPE));
+  STAC(parse_,TYPE,_array)(s, data->J+COLS, ROWS*COLS);
   memset(data->J+(ROWS+1)*COLS, 0, 2*COLS*sizeof(TYPE));
   printf("+++++++++++++++++++++++++++++++++++input_to_data: ");
   printf("%f\n",data->J[COLS]);
@@ -127,18 +127,24 @@ void output_to_data(int fd, void *vdata) {
   // Load input string
   p = readfile(fd);
 
+  // s = find_section_start(p,1);
+  // STAC(parse_,TYPE,_array)(s, data->J+COLS, ROWS * COLS);
   s = find_section_start(p,1);
-  STAC(parse_,TYPE,_array)(s, data->J+COLS, ROWS * COLS);
+  memset(data->Jout, 0, COLS*sizeof(TYPE));
+  STAC(parse_,TYPE,_array)(s, data->Jout+COLS, ROWS * COLS);
+  memset(data->Jout+(ROWS+1)*COLS, 0, 2*COLS*sizeof(TYPE));
+  printf("+++++++++++++++++++++++++++++++++++output_to_data: ");
+  printf("%f\n",data->Jout[COLS]);
 }
 
 void data_to_output(int fd, void *vdata) {
   struct bench_args_t *data = (struct bench_args_t *)vdata;
 
   printf("+++++++++++++++++++++++++++++++++++data_to_output: ");
-  printf("%f\n",data->J[COLS]);
+  printf("%f\n",data->Jout[COLS]);
 
   write_section_header(fd);
-  STAC(write_,TYPE,_array)(fd, data->J+COLS, ROWS * COLS);
+  STAC(write_,TYPE,_array)(fd, data->Jout+COLS, ROWS * COLS);
 
   write_section_header(fd);
 }
@@ -152,7 +158,7 @@ int check_data( void *vdata, void *vref ) {
   int has_errors = 0;
 
   //note that we only print useful data into the output.data file
-  has_errors |= memcmp(data->J, ref->J, ROWS * COLS);
+  has_errors |= memcmp(data->Jout, ref->Jout, ROWS * COLS);
   //printf("finished comparing\n");
   
   // Return true if it's correct.

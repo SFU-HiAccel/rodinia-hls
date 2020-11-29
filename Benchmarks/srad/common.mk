@@ -135,5 +135,5 @@ clean:
 
 cleanall: clean
 	-$(RMDIR) $(XCLBIN)
-	-$(RMDIR) _x.* ouptut.txt .run
+	-$(RMDIR) _x.* output.data *.run_summary .run
 

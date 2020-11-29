@@ -107,7 +107,7 @@ $(XCLBIN)/$(APP).$(TARGET).$(DSA).xo: src/$(APP).cpp
 #	$(XOCC) $(CLFLAGS) --temp_dir $(BUILD_DIR_KERNEL) -c -k $(KERNAL_NAME) -I'$(<D)' -o'$@' '$<'
 $(XCLBIN)/$(APP).$(TARGET).$(DSA).xclbin: $(BINARY_CONTAINER_vadd_OBJS)
 	mkdir -p $(XCLBIN)
-	$(VPP) $(CLFLAGS) --temp_dir $(BUILD_DIR_KERNEL) -R2 -l $(LDCLFLAGS) --coonectivity.nk $(KERNAL_NAME):1 -j 8 -o'$@' $(+) $(XOCC_LINK_OPTS)
+	$(VPP) $(CLFLAGS) --temp_dir $(BUILD_DIR_KERNEL) -R2 -l $(LDCLFLAGS) --connectivity.nk $(KERNAL_NAME):1 -j 8 -o'$@' $(+) $(XOCC_LINK_OPTS)
 #	$(XOCC) $(CLFLAGS) --temp_dir $(BUILD_DIR_KERNEL) -l $(LDCLFLAGS) --nk $(KERNAL_NAME):1 -o'$@' $(+)
 
 # Building Host
@@ -125,7 +125,7 @@ ifeq ($(TARGET),$(filter $(TARGET),sw_emu hw_emu))
 else
 	 ./$(EXECUTABLE) $(HOST_ARGS) $(XCLBIN)/$(APP).$(TARGET).$(DSA).xclbin
 endif
-	sdx_analyze profile sdaccel_profile_summary.csv
+#	sdx_analyze profile sdaccel_profile_summary.csv
 
 run_nimbix: all
 	$(COMMON_REPO)/utility/nimbix/run_nimbix.py $(EXECUTABLE) $(CMD_ARGS) $(DSA)
@@ -141,5 +141,5 @@ clean:
 
 cleanall: clean
 	-$(RMDIR) $(XCLBIN)
-	-$(RMDIR) _x.* output.txt .run
+	-$(RMDIR) _x.* output.data *.run_summary .run
 

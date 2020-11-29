@@ -105,7 +105,7 @@ $(XCLBIN)/$(APP).$(TARGET).$(DSA).xo: src/$(APP).cpp
 #	$(XOCC) $(CLFLAGS) --temp_dir $(BUILD_DIR_KERNEL) -c -k $(KERNAL_NAME) -I'$(<D)' -o'$@' '$<'
 $(XCLBIN)/$(APP).$(TARGET).$(DSA).xclbin: $(BINARY_CONTAINER_vadd_OBJS)
 	mkdir -p $(XCLBIN)
-	$(VPP) $(CLFLAGS) --temp_dir $(BUILD_DIR_KERNEL) -R2 -l $(LDCLFLAGS) --coonectivity.nk $(KERNAL_NAME):1 -j 8 -o'$@' $(+) $(XOCC_LINK_OPTS)
+	$(VPP) $(CLFLAGS) --temp_dir $(BUILD_DIR_KERNEL) -R2 -l $(LDCLFLAGS) --connectivity.nk $(KERNAL_NAME):1 -j 8 -o'$@' $(+) $(XOCC_LINK_OPTS)
 	#$(XOCC) $(CLFLAGS) --temp_dir $(BUILD_DIR_KERNEL) -l $(LDCLFLAGS) --nk $(KERNAL_NAME):1 -o'$@' $(+) $(XOCC_LINK_OPT)
 
 # Building Host
@@ -139,5 +139,5 @@ clean:
 
 cleanall: clean
 	-$(RMDIR) $(XCLBIN)
-	-$(RMDIR) _x.* output.txt .run
+	-$(RMDIR) _x.* output.data *.run_summary .run
 

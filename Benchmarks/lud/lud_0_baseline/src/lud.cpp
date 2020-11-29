@@ -1,5 +1,6 @@
 #include"lud.h"
-	void lud(float result[GRID_ROWS * GRID_COLS])
+extern "C"{
+void lud(float result[GRID_ROWS * GRID_COLS])
 	{
 		int i, j, k; 
 		float sum;
@@ -33,5 +34,4 @@
 		return;
 
 	}
-
-
+}
