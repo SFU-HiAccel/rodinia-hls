@@ -1,9 +1,10 @@
 # rodinia-hls
-Rodinia-hls is a HLS version of Rodinia Benchmark from HiAccel group. 
+
+Rodinia-hls is an FPGA version of the widely used GPU benchmark suite Rodinia, written in HLS (High-Level Synthesis) C/C++. This project was initiated by Dr. Zhenman Fang when he was a postdoc at UCLA, mentoring a few summer intern students. Now it is updated and maintained by the SFU-HiAccel group at SFU, led by Dr. Fang.
 
 If you use Rodinia-hls in your research, please cite our FCCM 2018 paper:
 
-> J. Cong, Z. Fang, M. Lo, H. Wang, J. Xu and S. Zhang, "Understanding Performance Differences of FPGAs and GPUs," 2018 IEEE 26th Annual International Symposium on Field-Programmable Custom Computing Machines (FCCM), Boulder, CO, 2018
+> Jason Cong, Zhenman Fang, Michael Lo, Hanrui Wang, Jingxian Xu, Shaochong Zhang. "Understanding Performance Differences of FPGAs and GPUs". The 26th IEEE International Symposium on Field-Programmable Custom Computing Machines (FCCM 2018 short paper), Boulder CO, May 2018, pp. 172-175.
 
 ## Download
 
@@ -12,10 +13,12 @@ git clone https://github.com/SFU-HiAccel/rodinia-hls.git
 ```
 
 ## Setup Requirements
+
 1. **Evaluated hardware platforms:**
   + **Host OS**
     + 64-bit Ubuntu 16.04.6 LTS
-  + **Cloud FPGA**
+    + 64-bit Ubuntu 18.04.2 LTS
+  + **Datacenter FPGA**
     + Xilinx Alveo U200 - DDR4-based FPGA
 2. **Software tools:**
    + **HLS tool**
@@ -35,6 +38,8 @@ In each baseline or optimization folder, you can run software emulation, hardwar
 make all TARGET=<sw_emu/hw_emu/hw> DEVICE=<FPGA platform>
 ```
 
+For FPGA platform names, they can be found in your install directory like /opt/xilinx/platforms/. For example, for U200 FPGA platform, use xilinx_u200_xdma_201830_2.
+
 + Run application in emulation or hardware
 ```shell
 make check TARGET=<sw_emu/hw_emu/hw> DEVICE=<FPGA platform>
@@ -44,15 +49,15 @@ make check TARGET=<sw_emu/hw_emu/hw> DEVICE=<FPGA platform>
 
 + Use ``make cleanall`` to remove all generated files. 
 
-## Team Members:
+## Host Code
 
-Stuedents: [Alec Lu](http://www.sfu.ca/~fla30/), [Weihua Liu](http://www.sfu.ca/~weihual/), [Xingyu Tian](http://www.sfu.ca/~xingyut/)
-
-Faculty: [Zhenman Fang](http://www.sfu.ca/~zhenman/group.html)
+The host code is written in Xilinx OpenCL. We have abstracted the HLS common code and put it in Benchmarks/common folder. For each kernel's specific host code, i.e., OpenCL buffer allocation and transfer between CPU and FPGA, it's in the local_support.cpp file in each kernel's folder. So users only need to focus on local_support.cpp for the host code.
 
 ## Kernel Introduction
 
-You can find more details on [Rodinia Website](https://rodinia.cs.virginia.edu/doku.php).
+The kernels are written and optimized in Xilinx Vivado HLS C/C++. We follow a series of common optimizations, including tiling, pipeline, unrolling (parallelization), double buffering, and memory coalescing. The subfolders include the code of step-by-step HLS optimizations, which could be very useful for HLS beginners.
+
+Below is a brief description of each kernel. You can find more details on [Rodinia Website](https://rodinia.cs.virginia.edu/doku.php).
 
 ### Backpropgation
 
@@ -60,7 +65,7 @@ Back Propagation is a machine-learning algorithm that trains the weights of conn
 
 ### CFD 
 
-The CFD solver is an unstructured grid finite volume solver for the three-dimensional Euler equations for compressible flow. Effective GPU memory bandwidth is improved by reducing total global memory access and overlapping redundant computation, as well as using an appropriate numbering scheme and data layout.
+The CFD solver is an unstructured grid finite volume solver for the three-dimensional Euler equations for compressible flow. 
 
 ### HotSpot
 
@@ -101,3 +106,13 @@ SRAD (Speckle Reducing Anisotropic Diffusion) is a diffusion method for ultrason
 ### StreamCluster
 
 For a stream of input points, it finds a predetermined number of medians so that each point is assigned to its nearest center. The quality of the clustering is measured by the sum of squared distances (SSQ) metric.
+
+## Team Members and Contact:
+
+Current Stuedents: [Alec Lu](http://www.sfu.ca/~fla30/), [Xingyu Tian](http://www.sfu.ca/~xingyut/)
+
+Faculty: [Zhenman Fang](http://www.sfu.ca/~zhenman/group.html)
+
+Past Contributors (at UCLA): Michael Lo (now PhD at UCLA), Hanrui Wang (now PhD at MIT), Jingxian Xu (now at Nvidia), Shaochong Zhang (now MASc at UCLA)
+
+If you have any questions, please feel free to contact Dr. Fang (zhenman@sfu.ca) or Xingyu (xingyut@sfu.ca)
