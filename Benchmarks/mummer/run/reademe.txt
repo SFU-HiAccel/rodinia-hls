@@ -1,1 +1,0 @@
-All compiled executables locates here. 

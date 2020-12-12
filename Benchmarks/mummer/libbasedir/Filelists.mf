@@ -1,9 +1,0 @@
-LIBOBJECTS=\
-  cleanMUMcand.o\
-  clock.o\
-  mapfile.o\
-  multiseq.o\
-  procopt.o\
-  safescpy.o\
-  seterror.o\
-  space.o

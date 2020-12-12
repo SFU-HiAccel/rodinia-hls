@@ -1,1 +1,0 @@
-t2q/r.fasta  two short DNA sequence, 5 characters only. 

@@ -1,1 +1,0 @@
-The "mummer" and "maxmat3.x" option in the make file are exactly same. 

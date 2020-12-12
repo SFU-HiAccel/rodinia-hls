@@ -1,1 +1,0 @@
-./mummer -mum -l 2  -s ../test_strings/t2r.fasta ../test_strings/t2q.fasta >t2t
