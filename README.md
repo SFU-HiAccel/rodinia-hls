@@ -115,4 +115,6 @@ Faculty: [Zhenman Fang](http://www.sfu.ca/~zhenman/group.html)
 
 Past Contributors (at UCLA): Michael Lo (now PhD at UCLA), Hanrui Wang (now PhD at MIT), Jingxian Xu (now at Nvidia), Shaochong Zhang (now MASc at UCLA)
 
+Special thanks to Falcon Computing to contribute the special memcpy APIs for memory coalescing optimizations.
+
 If you have any questions, please feel free to contact Dr. Fang (zhenman@sfu.ca) or Xingyu (xingyut@sfu.ca)
