@@ -109,7 +109,7 @@ For a stream of input points, it finds a predetermined number of medians so that
 
 ## Team Members and Contact:
 
-Current Stuedents: [Alec Lu](http://www.sfu.ca/~fla30/), [Xingyu Tian](http://www.sfu.ca/~xingyut/)
+Current Stuedents: [Xingyu Tian](http://www.sfu.ca/~xingyut/), [Alec Lu](http://www.sfu.ca/~fla30/)
 
 Faculty: [Zhenman Fang](http://www.sfu.ca/~zhenman/group.html)
 
